@@ -1,0 +1,36 @@
+@import be.thomastoye.speelsysteem.models.Crew
+@(crewMembers: Seq[(Crew.Id, Crew)])(implicit flash: Flash)
+
+@main("Animatoren") {
+    <h2 class="sub-header">Lijst van alle animatoren</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Geboortedatum</th>
+                    <th>Straat, nummer</th>
+                    <th>Gemeente</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @for((id, crewMember) <- crewMembers) {
+                <tr>
+                    <td>
+                        <a href="@routes.CrewController.details(id)">
+                            @crewMember.firstName @crewMember.lastName
+                        </a>
+                    </td>
+                    <td>
+                        @crewMember.birthDate
+                    </td>
+                    <td>@crewMember.address.street @crewMember.address.number</td>
+                    <td>@crewMember.address.city</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
