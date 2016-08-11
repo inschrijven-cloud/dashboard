@@ -1,3 +1,6 @@
+import ReleaseTransformations._
+import GhPagesKeys._
+
 name := "speelsysteem-dashboard"
 
 lazy val commonSettings = Seq(
@@ -43,3 +46,34 @@ lazy val dataAccess = Project("data-access", file("data-access"))
   )
   .dependsOn(models)
   .aggregate(models)
+
+ghpages.settings
+enablePlugins(SiteScaladocPlugin)
+
+val publishScalaDoc = (ref: ProjectRef) => ReleaseStep(
+  action = releaseStepTaskAggregated(GhPagesKeys.pushSite in ref) // publish scaladoc
+)
+
+
+releaseProcess <<= thisProjectRef apply { ref =>
+  import sbtrelease.ReleaseStateTransformations._
+
+  Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    //publishArtifacts,
+    publishScalaDoc(ref),
+    setNextVersion,
+    commitNextVersion,
+    pushChanges
+  )
+}
+
+git.remoteRepo := "git@github.com:speelsysteem/dashboard.git"
+
+releaseIgnoreUntrackedFiles := true
