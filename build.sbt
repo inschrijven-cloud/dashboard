@@ -50,6 +50,8 @@ lazy val dataAccess = Project("data-access", file("data-access"))
 ghpages.settings
 enablePlugins(SiteScaladocPlugin)
 
+siteSourceDirectory := file("app/site")
+
 val publishScalaDoc = (ref: ProjectRef) => ReleaseStep(
   action = releaseStepTaskAggregated(GhPagesKeys.pushSite in ref) // publish scaladoc
 )
