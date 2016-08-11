@@ -17,8 +17,7 @@ resolvers += Classpaths.sbtPluginReleases
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.8")
 
-// Integration plugins
 
-addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.6.0")
 
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.4")
+addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.3")
+
