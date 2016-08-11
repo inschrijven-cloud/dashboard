@@ -1,6 +1,4 @@
-name := "speelsysteem"
-
-version := "1.0-SNAPSHOT"
+name := "speelsysteem-dashboard"
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
