@@ -23,9 +23,10 @@ GET     /api/v1/day            controllers.api.DayApiController.all
 
 # Child API
 
-GET     /api/v1/child                   controllers.api.ChildApiController.all
-POST    /api/v1/child                   controllers.api.ChildApiController.create
-GET     /api/v1/child/:id/attendances   controllers.api.DayApiController.getAttendancesForChild(id)
+GET     /api/v1/child                               controllers.api.ChildApiController.all
+POST    /api/v1/child                               controllers.api.ChildApiController.create
+GET     /api/v1/child/:id/attendances               controllers.api.DayApiController.getAttendancesForChild(id)
+GET     /api/v1/child/:childId/attendances/:dayId   controllers.api.DayApiController.addAttendancesForChild(childId, dayId)
 
 ### Assets
 

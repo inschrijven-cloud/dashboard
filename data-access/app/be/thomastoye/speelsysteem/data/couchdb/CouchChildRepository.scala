@@ -7,7 +7,9 @@ import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
 import upickle.default.{Reader, Writer}
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.models.Child.Id
+import be.thomastoye.speelsysteem.models.Day.Id
 import be.thomastoye.speelsysteem.models.JsonFormats._
+import be.thomastoye.speelsysteem.models.Child.Id
 import com.ibm.couchdb.{CouchDoc, MappedDocType}
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
@@ -49,5 +51,25 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
       currentRev <- db.docs.get[Child](id).toFuture.map(_._rev)
       res        <- db.docs.update[Child](CouchDoc(child, childKind, _id = id, _rev = currentRev)).toFuture
     } yield { () }
+  }
+
+  override def addAttendancesForChild(id: Id, dayId: Id, shifts: Seq[Id]): Future[Option[Unit]] = {
+    findById(id) flatMap { childWithIdOpt =>
+      if(childWithIdOpt.isDefined) {
+        val childWithId = childWithIdOpt.get
+        val child = addShifts(childWithId._2, dayId, shifts)
+        update(childWithId._1, child).map(_ => Some( () ))
+      } else Future.successful(None)
+    }
+  }
+
+  private def addShifts(child: Child, dayId: Id, shifts: Seq[Id]) = {
+    val newAttendance = child.attendances
+      .find(_.day == dayId).map(att => Attendance(att.day, (att.shifts ++ shifts).distinct))
+      .getOrElse(Attendance(dayId, shifts))
+
+    val newAttendances =  child.attendances.filterNot(_.day == dayId) :+ newAttendance
+
+    child.copy(attendances = newAttendances)
   }
 }

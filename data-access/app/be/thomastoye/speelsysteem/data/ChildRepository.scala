@@ -1,6 +1,6 @@
 package be.thomastoye.speelsysteem.data
 
-import be.thomastoye.speelsysteem.models.Child
+import be.thomastoye.speelsysteem.models.{Child, Day, Shift}
 import be.thomastoye.speelsysteem.models.Child.Id
 
 import scala.concurrent.Future
@@ -16,4 +16,6 @@ trait ChildRepository {
   def count: Future[Int]
 
   def update(id: Id, child: Child): Future[Unit]
+
+  def addAttendancesForChild(id: Id, dayId: Day.Id, shifts: Seq[Shift.Id]): Future[Option[Unit]] // TODO should be Try
 }
