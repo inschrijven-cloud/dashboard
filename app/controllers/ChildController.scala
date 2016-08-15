@@ -3,7 +3,8 @@ package controllers
 import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.ChildRepository
-import be.thomastoye.speelsysteem.models.Child
+import be.thomastoye.speelsysteem.data.util.UuidService
+import be.thomastoye.speelsysteem.models.{Child, JsonFormats}
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import views._

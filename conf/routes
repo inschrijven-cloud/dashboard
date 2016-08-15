@@ -19,7 +19,13 @@ GET     /kind/details/:id   controllers.ChildController.details(id: String)
 
 # Day API
 
-GET     /api/dag            controllers.api.DayApiController.all
+GET     /api/v1/day            controllers.api.DayApiController.all
+
+# Child API
+
+GET     /api/v1/child                   controllers.api.ChildApiController.all
+POST    /api/v1/child                   controllers.api.ChildApiController.create
+GET     /api/v1/child/:id/attendances   controllers.api.DayApiController.getAttendancesForChild(id)
 
 ### Assets
 

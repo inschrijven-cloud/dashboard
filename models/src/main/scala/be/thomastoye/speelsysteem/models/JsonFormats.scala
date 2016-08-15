@@ -1,5 +1,6 @@
 package be.thomastoye.speelsysteem.models
 
+import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -53,5 +54,9 @@ object JsonFormats {
 
   implicit val dayWithIdWrites = new Writes[(Day.Id, Day)] {
     override def writes(o: (Day.Id, Day)): JsValue = Json.obj("id" -> o._1) ++ Json.toJson(o._2).as[JsObject]
+  }
+
+  implicit val childWithIdWrites = new Writes[(Child.Id, Child)] {
+    override def writes(o: (Id, Child)): JsValue = Json.obj("id" -> o._1) ++ Json.toJson(o._2).as[JsObject]
   }
 }

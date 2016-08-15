@@ -49,7 +49,7 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
         val shiftsAttendedWithDetails = if(daysChildAttended.contains(day._id)) {
           val shiftsOnDay = allDays.filter(_._id == day._id).head.doc.shifts
           val shiftsChildAttended = child.attendances.filter(_.day == day._id).head.shifts
-          Some(shiftsOnDay.filter(shiftsChildAttended.contains))
+          Some(shiftsOnDay.filter(x => shiftsChildAttended.contains(x.id)))
         } else None
 
         Day(day.doc.date, shiftsAttendedWithDetails.toSeq.flatten)
