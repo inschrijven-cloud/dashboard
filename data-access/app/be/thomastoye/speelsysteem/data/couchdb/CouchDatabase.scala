@@ -29,19 +29,23 @@ object CouchDatabase {
   case class CouchPersistenceException(msg: String) extends Exception(msg) // TODO is this used?
 }
 
+trait CouchDatabase {
+  val db: CouchDbApi
+}
+
 @Singleton
-class CouchDatabase @Inject()(config: Configuration) {
+class CouchDatabaseImpl @Inject()(config: Configuration) extends CouchDatabase {
   private val couchConfig = CouchConfiguration.fromConfig(config)
   val couchdb = (for (user <- couchConfig.user; pass <- couchConfig.pass)
     yield CouchDb(couchConfig.host, couchConfig.port, couchConfig.https, user, pass)
-  ) getOrElse CouchDb(couchConfig.host, couchConfig.port, couchConfig.https)
+    ) getOrElse CouchDb(couchConfig.host, couchConfig.port, couchConfig.https)
 
   couchdb.server.info.unsafePerformAsync {
-      case -\/(e) =>   Logger.warn("Could not connect to CouchDB", e)
-      case \/-(res) => Logger.info(s"Successfully connected to CouchDB ${res.version} (vendor: ${res.vendor.name}): ${res.couchdb}")
+    case -\/(e) =>   Logger.warn("Could not connect to CouchDB", e)
+    case \/-(res) => Logger.info(s"Successfully connected to CouchDB ${res.version} (vendor: ${res.vendor.name}): ${res.couchdb}")
   }
 
-  val db = couchdb.db(couchConfig.db, TypeMapping(
+  override val db = couchdb.db(couchConfig.db, TypeMapping(
     classOf[Crew] -> CouchCrewRepository.crewKind,
     classOf[Child] -> CouchChildRepository.childKind
   ))
