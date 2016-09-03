@@ -1,21 +1,7 @@
 # Home page
-GET     /                      controllers.ApplicationController.home
+GET     /                      controllers.ApplicationController.heartbeat
 
 GET     /heartbeat              controllers.ApplicationController.heartbeat
-
-# Animators
-GET     /animator              controllers.CrewController.list
-GET     /animator/             controllers.CrewController.list
-GET     /animator/lijst        controllers.CrewController.list
-GET     /animator/details/:id  controllers.CrewController.details(id: String)
-
-# Children
-GET     /kind               controllers.ChildController.showList
-GET     /kind/              controllers.ChildController.showList
-GET     /kind/lijst         controllers.ChildController.showList
-GET     /kind/details/:id   controllers.ChildController.details(id: String)
-
-### API
 
 # Day API
 
@@ -32,6 +18,3 @@ GET     /api/v1/child/:childId/attendances/:dayId   controllers.api.DayApiContro
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
-# WebJar routing (for bootstrap, ...)
-GET		/webjars/*file				controllers.WebJarAssets.at(file)

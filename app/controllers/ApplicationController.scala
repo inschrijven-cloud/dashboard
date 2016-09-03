@@ -1,11 +1,10 @@
 package controllers
 
+import play.api.libs.json.Json
 import play.api.mvc._
 
 class ApplicationController extends Controller {
-  def home: Action[AnyContent] = Action { implicit req =>
-    Ok(views.html.application.home.render(req.flash))
+  def heartbeat: Action[AnyContent] = Action {
+    Ok(Json.obj("status" -> "ok", "statusCode" -> "200", "message" -> "online"))
   }
-
-  def heartbeat: Action[AnyContent] = Action { Ok("online") }
 }
