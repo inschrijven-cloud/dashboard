@@ -1,6 +1,6 @@
 package be.thomastoye.speelsysteem.data.couchdb
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import be.thomastoye.speelsysteem.exceptions.ConfigurationMissingFieldException
 import be.thomastoye.speelsysteem.models.{Child, Crew}
@@ -29,6 +29,7 @@ object CouchDatabase {
   case class CouchPersistenceException(msg: String) extends Exception(msg) // TODO is this used?
 }
 
+@Singleton
 class CouchDatabase @Inject()(config: Configuration) {
   private val couchConfig = CouchConfiguration.fromConfig(config)
   val couchdb = (for (user <- couchConfig.user; pass <- couchConfig.pass)
