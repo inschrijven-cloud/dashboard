@@ -16,6 +16,8 @@ lazy val root = (project in file("."))
 
 scalaVersion := "2.11.8"
 
+coverageEnabled := true
+
 libraryDependencies ++= Seq(
   filters,
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"

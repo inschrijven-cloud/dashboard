@@ -1,4 +1,4 @@
-# Speelsysteem
+# Speelsysteem [![Build Status](https://travis-ci.org/speelsysteem/dashboard.svg?branch=master)](https://travis-ci.org/speelsysteem/dashboard) [![Coverage Status](https://coveralls.io/repos/github/speelsysteem/dashboard/badge.svg?branch=master)](https://coveralls.io/github/speelsysteem/dashboard?branch=master)
 
 This is the system that will power Speelplein De Speelberg. Since it's created for a Dutch audience and at the moment is too specific to be helpful for others, instructions will be given only in Dutch.
 
