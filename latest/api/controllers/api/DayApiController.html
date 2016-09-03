@@ -89,7 +89,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="controllers.api.DayApiController#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(couchDayService:be.thomastoye.speelsysteem.data.couchdb.CouchDayService):controllers.api.DayApiController"></a>
+      <a id="&lt;init&gt;(couchDayService:be.thomastoye.speelsysteem.data.couchdb.CouchDayService,childRepository:be.thomastoye.speelsysteem.data.ChildRepository):controllers.api.DayApiController"></a>
       <a id="&lt;init&gt;:DayApiController"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -97,10 +97,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">DayApiController</span><span class="params">(<span name="couchDayService">couchDayService: <span class="extype" name="be.thomastoye.speelsysteem.data.couchdb.CouchDayService">CouchDayService</span></span>)</span>
+        <span class="name">DayApiController</span><span class="params">(<span name="couchDayService">couchDayService: <span class="extype" name="be.thomastoye.speelsysteem.data.couchdb.CouchDayService">CouchDayService</span></span>, <span name="childRepository">childRepository: <span class="extype" name="be.thomastoye.speelsysteem.data.ChildRepository">ChildRepository</span></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@&lt;init&gt;(couchDayService:be.thomastoye.speelsysteem.data.couchdb.CouchDayService):controllers.api.DayApiController" title="Permalink" target="_top">
+      <a href="../../index.html#controllers.api.DayApiController@&lt;init&gt;(couchDayService:be.thomastoye.speelsysteem.data.couchdb.CouchDayService,childRepository:be.thomastoye.speelsysteem.data.ChildRepository):controllers.api.DayApiController" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -113,7 +113,24 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="play.api.mvc.Results.Status" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+              <ol><li name="controllers.api.DayApiController.BindShiftIds" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BindShiftIdsextendsProductwithSerializable"></a>
+      <a id="BindShiftIds:BindShiftIds"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="DayApiController$BindShiftIds.html"><span class="name">BindShiftIds</span></a><span class="params">(<span name="shiftIds">shiftIds: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="be.thomastoye.speelsysteem.models.Shift.Id">Id</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@BindShiftIdsextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="play.api.mvc.Results.Status" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="StatusextendsResult"></a>
       <a id="Status:Status"></a>
       <h4 class="signature">
@@ -605,7 +622,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">CACHE_MANIFEST</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">CACHE_MANIFEST</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@CACHE_MANIFEST:String" title="Permalink" target="_top">
@@ -877,7 +894,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">CSS</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">CSS</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@CSS(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
@@ -962,7 +979,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">EVENT_STREAM</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">EVENT_STREAM</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@EVENT_STREAM(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
@@ -1090,18 +1107,18 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Status</dd></dl></div>
     </li><li name="play.api.http.ContentTypes#FORM" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="FORM(implicitcodec:&lt;?&gt;):String"></a>
-      <a id="FORM(Codec):String"></a>
+      <a id="FORM:String"></a>
+      <a id="FORM:String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">FORM</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">FORM</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@FORM(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
+      <a href="../../index.html#controllers.api.DayApiController@FORM:String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -1302,7 +1319,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">HTML</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">HTML</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@HTML(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
@@ -1540,7 +1557,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">JAVASCRIPT</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">JAVASCRIPT</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@JAVASCRIPT(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
@@ -1549,18 +1566,18 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ContentTypes</dd></dl></div>
     </li><li name="play.api.http.ContentTypes#JSON" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="JSON(implicitcodec:&lt;?&gt;):String"></a>
-      <a id="JSON(Codec):String"></a>
+      <a id="JSON:String"></a>
+      <a id="JSON:String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">JSON</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">JSON</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@JSON(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
+      <a href="../../index.html#controllers.api.DayApiController@JSON:String" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -2075,6 +2092,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Status</dd></dl></div>
+    </li><li name="play.api.http.Status#PERMANENT_REDIRECT" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="PERMANENT_REDIRECT:Int"></a>
+      <a id="PERMANENT_REDIRECT:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">PERMANENT_REDIRECT</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@PERMANENT_REDIRECT:Int" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Status</dd></dl></div>
     </li><li name="play.api.http.HeaderNames#PRAGMA" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="PRAGMA:String"></a>
       <a id="PRAGMA:String"></a>
@@ -2190,6 +2224,23 @@
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@PaymentRequired:Results.this.Status" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
+    </li><li name="play.api.mvc.Results#PermanentRedirect" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="PermanentRedirect(url:&lt;?&gt;):play.api.mvc.Result"></a>
+      <a id="PermanentRedirect(String):Result"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">PermanentRedirect</span><span class="params">(<span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Result">Result</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@PermanentRedirect(url:String):play.api.mvc.Result" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -2586,7 +2637,7 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
     </li><li name="play.api.mvc.Results#Status" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Status(code:&lt;?&gt;):Results.this.Status"></a>
+      <a id="Status(code:Int):Results.this.Status"></a>
       <a id="Status(Int):Status"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -2645,7 +2696,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">TEXT</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">TEXT</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@TEXT(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
@@ -2670,19 +2721,19 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Controller</dd></dl></div>
-    </li><li name="play.api.http.Status#TOO_MANY_REQUEST" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="TOO_MANY_REQUEST:Int"></a>
-      <a id="TOO_MANY_REQUEST:Int"></a>
+    </li><li name="play.api.http.Status#TOO_MANY_REQUESTS" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TOO_MANY_REQUESTS:Int"></a>
+      <a id="TOO_MANY_REQUESTS:Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">TOO_MANY_REQUEST</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">TOO_MANY_REQUESTS</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@TOO_MANY_REQUEST:Int" title="Permalink" target="_top">
+      <a href="../../index.html#controllers.api.DayApiController@TOO_MANY_REQUESTS:Int" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -2738,19 +2789,19 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
-    </li><li name="play.api.mvc.Results#TooManyRequest" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="TooManyRequest:Results.this.Status"></a>
-      <a id="TooManyRequest:Status"></a>
+    </li><li name="play.api.mvc.Results#TooManyRequests" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TooManyRequests:Results.this.Status"></a>
+      <a id="TooManyRequests:Status"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">TooManyRequest</span><span class="result">: <a href="#StatusextendsResult" class="extmbr" name="controllers.api.DayApiController.Status">Status</a></span>
+        <span class="name">TooManyRequests</span><span class="result">: <a href="#StatusextendsResult" class="extmbr" name="controllers.api.DayApiController.Status">Status</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@TooManyRequest:Results.this.Status" title="Permalink" target="_top">
+      <a href="../../index.html#controllers.api.DayApiController@TooManyRequests:Results.this.Status" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -2823,6 +2874,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>HeaderNames</dd></dl></div>
+    </li><li name="play.api.http.Status#UPGRADE_REQUIRED" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="UPGRADE_REQUIRED:Int"></a>
+      <a id="UPGRADE_REQUIRED:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">UPGRADE_REQUIRED</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@UPGRADE_REQUIRED:Int" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Status</dd></dl></div>
     </li><li name="play.api.http.HeaderNames#USER_AGENT" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="USER_AGENT:String"></a>
       <a id="USER_AGENT:String"></a>
@@ -3002,7 +3070,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">XML</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">XML</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@XML(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
@@ -3095,6 +3163,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>HeaderNames</dd></dl></div>
+    </li><li name="controllers.api.DayApiController#addAttendancesForChild" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="addAttendancesForChild(childId:be.thomastoye.speelsysteem.models.Child.Id,dayId:be.thomastoye.speelsysteem.models.Day.Id):play.api.mvc.Action[DayApiController.this.BindShiftIds]"></a>
+      <a id="addAttendancesForChild(Id,Id):Action[BindShiftIds]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addAttendancesForChild</span><span class="params">(<span name="childId">childId: <span class="extype" name="be.thomastoye.speelsysteem.models.Child.Id">Id</span></span>, <span name="dayId">dayId: <span class="extype" name="be.thomastoye.speelsysteem.models.Day.Id">Id</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<a href="DayApiController$BindShiftIds.html" class="extype" name="controllers.api.DayApiController.BindShiftIds">BindShiftIds</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@addAttendancesForChild(childId:be.thomastoye.speelsysteem.models.Child.Id,dayId:be.thomastoye.speelsysteem.models.Day.Id):play.api.mvc.Action[DayApiController.this.BindShiftIds]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="controllers.api.DayApiController#all" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="all:play.api.mvc.Action[play.api.mvc.AnyContent]"></a>
       <a id="all:Action[AnyContent]"></a>
@@ -3129,40 +3214,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="play.api.mvc.Results#chunk" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="chunk(trailers:&lt;?&gt;):play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]"></a>
-      <a id="chunk(Option[Iteratee[Array[Byte],Seq[(String,String)]]]):Enumeratee[Array[Byte],Array[Byte]]"></a>
+    </li><li name="controllers.api.DayApiController#bindShiftIdsReads" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bindShiftIdsReads:play.api.libs.json.Reads[DayApiController.this.BindShiftIds]"></a>
+      <a id="bindShiftIdsReads:Reads[BindShiftIds]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">chunk</span><span class="params">(<span name="trailers">trailers: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="play.api.libs.iteratee.Iteratee">Iteratee</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>], <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]]]</span>)</span><span class="result">: <span class="extype" name="play.api.libs.iteratee.Enumeratee">Enumeratee</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>], <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]]</span>
+        <span class="name">bindShiftIdsReads</span><span class="result">: <span class="extype" name="play.api.libs.json.Reads">Reads</span>[<a href="DayApiController$BindShiftIds.html" class="extype" name="controllers.api.DayApiController.BindShiftIds">BindShiftIds</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@chunk(trailers:Option[play.api.libs.iteratee.Iteratee[Array[Byte],Seq[(String,String)]]]):play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]" title="Permalink" target="_top">
+      <a href="../../index.html#controllers.api.DayApiController@bindShiftIdsReads:play.api.libs.json.Reads[DayApiController.this.BindShiftIds]" title="Permalink" target="_top">
         <img src="../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
-    </li><li name="play.api.mvc.Results#chunk" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="chunk:play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]"></a>
-      <a id="chunk:Enumeratee[Array[Byte],Array[Byte]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">chunk</span><span class="result">: <span class="extype" name="play.api.libs.iteratee.Enumeratee">Enumeratee</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>], <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@chunk:play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]" title="Permalink" target="_top">
-        <img src="../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -3186,40 +3254,6 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="play.api.mvc.Results#dechunk" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="dechunk:play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]"></a>
-      <a id="dechunk:Enumeratee[Array[Byte],Array[Byte]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">dechunk</span><span class="result">: <span class="extype" name="play.api.libs.iteratee.Enumeratee">Enumeratee</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>], <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>]]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@dechunk:play.api.libs.iteratee.Enumeratee[Array[Byte],Array[Byte]]" title="Permalink" target="_top">
-        <img src="../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
-    </li><li name="play.api.mvc.Results#dechunkWithTrailers" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="dechunkWithTrailers:play.api.libs.iteratee.Enumeratee[Array[Byte],Either[Array[Byte],Seq[(String,String)]]]"></a>
-      <a id="dechunkWithTrailers:Enumeratee[Array[Byte],Either[Array[Byte],Seq[(String,String)]]]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">dechunkWithTrailers</span><span class="result">: <span class="extype" name="play.api.libs.iteratee.Enumeratee">Enumeratee</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>], <span class="extype" name="scala.Either">Either</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Byte">Byte</span>], <span class="extype" name="scala.Seq">Seq</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]]]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../index.html#controllers.api.DayApiController@dechunkWithTrailers:play.api.libs.iteratee.Enumeratee[Array[Byte],Either[Array[Byte],Seq[(String,String)]]]" title="Permalink" target="_top">
-        <img src="../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -3277,6 +3311,23 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="controllers.api.DayApiController#getAttendancesForChild" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getAttendancesForChild(id:be.thomastoye.speelsysteem.models.Child.Id):play.api.mvc.Action[play.api.mvc.AnyContent]"></a>
+      <a id="getAttendancesForChild(Id):Action[AnyContent]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getAttendancesForChild</span><span class="params">(<span name="id">id: <span class="extype" name="be.thomastoye.speelsysteem.models.Child.Id">Id</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@getAttendancesForChild(id:be.thomastoye.speelsysteem.models.Child.Id):play.api.mvc.Action[play.api.mvc.AnyContent]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -3379,6 +3430,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="play.api.mvc.BodyParsers.parse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="parse"></a>
+      <a id="parse:parse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <span class="name">parse</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@parse" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>BodyParsers</dd></dl></div>
     </li><li name="play.api.mvc.Controller#request2flash" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="request2flash(implicitrequest:play.api.mvc.RequestHeader):play.api.mvc.Flash"></a>
       <a id="request2flash(RequestHeader):Flash"></a>
@@ -3542,7 +3610,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withCharset</span><span class="params">(<span name="mimeType">mimeType: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">withCharset</span><span class="params">(<span name="mimeType">mimeType: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="codec">codec: <span class="extype" name="play.api.mvc.Codec">Codec</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../index.html#controllers.api.DayApiController@withCharset(mimeType:String)(implicitcodec:play.api.mvc.Codec):String" title="Permalink" target="_top">
@@ -3555,7 +3623,50 @@
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="play.api.http.Status#TOO_MANY_REQUEST" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TOO_MANY_REQUEST:Int"></a>
+      <a id="TOO_MANY_REQUEST:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 3.0.0) Use TOO_MANY_REQUESTS instead">TOO_MANY_REQUEST</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@TOO_MANY_REQUEST:Int" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Status</dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 3.0.0)</i> Use TOO_MANY_REQUESTS instead</p></dd></dl></div>
+    </li><li name="play.api.mvc.Results#TooManyRequest" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="TooManyRequest:Results.this.Status"></a>
+      <a id="TooManyRequest:Status"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: (Since version 3.0.0) Use TooManyRequests instead">TooManyRequest</span><span class="result">: <a href="#StatusextendsResult" class="extmbr" name="controllers.api.DayApiController.Status">Status</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#controllers.api.DayApiController@TooManyRequest:Results.this.Status" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Results</dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 3.0.0)</i> Use TooManyRequests instead</p></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">
