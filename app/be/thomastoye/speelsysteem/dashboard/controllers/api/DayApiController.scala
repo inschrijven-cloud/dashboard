@@ -1,14 +1,14 @@
-package controllers.api
+package be.thomastoye.speelsysteem.dashboard.controllers.api
 
 import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.ChildRepository
 import be.thomastoye.speelsysteem.data.couchdb.CouchDayService
+import be.thomastoye.speelsysteem.models.JsonFormats.{dayFormat, dayWithIdWrites}
 import be.thomastoye.speelsysteem.models.{Child, Day, Shift}
-import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.Json
-import be.thomastoye.speelsysteem.models.JsonFormats.{dayFormat, dayWithIdWrites}
+import play.api.mvc._
 
 class DayApiController @Inject() (couchDayService: CouchDayService, childRepository: ChildRepository) extends Controller {
   case class BindShiftIds(shiftIds: Seq[Shift.Id])

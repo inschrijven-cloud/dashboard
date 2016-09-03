@@ -1,4 +1,4 @@
-package controllers
+package be.thomastoye.speelsysteem.dashboard.controllers
 
 import play.api.libs.json.Json
 import play.api.mvc._
