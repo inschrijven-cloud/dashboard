@@ -35,7 +35,7 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
      .byTypeUsingTemporaryView(MappedDocType(dayKind))
      .includeDocs[Day].build.query.toFuture
      .map(res => res.getDocs.map(doc => (doc._id, doc.doc)))
-     .map(_.sortBy(x => x._2.date))
+     .map(_.sortBy(x => x._2.date).reverse)
   }
 
   def findAttendancesForChild(id: Child.Id): Future[Seq[Day]] = {
