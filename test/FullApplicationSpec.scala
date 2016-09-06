@@ -1,7 +1,4 @@
-import be.thomastoye.speelsysteem.data.couchdb.CouchDatabase
-import com.google.inject.AbstractModule
-import com.ibm.couchdb.CouchDbApi
-
+import helpers.StubCouchDatabaseModule
 import org.scalatestplus.play._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -10,19 +7,8 @@ import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
 
-class StubCouchDatabase extends CouchDatabase {
-  override val db: CouchDbApi = null
-}
-
-class StubCouchDatabaseModule extends AbstractModule {
-  override def configure() = {
-    bind(classOf[CouchDatabase]).to(classOf[StubCouchDatabase])
-  }
-}
 
 class FullApplicationSpec extends PlaySpec with OneServerPerSuite with Results {
-
-  // Override app if you need a Application with other than default parameters.
   implicit override lazy val app = GuiceApplicationBuilder(overrides = Seq(new StubCouchDatabaseModule())).build()
 
   "Starting the app" must {
