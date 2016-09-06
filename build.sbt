@@ -16,7 +16,7 @@ lazy val root = (project in file("."))
 
 scalaVersion := "2.11.8"
 
-coverageEnabled := true
+coverageEnabled in Test := true
 
 libraryDependencies ++= Seq(
   filters,
