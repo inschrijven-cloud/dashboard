@@ -15,7 +15,7 @@ class PlayJsonReaderUpickleCompat[T](implicit reads: Reads[T]) extends Reader[T]
         case JsSuccess(res, path) => res
         case JsError(errors) =>
           logger.error(s"""Errors encountered while parsing JSON\n offending JSON: $render\n errors: ${errors.mkString(", ")}""")
-          throw new Exception()
+          throw new Exception(s"""Errors encountered while parsing JSON\. Offending JSON: $render, errors: ${errors.mkString(", ")}""")
       }
   }
 }
