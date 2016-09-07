@@ -51,4 +51,6 @@ case class Shift(
   startAndEnd: Option[StartAndEndTime]
 )
 
-case class StartAndEndTime(start: Instant, end: Instant)
+case class RelativeTime(hour: Int, minute: Int)
+
+case class StartAndEndTime(start: RelativeTime, end: RelativeTime)

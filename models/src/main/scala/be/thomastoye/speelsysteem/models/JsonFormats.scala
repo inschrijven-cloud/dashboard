@@ -10,6 +10,7 @@ object JsonFormats {
   val emptyJsonObject = Json.obj()
 
   implicit val attendanceFormat = Json.format[Attendance]
+  implicit val relativeTimeFormat = Json.format[RelativeTime]
   implicit val addressFormat = Json.format[Address]
   implicit val phoneContactFormat = Json.format[PhoneContact]
   implicit val crewContactFormat = Json.format[ContactInfo]
