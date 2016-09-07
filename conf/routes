@@ -12,7 +12,7 @@ GET         /api/v1/day                                      be.thomastoye.speel
 GET         /api/v1/child                                    be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.all
 POST        /api/v1/child                                    be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.create
 GET         /api/v1/child/:id/attendances                    be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.getAttendancesForChild(id)
-GET         /api/v1/child/:childId/attendances/:dayId        be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.addAttendancesForChild(childId, dayId)
+POST        /api/v1/child/:childId/attendances/:dayId        be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.addAttendancesForChild(childId, dayId)
 
 ### Assets
 
