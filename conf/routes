@@ -14,6 +14,10 @@ POST        /api/v1/child                                    be.thomastoye.speel
 GET         /api/v1/child/:id/attendances                    be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.getAttendancesForChild(id)
 POST        /api/v1/child/:childId/attendances/:dayId        be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.addAttendancesForChild(childId, dayId)
 
+# File API
+
+GET         /api/v1/files/fiscalCertificates/:year           be.thomastoye.speelsysteem.dashboard.controllers.api.FileController.downloadFiscalCertificates(year: Int)
+
 ### Assets
 
 # Map static resources from the /public folder to the /assets URL path

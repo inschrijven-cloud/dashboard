@@ -20,6 +20,7 @@ coverageEnabled in Test := true
 
 libraryDependencies ++= Seq(
   filters,
+  "com.norbitltd" % "spoiwo" % "1.0.3",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"
 )
 
