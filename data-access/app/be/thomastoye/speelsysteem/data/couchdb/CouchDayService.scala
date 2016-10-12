@@ -24,21 +24,21 @@ object CouchDayService extends StrictLogging {
   implicit val dayWriter: Writer[Day] = new PlayJsonWriterUpickleCompat[Day]
 }
 
-class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLogging {
+class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLogging with DayService {
   import CouchDayService._
 
   val db = couchDatabase.db
 
 
-  def findAll: Future[Seq[(Id, Day)]] = {
-   db.docs.getMany
-     .byTypeUsingTemporaryView(MappedDocType(dayKind))
-     .includeDocs[Day].build.query.toFuture
-     .map(res => res.getDocs.map(doc => (doc._id, doc.doc)))
-     .map(_.sortBy(x => x._2.date).reverse)
+  override def findAll: Future[Seq[(Id, Day)]] = {
+    db.docs.getMany
+      .byTypeUsingTemporaryView(MappedDocType(dayKind))
+      .includeDocs[Day].build.query.toFuture
+      .map(res => res.getDocs.map(doc => (doc._id, doc.doc)))
+      .map(_.sortBy(x => x._2.date).reverse)
   }
 
-  def findAttendancesForChild(id: Child.Id): Future[Seq[Day]] = {
+  override def findAttendancesForChild(id: Child.Id): Future[Seq[Day]] = {
     db.docs.get[Child](id)(CouchChildRepository.childReader).toFuture.map(_.doc).flatMap(findAttendancesForChild)
   }
 
@@ -56,4 +56,5 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
       }
     }
   }
+
 }
