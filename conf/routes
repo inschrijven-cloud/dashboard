@@ -6,6 +6,8 @@ GET         /heartbeat                                       be.thomastoye.speel
 # Day API
 
 GET         /api/v1/day                                      be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.all
+GET         /api/v1/day/attendances/child                    be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.numberOfChildAttendances
+
 
 # Child API
 
