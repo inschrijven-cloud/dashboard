@@ -1,7 +1,6 @@
-package be.thomastoye.speelsysteem.data.couchdb
+package be.thomastoye.speelsysteem.data
 
 import be.thomastoye.speelsysteem.models.Child.Id
-import be.thomastoye.speelsysteem.models.Day._
 import be.thomastoye.speelsysteem.models.{Child, Day, Shift}
 import play.api.libs.concurrent.Execution.Implicits._
 

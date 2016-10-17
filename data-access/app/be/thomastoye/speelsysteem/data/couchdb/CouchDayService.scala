@@ -2,7 +2,7 @@ package be.thomastoye.speelsysteem.data.couchdb
 
 import javax.inject.Inject
 
-import be.thomastoye.speelsysteem.data.{PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat}
+import be.thomastoye.speelsysteem.data.{DayService, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat}
 import com.typesafe.scalalogging.StrictLogging
 import upickle.default.{Reader, Writer}
 import be.thomastoye.speelsysteem.models._

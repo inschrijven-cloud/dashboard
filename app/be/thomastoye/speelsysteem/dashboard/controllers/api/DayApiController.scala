@@ -2,8 +2,7 @@ package be.thomastoye.speelsysteem.dashboard.controllers.api
 
 import javax.inject.Inject
 
-import be.thomastoye.speelsysteem.data.ChildRepository
-import be.thomastoye.speelsysteem.data.couchdb.DayService
+import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
 import be.thomastoye.speelsysteem.models.JsonFormats.{dayFormat, dayWithIdWrites}
 import be.thomastoye.speelsysteem.models.Shift.Id
 import be.thomastoye.speelsysteem.models.{Child, Day, Shift}

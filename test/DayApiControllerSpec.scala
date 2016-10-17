@@ -1,6 +1,5 @@
 import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
-import be.thomastoye.speelsysteem.data.ChildRepository
-import be.thomastoye.speelsysteem.data.couchdb.DayService
+import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
 import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
 import be.thomastoye.speelsysteem.models.{Shift, _}
 

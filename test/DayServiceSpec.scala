@@ -1,4 +1,5 @@
-import be.thomastoye.speelsysteem.data.couchdb.{CouchDayService, DayService}
+import be.thomastoye.speelsysteem.data.DayService
+import be.thomastoye.speelsysteem.data.couchdb.CouchDayService
 import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models._
 

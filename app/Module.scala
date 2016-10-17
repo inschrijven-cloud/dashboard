@@ -1,6 +1,6 @@
 import be.thomastoye.speelsysteem.data.couchdb._
 import be.thomastoye.speelsysteem.data.util.{UuidService, UuidServiceImpl}
-import be.thomastoye.speelsysteem.data.{ChildRepository, CrewRepository}
+import be.thomastoye.speelsysteem.data.{ChildRepository, CrewRepository, DayService}
 import com.google.inject.AbstractModule
 
 class Module extends AbstractModule {
