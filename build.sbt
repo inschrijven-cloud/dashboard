@@ -30,7 +30,8 @@ lazy val models = project
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-json" % "2.5.6"
+      "com.typesafe.play" %% "play-json" % "2.5.6",
+      "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     )
   )
 
