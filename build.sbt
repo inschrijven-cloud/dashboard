@@ -31,6 +31,7 @@ lazy val models = project
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-json" % "2.5.6",
+
       "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     )
   )
@@ -41,7 +42,9 @@ lazy val dataAccess = Project("data-access", file("data-access"))
   .settings(
     libraryDependencies ++= Seq(
       "com.ibm" %% "couchdb-scala" % "0.7.2",
-      "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
+
+      "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     )
   )
   .dependsOn(models)
