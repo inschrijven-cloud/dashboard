@@ -13,9 +13,14 @@ class DayDateSpec extends WordSpec with Matchers {
   }
 
   "DayDate#toString" should {
-    "work" in {
+    "work for 01/02/2003" in {
       val day = DayDate(1, 2, 2003)
       day.toString should be("2003-02-01")
+    }
+
+    "work for 29/03/2003" in {
+      val day = DayDate(29, 3, 2003)
+      day.toString should be("2003-03-29")
     }
   }
 

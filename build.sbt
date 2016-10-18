@@ -20,7 +20,6 @@ coverageEnabled in Test := true
 
 libraryDependencies ++= Seq(
   filters,
-  "com.norbitltd" % "spoiwo" % "1.0.3",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"
 )
 
@@ -43,6 +42,7 @@ lazy val dataAccess = Project("data-access", file("data-access"))
     libraryDependencies ++= Seq(
       "com.ibm" %% "couchdb-scala" % "0.7.2",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
+      "com.norbitltd" % "spoiwo" % "1.0.3",
 
       "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     )
