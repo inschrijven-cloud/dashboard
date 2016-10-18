@@ -5,7 +5,8 @@ name := "speelsysteem-dashboard"
 
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
-  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
+  coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;"""
 )
 
 lazy val root = (project in file("."))
