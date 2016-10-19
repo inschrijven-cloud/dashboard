@@ -9,7 +9,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
 import com.typesafe.scalalogging.StrictLogging
 
-class FileController @Inject()(fiscalCertificateService: FiscalCertificateService) extends Controller with StrictLogging {
+class ReportController @Inject()(fiscalCertificateService: FiscalCertificateService) extends Controller with StrictLogging {
 
   def downloadFiscalCertificates(year: Int) = Action.async {
    fiscalCertificateService.getFiscalCertificateSheet(year) map { sheet =>
@@ -19,5 +19,11 @@ class FileController @Inject()(fiscalCertificateService: FiscalCertificateServic
       Ok.sendFile(file, fileName = _ => "fiscale-attesten.xlsx")
     }
   }
+
+  def downloadFiscalCertificateForChild(year: Int, childId: String) = TODO
+
+  def downloadCompensation(year: Int) = TODO
+
+  def downloadCompensationForCrew(year: Int, crewId: String) = TODO
 
 }

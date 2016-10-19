@@ -3,58 +3,83 @@
 [![Coverage Status](https://coveralls.io/repos/github/speelsysteem/dashboard/badge.svg?branch=master)](https://coveralls.io/github/speelsysteem/dashboard?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0927605b06c24469a5f89efc85f86a91)](https://www.codacy.com/app/toye-thomas/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=speelsysteem/dashboard&amp;utm_campaign=Badge_Grade)
 
-This is the system that will power Speelplein De Speelberg. Since it's created for a Dutch audience and at the moment is too specific to be helpful for others, instructions will be given only in Dutch.
+This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's a Play 2 layer over a CouchDB database.
 
-## Doelen
+## Functionality
 
-### Minimum
+### Child API
 
-- [x] Een animator moet nieuwe kinderen kunnen toevoegen
-- [x] Een animator moet bestaande kinderen kunnen wijzigen
-- [ ] Een animator moet bestaande kinderen kunnen verwijderen
-- [x] Een animator moet nieuwe animatoren kunnen toevoegen
-- [x] Een animator moet bestaande animatoren kunnen wijzigen
-- [ ] Een animator moet bestaande animatoren kunnen verwijderen
+| Implemented | Description                       | Endpoint                               |
+|-------------|-----------------------------------|----------------------------------------|
+|             | Create new child                  | `POST /api/v1/child`                   |
+|             | Retrieve all children             | `GET /api/v1/child`                    |
+|             | Retrieve a child by id            | `GET /api/v1/child/:id`                |
+|             | Update child                      | `PUT /api/v1/child`                    |
+|             | Delete child                      | `DELETE /api/v1/child/:id`             |
 
-### Dagdelen
 
-- [x] Een animator moet een nieuw dagdeel kunnen aanmaken met een bepaald type (voormiddag, middag, namiddag)
-- [x] Een animator moet een externe activiteit kunnen aanmaken
-- [x] Een animator moet een bestaand dagdeel kunnen wijzigen
-- [x] Een animator moet kunnen zien hoeveel kinderen er aanwezig waren tijdens een bepaald dagdeel
-- [x] Een animator moet kunnen zien welke kinderen er aanwezig waren tijdens een bepaald dagdeel
-- [ ] De lijst met alle dagdelen moet gesorteerd worden per dag, dan per type, en gegroepeerd per dag
+### Crew API
 
-### Aanwezigheden kinderen
+| Implemented | Description                       | Endpoint                               |
+|-------------|-----------------------------------|----------------------------------------|
+|             | Create new crew member            | `POST /api/v1/crew`                    |
+|             | Retrieve all crew members         | `GET /api/v1/crew`                     |
+|             | Retrieve a crew member by id      | `GET /api/v1/crew/:id`                 |
+|             | Update crew member                | `PUT /api/v1/crew`                     |
+|             | Delete crew member                | `DELETE /api/v1/crew`                  |
 
-- [x] Een animator moet kinderen kunnen opgeven als aanwezig voor een dagdeel
-- [x] Een animator moet kunnen zien op welke dagdelen een kind aanwezig was
-- [ ] Een animator moet een fiscale fiche kunnen maken voor een kind, waarop staat wanneer het kind aanwezig was en hoeveel het betaald heeft in totaal
-- [x] Een animator moet kunnen aanpassen op welke dagdelen een kind aanwezig was
-- [ ] Een animator moet een kind kunnen verwijderen
-- 
-### Aanwezigheden animatoren
 
-- [ ] De verantwoordelijke van de dag moet animatoren kunnen opgeven als aanwezig voor een dagdeel
-- [ ] De verantwoordelijke van de dag moet kunnen zien op welke dagdelen een animator aanwezig was
-- [ ] De financieel verantwoordelijke moet een loonfiche kunnen maken voor een animator, waarop staat wanneer de animator aanwezig was, welk attest hij/zij heeft en hoeveel hij/zij betaald zal worden
-- [ ] De verantwoordelijke van de dag moet kunnen aanpassen op welke dagdelen een animator aanwezig was
-- [ ] De verantwoordelijke van de dag moet een animator kunnen verwijderen
+### Day and shift api
 
-### Medische fiches
+| Implemented | Description                                        | Endpoint                               |
+|-------------|----------------------------------------------------|----------------------------------------|
+|             | Create day                                         | `POST /api/v1/day`                     |
+|             | Create shift on a day                              |  |
+|             | Retrieve all days                                  | `GET /api/v1/day`                      |
+|             | Retrieve all shifts on a day                       |  |
+|             | Retrieve a day by  id                              | `GET /api/v1/day/:id`                  |
+|             | Update a day                                       | `PUT /api/v1/day`                      |
+|             | Update shift of a day                              |  |
 
-- [x] Een animator moet kunnen zien of de medische fiche van een kind in orde is
-- [x] Een animator moet kunnen veranderen of de medische fiche van een kind in orde is
-- [x] Een animator moet kunnen zien wanneer de medische fiche van een kind laatst is nagekeken
-- [ ] Een animator moet de medische fiche op de computer kunnen invullen en aanpassen
 
-### Export
+### Attendance API
 
-- [ ] De lijst van alle kinderen, met hun details en al hun aanwezigheden moet naar excel kunnen worden ge-exporteerd
+#### Child attendance API
 
-## Development notes
+| Implemented | Description                                        | Endpoint                                           |
+|-------------|----------------------------------------------------|----------------------------------------------------|
+|             | Number of child attendances on a day per shift     | `GET /api/v1/day/attendances/child`                |
+|             | Retrieve children on a day per shift               | `GET /api/v1/day/:id/attendances/child`            |
+|             | Create attendance for a child                      | `POST /api/v1/child/:childId/attendances/:dayId`   |
+|             | Delete attandance for a child                      | `DELETE /api/v1/child/:childId/attendances/:dayId` |
+|             | Retrieve attended days with shifts for child       | `GET /api/v1/child/:id/attendances`                |
 
-- `~run` to watch source files and recompile on changes
-- Default address and port during development are http://localhost:9000
-- Postgres is used as the database in production, and H2 locally for development
 
+#### Crew attendance API
+
+
+| Implemented | Description                                        | Endpoint                                         |
+|-------------|----------------------------------------------------|--------------------------------------------------|
+|             | Retrieve crew members on a day per shift           | |
+|             | Create attendance for a crew member                | |
+|             | Delete attendance for a crew member                | |
+|             | Number of crew attendances on a day per shift      | |
+|             | Retrieve attended days with shifts for crew member | |
+
+
+### Report API
+
+| Implemented | Description                                       | Endpoint                                         |
+|-------------|---------------------------------------------------|--------------------------------------------------|
+|             | Generate fiscal certificate data                  | `GET /api/v1/files/fiscalCertificate/:year`      |
+|             | Generate fiscal certificate for a child           | `/api/v1/files/fiscalCertificate/:year/:childId` |
+|             | Generate compensation certificate data            | `GET /api/v1/files/compensation/:year`           |
+|             | Generate compensation certificate for a volunteer | `GET /api/v1/files/compensation/:year/:crewId`   |
+
+
+### Export API
+
+| Implemented | Description                              | Endpoint                               |
+|-------------|------------------------------------------|----------------------------------------|
+|             | List of children                         | `GET /api/v1/files/export/children`    |
+|             | List of crew members                     | `GET /api/v1/files/export/crew`        |

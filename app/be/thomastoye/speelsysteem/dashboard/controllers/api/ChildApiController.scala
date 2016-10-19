@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.ChildRepository
 import be.thomastoye.speelsysteem.data.util.UuidService
-import be.thomastoye.speelsysteem.models.JsonFormats
+import be.thomastoye.speelsysteem.models.{Child, JsonFormats}
 import be.thomastoye.speelsysteem.models.JsonFormats.childWithIdWrites
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.Json
@@ -17,4 +17,10 @@ class ChildApiController @Inject() (childRepository: ChildRepository, uuidServic
   def create = Action.async(BodyParsers.parse.json(JsonFormats.childFormat)) { req =>
     childRepository.insert(uuidService.random, req.body).map(created)
   }
+
+  def getById(id: Child.Id) = TODO
+
+  def update = TODO
+
+  def delete(id: Child.Id) = TODO
 }
