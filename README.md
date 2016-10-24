@@ -14,7 +14,7 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 | X           | Create new child                  | `POST /api/v1/child`                   |
 | X           | Retrieve all children             | `GET /api/v1/child`                    |
 | X           | Retrieve a child by id            | `GET /api/v1/child/:id`                |
-|             | Update child                      | `PUT /api/v1/child/:id`                |
+| X           | Update child                      | `PUT /api/v1/child/:id`                |
 | X           | Delete child                      | `DELETE /api/v1/child/:id`             |
 
 
