@@ -26,7 +26,9 @@ class ChildApiController @Inject() (childRepository: ChildRepository, uuidServic
     }
   }
 
-  def update = TODO
+  def update(id: Child.Id) = Action.async(parse.json(childFormat)) { childReq =>
+    childRepository.update(id, childReq.body).map(_ => Ok)
+  }
 
   def delete(id: Child.Id) = Action.async { req =>
     childRepository.delete(id).map(_ => Ok)

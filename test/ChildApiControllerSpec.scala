@@ -8,7 +8,7 @@ import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.models.Shift.Id
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.Results
+import play.api.mvc.{AnyContentAsJson, Request, Results}
 import play.api.libs.json.Json
 import play.api.test._
 import play.api.test.Helpers._
@@ -103,7 +103,20 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val controller = new ChildApiController(childRepo, uuidService)
 
-      status(controller.delete("the-id-to-delete").apply(FakeRequest())) mustBe 200
+      status(controller.delete("the-id-to-delete").apply(FakeRequest())) mustBe OK
+    }
+  }
+
+  "ChildApiController#update" should {
+    "update a child" in {
+      val childRepo = mock[ChildRepository]
+      val child = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty)
+
+      (childRepo.update _).expects("the-id-to-update", child).returning(Future.successful(())).once()
+      val controller = new ChildApiController(childRepo, mock[UuidService])
+
+      val body: FakeRequest[Child] = FakeRequest().withBody[Child](child)
+      status(controller.update("the-id-to-update").apply(body)) mustBe OK
     }
   }
 }
