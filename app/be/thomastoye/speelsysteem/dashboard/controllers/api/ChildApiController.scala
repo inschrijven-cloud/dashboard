@@ -12,7 +12,9 @@ import play.api.mvc._
 
 class ChildApiController @Inject() (childRepository: ChildRepository, uuidService: UuidService) extends ApiController {
 
-  def all = Action.async { req => childRepository.findAll.map(all => Ok(Json.toJson(all))) }
+  def all = Action.async { req =>
+    childRepository.findAll.map(all => Ok(Json.toJson(all)))
+  }
 
   def create = Action.async(BodyParsers.parse.json(JsonFormats.childFormat)) { req =>
     childRepository.insert(uuidService.random, req.body).map(created)
@@ -26,5 +28,7 @@ class ChildApiController @Inject() (childRepository: ChildRepository, uuidServic
 
   def update = TODO
 
-  def delete(id: Child.Id) = TODO
+  def delete(id: Child.Id) = Action.async { req =>
+    childRepository.delete(id).map(_ => Ok)
+  }
 }

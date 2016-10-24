@@ -1,5 +1,6 @@
 import be.thomastoye.speelsysteem.dashboard.controllers.api.ChildAttendanceApiController
 import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
+import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
 import be.thomastoye.speelsysteem.models.{Shift, _}
 
@@ -48,6 +49,8 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results {
               Seq(Attendance("2016-11-25", Seq("shift1", "shift2")), Attendance("2016-02-01", Seq("shift3"))))
             )
         ))
+
+        override def delete(id: Id): Future[Unit] = ???
       }
 
       val controller = new ChildAttendanceApiController(childRepoStub, dayServiceStub)

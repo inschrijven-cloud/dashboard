@@ -21,7 +21,8 @@ coverageEnabled in Test := true
 
 libraryDependencies ++= Seq(
   filters,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test"
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test",
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
 )
 
 routesGenerator := InjectedRoutesGenerator

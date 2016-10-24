@@ -1,4 +1,5 @@
 import be.thomastoye.speelsysteem.data.{ChildRepository, DayService, FiscalCertificateService}
+import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import be.thomastoye.speelsysteem.models._
 import com.norbitltd.spoiwo.model._
@@ -18,6 +19,7 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
         override def insert(id: Child.Id, child: Child): Future[Child.Id] = ???
         override def findById(id: Child.Id): Future[Option[(Child.Id, Child)]] = ???
         override def findAll: Future[Seq[(Child.Id, Child)]] = Future.successful(Seq.empty)
+        override def delete(id: Id): Future[Unit] = ???
       }
 
       val dayService = new DayService {
@@ -88,6 +90,7 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
         override def insert(id: Child.Id, child: Child): Future[Child.Id] = ???
         override def findById(id: Child.Id): Future[Option[(Child.Id, Child)]] = ???
         override def findAll: Future[Seq[(Child.Id, Child)]] = Future.successful(children)
+        override def delete(id: Id): Future[Unit] = ???
       }
 
       val dayService = new DayService {
@@ -211,6 +214,7 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
         override def insert(id: Child.Id, child: Child): Future[Child.Id] = ???
         override def findById(id: Child.Id): Future[Option[(Child.Id, Child)]] = ???
         override def findAll: Future[Seq[(Child.Id, Child)]] = Future.successful(children)
+        override def delete(id: Id): Future[Unit] = ???
       }
 
       val dayService = new DayService {

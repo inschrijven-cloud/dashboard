@@ -63,6 +63,8 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
     }
   }
 
+  override def delete(id: Id): Future[Unit] = ???
+
   private def addShifts(child: Child, dayId: Id, shifts: Seq[Id]) = {
     val newAttendance = child.attendances
       .find(_.day == dayId).map(att => Attendance(att.day, (att.shifts ++ shifts).distinct))

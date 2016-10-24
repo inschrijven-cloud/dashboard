@@ -18,4 +18,6 @@ trait ChildRepository {
   def update(id: Id, child: Child): Future[Unit]
 
   def addAttendancesForChild(id: Id, dayId: Day.Id, shifts: Seq[Shift.Id]): Future[Option[Unit]] // TODO should be Try
+
+  def delete(id: Id): Future[Unit] // TODO Correct? What do we want when id does not exist?
 }

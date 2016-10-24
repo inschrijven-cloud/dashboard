@@ -1,5 +1,6 @@
 import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
 import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
+import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
 import be.thomastoye.speelsysteem.models._
 
@@ -26,6 +27,7 @@ class DayApiControllerSpec extends PlaySpec with Results {
         override def insert(id: Id, child: Child): Future[Id] = ???
         override def findById(id: Id): Future[Option[(Id, Child)]] = ???
         override def findAll: Future[Seq[(Id, Child)]] = ???
+        override def delete(id: Id): Future[Unit] = ???
       }
 
       val controller = new DayApiController(dayServiceStub, childRepoStub)
@@ -61,6 +63,7 @@ class DayApiControllerSpec extends PlaySpec with Results {
         override def insert(id: Id, child: Child): Future[Id] = ???
         override def findById(id: Id): Future[Option[(Id, Child)]] = ???
         override def findAll: Future[Seq[(Id, Child)]] = ???
+        override def delete(id: Id): Future[Unit] = ???
       }
 
       val controller = new DayApiController(dayServiceStub, childRepoStub)
