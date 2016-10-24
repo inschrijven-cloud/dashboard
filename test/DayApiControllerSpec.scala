@@ -1,7 +1,7 @@
-import be.thomastoye.speelsysteem.dashboard.controllers.api.{ChildAttendanceApiController$, DayApiController}
+import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
 import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
 import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
-import be.thomastoye.speelsysteem.models.{Shift, _}
+import be.thomastoye.speelsysteem.models._
 
 import scala.concurrent.Future
 import org.scalatestplus.play._
