@@ -11,6 +11,7 @@ import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc._
 
 class DayApiController @Inject() (dayService: DayService, childRepository: ChildRepository) extends ApiController {
+
   def all = Action.async { req => dayService.findAll.map(days => Ok(Json.toJson(days))) }
 
   def create = TODO

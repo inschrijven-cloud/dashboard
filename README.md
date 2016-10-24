@@ -11,8 +11,8 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 
 | Implemented | Description                       | Endpoint                               |
 |-------------|-----------------------------------|----------------------------------------|
-|             | Create new child                  | `POST /api/v1/child`                   |
-|             | Retrieve all children             | `GET /api/v1/child`                    |
+| X           | Create new child                  | `POST /api/v1/child`                   |
+| X           | Retrieve all children             | `GET /api/v1/child`                    |
 |             | Retrieve a child by id            | `GET /api/v1/child/:id`                |
 |             | Update child                      | `PUT /api/v1/child`                    |
 |             | Delete child                      | `DELETE /api/v1/child/:id`             |
@@ -35,7 +35,7 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 |-------------|----------------------------------------------------|----------------------------------------|
 |             | Create day                                         | `POST /api/v1/day`                     |
 |             | Create shift on a day                              |  |
-|             | Retrieve all days                                  | `GET /api/v1/day`                      |
+| X           | Retrieve all days                                  | `GET /api/v1/day`                      |
 |             | Retrieve all shifts on a day                       |  |
 |             | Retrieve a day by  id                              | `GET /api/v1/day/:id`                  |
 |             | Update a day                                       | `PUT /api/v1/day`                      |
@@ -48,11 +48,11 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 
 | Implemented | Description                                        | Endpoint                                           |
 |-------------|----------------------------------------------------|----------------------------------------------------|
-|             | Number of child attendances on a day per shift     | `GET /api/v1/day/attendances/child`                |
+| X           | Number of child attendances on a day per shift     | `GET /api/v1/day/attendances/child`                |
 |             | Retrieve children on a day per shift               | `GET /api/v1/day/:id/attendances/child`            |
-|             | Create attendance for a child                      | `POST /api/v1/child/:childId/attendances/:dayId`   |
+| X           | Create attendance for a child                      | `POST /api/v1/child/:childId/attendances/:dayId`   |
 |             | Delete attandance for a child                      | `DELETE /api/v1/child/:childId/attendances/:dayId` |
-|             | Retrieve attended days with shifts for child       | `GET /api/v1/child/:id/attendances`                |
+| X           | Retrieve attended days with shifts for child       | `GET /api/v1/child/:id/attendances`                |
 
 
 #### Crew attendance API
@@ -69,12 +69,12 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 
 ### Report API
 
-| Implemented | Description                                       | Endpoint                                         |
-|-------------|---------------------------------------------------|--------------------------------------------------|
-|             | Generate fiscal certificate data                  | `GET /api/v1/files/fiscalCertificate/:year`      |
-|             | Generate fiscal certificate for a child           | `/api/v1/files/fiscalCertificate/:year/:childId` |
-|             | Generate compensation certificate data            | `GET /api/v1/files/compensation/:year`           |
-|             | Generate compensation certificate for a volunteer | `GET /api/v1/files/compensation/:year/:crewId`   |
+| Implemented | Description                                       | Endpoint                                             |
+|-------------|---------------------------------------------------|------------------------------------------------------|
+| X           | Generate fiscal certificate data                  | `GET /api/v1/files/fiscalCertificate/:year`          |
+|             | Generate fiscal certificate for a child           | `GET /api/v1/files/fiscalCertificate/:year/:childId` |
+|             | Generate compensation certificate data            | `GET /api/v1/files/compensation/:year`               |
+|             | Generate compensation certificate for a volunteer | `GET /api/v1/files/compensation/:year/:crewId`       |
 
 
 ### Export API
@@ -83,3 +83,4 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 |-------------|------------------------------------------|----------------------------------------|
 |             | List of children                         | `GET /api/v1/files/export/children`    |
 |             | List of crew members                     | `GET /api/v1/files/export/crew`        |
+|             | List of children with medical conditions |                                        |
