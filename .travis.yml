@@ -10,4 +10,5 @@ script:
     sbt coverageAggregate
 after_success:
   - sbt coveralls
+  - sbt codacyCoverage
 
