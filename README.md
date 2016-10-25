@@ -33,12 +33,12 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 
 | Implemented | Description                                        | Endpoint                               |
 |-------------|----------------------------------------------------|----------------------------------------|
-|             | Create day                                         | `POST /api/v1/day`                     |
+| X           | Create day                                         | `POST /api/v1/day`                     |
 |             | Create shift on a day                              |  |
 | X           | Retrieve all days                                  | `GET /api/v1/day`                      |
 |             | Retrieve all shifts on a day                       |  |
-|             | Retrieve a day by  id                              | `GET /api/v1/day/:id`                  |
-|             | Update a day                                       | `PUT /api/v1/day`                      |
+| X           | Retrieve a day by  id                              | `GET /api/v1/day/:id`                  |
+| X           | Update a day                                       | `PUT /api/v1/day`                      |
 |             | Update shift of a day                              |  |
 
 
