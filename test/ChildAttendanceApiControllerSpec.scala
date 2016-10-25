@@ -4,6 +4,7 @@ import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
 import be.thomastoye.speelsysteem.models.{Shift, _}
 import helpers.UnimplementedDayService
+import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future
 import org.scalatestplus.play._
@@ -12,9 +13,11 @@ import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
 
-class ChildAttendanceApiControllerSpec extends PlaySpec with Results {
+class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFactory {
   "ChildAttendanceApiController#numberOfChildAttendances" should {
     "return a list with days and the number of children attending each shift" in {
+
+      // Currently can't be mocked, relies on functionality in the trait
       val dayServiceStub = new UnimplementedDayService {
         def shift: (String => Shift) = Shift(_, Price(2,0), true, true, ShiftKind.Afternoon, None, None, None)
 
@@ -32,27 +35,21 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results {
         )
       }
 
-      val childRepoStub = new ChildRepository {
-        override def addAttendancesForChild(id: Id, dayId: Id, shifts: Seq[Id]): Future[Option[Unit]] = ???
-        override def count: Future[Port] = ???
-        override def update(id: Id, child: Child): Future[Unit] = ???
-        override def insert(id: Id, child: Child): Future[Id] = ???
-        override def findById(id: Id): Future[Option[(Id, Child)]] = ???
-        override def findAll: Future[Seq[(Id, Child)]] = Future.successful(Seq(
-          ("child1",
-            Child("aoeu1", "snth", Address(), ContactInfo(Seq.empty, Seq.empty), None,
-              Seq(Attendance("2016-11-25", Seq("shift1"))))
-            ),
-          ("child2",
-            Child("aoeu2", "snth", Address(), ContactInfo(Seq.empty, Seq.empty), None,
-              Seq(Attendance("2016-11-25", Seq("shift1", "shift2")), Attendance("2016-02-01", Seq("shift3"))))
-            )
-        ))
+      val childRepo = mock[ChildRepository]
 
-        override def delete(id: Id): Future[Unit] = ???
-      }
+      (childRepo.findAll _).expects().returning(Future.successful(Seq(
+        ("child1",
+          Child("aoeu1", "snth", Address(), ContactInfo(Seq.empty, Seq.empty), None,
+            Seq(Attendance("2016-11-25", Seq("shift1"))))
+          ),
+        ("child2",
+          Child("aoeu2", "snth", Address(), ContactInfo(Seq.empty, Seq.empty), None,
+            Seq(Attendance("2016-11-25", Seq("shift1", "shift2")), Attendance("2016-02-01", Seq("shift3"))))
+          )
+      ))).once()
 
-      val controller = new ChildAttendanceApiController(childRepoStub, dayServiceStub)
+
+      val controller = new ChildAttendanceApiController(childRepo, dayServiceStub)
 
       val body = contentAsJson(controller.numberOfChildAttendances.apply(FakeRequest()))
 

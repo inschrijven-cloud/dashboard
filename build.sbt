@@ -46,7 +46,8 @@ lazy val dataAccess = Project("data-access", file("data-access"))
       "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
       "com.norbitltd" % "spoiwo" % "1.0.3",
 
-      "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.0" % "test",
+      "org.scalamock" %% "scalamock-scalatest-support" % "3.3.0" % "test"
     )
   )
   .dependsOn(models)

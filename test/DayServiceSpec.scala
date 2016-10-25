@@ -1,12 +1,9 @@
-import be.thomastoye.speelsysteem.data.DayService
-import be.thomastoye.speelsysteem.data.couchdb.CouchDayService
 import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models._
 import helpers.UnimplementedDayService
 
 import scala.concurrent.Future
 import org.scalatestplus.play._
-import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
@@ -26,6 +23,7 @@ class DayServiceSpec extends PlaySpec with FutureAwaits with DefaultAwaitTimeout
         Day(DayDate(25, 5, 2016), Seq(shiftCreator("shiftA"), shiftCreator("shiftB"), shiftCreator("shiftC")))
       )
 
+      // Currently can't be mocked, relies on functionality in the trait
       val dayService = new UnimplementedDayService {
         override def findAll: Future[Seq[(Id, Day)]] = Future.successful(Seq(
           ("2016-05-03", days.head), ("2016-05-25", days.last)

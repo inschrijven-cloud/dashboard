@@ -4,28 +4,20 @@ import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import be.thomastoye.speelsysteem.models._
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
-import helpers.UnimplementedDayService
+import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
+class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with MockFactory {
   "Fiscal certificate service" should {
     "return a sheet with no date rows when there are no children" in {
-      val childRepo = new ChildRepository {
-        override def addAttendancesForChild(id: Child.Id, dayId: Day.Id, shifts: Seq[Shift.Id]): Future[Option[Unit]] = ???
-        override def count: Future[Int] = ???
-        override def update(id: Child.Id, child: Child): Future[Unit] = ???
-        override def insert(id: Child.Id, child: Child): Future[Child.Id] = ???
-        override def findById(id: Child.Id): Future[Option[(Child.Id, Child)]] = ???
-        override def findAll: Future[Seq[(Child.Id, Child)]] = Future.successful(Seq.empty)
-        override def delete(id: Id): Future[Unit] = ???
-      }
+      val childRepo = mock[ChildRepository]
+      (childRepo.findAll _).expects().returning(Future.successful(Seq.empty)).once()
 
-      val dayService = new UnimplementedDayService {
-        override def findAll: Future[Seq[(Day.Id, Day)]] = Future.successful(Seq.empty)
-      }
+      val dayService = mock[DayService]
+      (dayService.findAll _).expects().returning(Future.successful(Seq.empty))
 
       val service = new FiscalCertificateService(childRepo, dayService, global)
 
@@ -83,19 +75,11 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
         ))
       )
 
-      val childRepo = new ChildRepository {
-        override def addAttendancesForChild(id: Child.Id, dayId: Day.Id, shifts: Seq[Shift.Id]): Future[Option[Unit]] = ???
-        override def count: Future[Int] = ???
-        override def update(id: Child.Id, child: Child): Future[Unit] = ???
-        override def insert(id: Child.Id, child: Child): Future[Child.Id] = ???
-        override def findById(id: Child.Id): Future[Option[(Child.Id, Child)]] = ???
-        override def findAll: Future[Seq[(Child.Id, Child)]] = Future.successful(children)
-        override def delete(id: Id): Future[Unit] = ???
-      }
+      val childRepo = mock[ChildRepository]
+      (childRepo.findAll _).expects().returning(Future.successful(children))
 
-      val dayService = new UnimplementedDayService {
-        override def findAll: Future[Seq[(Day.Id, Day)]] = Future.successful(days)
-      }
+      val dayService = mock[DayService]
+      (dayService.findAll _).expects().returning(Future.successful(days)).once()
 
       val service = new FiscalCertificateService(childRepo, dayService, global)
 
@@ -206,19 +190,11 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
         ))
       )
 
-      val childRepo = new ChildRepository {
-        override def addAttendancesForChild(id: Child.Id, dayId: Day.Id, shifts: Seq[Shift.Id]): Future[Option[Unit]] = ???
-        override def count: Future[Int] = ???
-        override def update(id: Child.Id, child: Child): Future[Unit] = ???
-        override def insert(id: Child.Id, child: Child): Future[Child.Id] = ???
-        override def findById(id: Child.Id): Future[Option[(Child.Id, Child)]] = ???
-        override def findAll: Future[Seq[(Child.Id, Child)]] = Future.successful(children)
-        override def delete(id: Id): Future[Unit] = ???
-      }
+      val childRepo = mock[ChildRepository]
+      (childRepo.findAll _).expects().returning(Future.successful(children))
 
-      val dayService = new UnimplementedDayService {
-        override def findAll: Future[Seq[(Day.Id, Day)]] = Future.successful(days)
-      }
+      val dayService = mock[DayService]
+      (dayService.findAll _).expects().returning(Future.successful(days)).once()
 
       val service = new FiscalCertificateService(childRepo, dayService, global)
 
