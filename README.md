@@ -79,8 +79,8 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 
 ### Export API
 
-| Implemented | Description                              | Endpoint                               |
-|-------------|------------------------------------------|----------------------------------------|
-|             | List of children                         | `GET /api/v1/files/export/children`    |
-|             | List of crew members                     | `GET /api/v1/files/export/crew`        |
-|             | List of children with medical conditions |                                        |
+| Implemented | Description                              | Endpoint                                    |
+|-------------|------------------------------------------|---------------------------------------------|
+|             | List of children                         | `GET /api/v1/files/export/children`         |
+|             | List of crew members                     | `GET /api/v1/files/export/crew`             |
+|             | List of children with medical conditions | `GET /api/v1/files/export/children/medical` |                                  |

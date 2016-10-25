@@ -47,6 +47,7 @@ GET           /api/v1/files/compensation/:year/:crewId              be.thomastoy
 # Export API
 
 GET           /api/v1/files/export/children                         be.thomastoye.speelsysteem.dashboard.controllers.api.ExportController.downloadChildren
+GET           /api/v1/files/export/children/medical                 be.thomastoye.speelsysteem.dashboard.controllers.api.ExportController.downloadChildrenWitbExtraMedicalAttention
 GET           /api/v1/files/export/crew                             be.thomastoye.speelsysteem.dashboard.controllers.api.ExportController.downloadCrew
 
 
