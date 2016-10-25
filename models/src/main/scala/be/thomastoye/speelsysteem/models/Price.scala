@@ -8,7 +8,7 @@ case class Price(euro: Int, cents: Int) {
     Price(resEuro, resCents % 100)
   }
 
-  override def toString = {
+  override def toString: String = {
     val formattedCents = cents match {
       case 0 => "00"
       case n if n < 10 => "0" + n

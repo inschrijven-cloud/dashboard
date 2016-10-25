@@ -4,7 +4,7 @@ import be.thomastoye.speelsysteem.data.{ChildRepository, CrewRepository, DayServ
 import com.google.inject.AbstractModule
 
 class Module extends AbstractModule {
-  override def configure() = {
+  override def configure(): Unit = {
     bind(classOf[ChildRepository]).to(classOf[CouchChildRepository])
     bind(classOf[CrewRepository]).to(classOf[CouchCrewRepository])
     bind(classOf[UuidService]).to(classOf[UuidServiceImpl])

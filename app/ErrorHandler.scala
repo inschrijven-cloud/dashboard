@@ -10,7 +10,7 @@ import play.api.libs.json.Json
 @Singleton
 class ErrorHandler extends HttpErrorHandler {
 
-  def onClientError(request: RequestHeader, statusCode: Int, message: String) = {
+  def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     Future.successful(
       Status(statusCode)(Json.obj(
         "status" -> "error",
@@ -20,7 +20,7 @@ class ErrorHandler extends HttpErrorHandler {
     )
   }
 
-  def onServerError(request: RequestHeader, exception: Throwable) = {
+  def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
     Future.successful(
       InternalServerError(Json.obj(
         "status" -> "error",

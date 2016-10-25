@@ -28,7 +28,7 @@ object Shift {
     case object External extends ShiftKind { override val mnemonic = "EXT" }
     case object CrewActivity extends ShiftKind { override val mnemonic = "LEI" }
 
-    def apply(mnemonic: String) = mnemonic match {
+    def apply(mnemonic: String): ShiftKind = mnemonic match {
       case "VRO" => Early
       case "VM"  => Morning
       case "MID" => Noon
