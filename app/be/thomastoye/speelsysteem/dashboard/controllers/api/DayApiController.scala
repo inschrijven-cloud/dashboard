@@ -12,21 +12,21 @@ import play.api.mvc._
 
 class DayApiController @Inject() (dayService: DayService, childRepository: ChildRepository) extends ApiController {
 
-  def all = Action.async { req =>
+  def all: Action[AnyContent] = Action.async { req =>
     dayService.findAll.map(days => Ok(Json.toJson(days)))
   }
 
-  def create = Action.async(BodyParsers.parse.json(dayFormat)) { req =>
+  def create: Action[Day] = Action.async(BodyParsers.parse.json(dayFormat)) { req =>
     dayService.insert(req.body).map(_ => Ok)
   }
 
-  def getById(id: Day.Id) = Action.async { req =>
+  def getById(id: Day.Id): Action[AnyContent] = Action.async { req =>
     dayService.findById(id).map { maybeDay =>
       maybeDay.map(dayWithId => Ok(Json.toJson(dayWithId))).getOrElse(NotFound)
     }
   }
 
-  def update(id: Day.Id) = Action.async(BodyParsers.parse.json(dayFormat)) { req =>
+  def update(id: Day.Id): Action[Day] = Action.async(BodyParsers.parse.json(dayFormat)) { req =>
     dayService.update(id, req.body).map(_ => Ok)
   }
 }
