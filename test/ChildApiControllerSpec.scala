@@ -1,9 +1,9 @@
+import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController
 import be.thomastoye.speelsysteem.data.ChildRepository
 import be.thomastoye.speelsysteem.data.util.UuidService
 import be.thomastoye.speelsysteem.models.{Address, Child, ContactInfo}
 import be.thomastoye.speelsysteem.models.JsonFormats._
-import be.thomastoye.speelsysteem.models.Shift.Id
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
 import play.api.mvc.{AnyContentAsJson, Request, Results}
@@ -21,7 +21,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
 
     "return NotFound if the child is not in the database" in {
       val childRepo = mock[ChildRepository]
-      (childRepo.findById _).expects("existing-id").returning(Future.successful(Some(("existing-id", child)))).never()
+      (childRepo.findById _).expects("existing-id").returning(Future.successful(Some(EntityWithId("existing-id", child)))).never()
       (childRepo.findById _).expects(*).returning(Future.successful(None)).once()
 
       val controller = new ChildApiController(childRepo, uuidService)
@@ -30,7 +30,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
 
     "return child as JSON if the child is in the database" in {
       val childRepo = mock[ChildRepository]
-      (childRepo.findById _).expects("existing-id").returning(Future.successful(Some(("existing-id", child)))).once()
+      (childRepo.findById _).expects("existing-id").returning(Future.successful(Some(EntityWithId("existing-id", child)))).once()
       (childRepo.findById _).expects(*).returning(Future.successful(None)).never()
 
       val controller = new ChildApiController(childRepo, uuidService)
@@ -48,10 +48,10 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
 
     "return list of children in the database" in {
       val childRepo = mock[ChildRepository]
-      (childRepo.findAll _).expects().returning(Future.successful(Seq(("first-id", child1), ("second-id", child2)))).once()
+      (childRepo.findAll _).expects().returning(Future.successful(Seq(EntityWithId("first-id", child1), EntityWithId("second-id", child2)))).once()
 
       val controller = new ChildApiController(childRepo, uuidService)
-      contentAsJson(controller.all.apply(FakeRequest())) mustBe Json.arr(Json.toJson(("first-id", child1)), Json.toJson(("second-id", child2)))
+      contentAsJson(controller.all.apply(FakeRequest())) mustBe Json.arr(Json.toJson(EntityWithId("first-id", child1)), Json.toJson(EntityWithId("second-id", child2)))
     }
 
     "return empty JSON list if there are no children in the database" in {

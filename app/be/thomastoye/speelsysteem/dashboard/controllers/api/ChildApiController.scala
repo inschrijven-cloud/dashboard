@@ -22,7 +22,7 @@ class ChildApiController @Inject() (childRepository: ChildRepository, uuidServic
 
   def getById(id: Child.Id): Action[AnyContent] = Action.async { req =>
     childRepository.findById(id).map { childOpt =>
-      childOpt.map(child => Json.toJson(child._2)).map(Ok(_)).getOrElse(NotFound)
+      childOpt.map(child => Json.toJson(child.entity)).map(Ok(_)).getOrElse(NotFound)
     }
   }
 

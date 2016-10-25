@@ -2,6 +2,7 @@ package be.thomastoye.speelsysteem.data.couchdb
 
 import javax.inject.Inject
 
+import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.{ChildRepository, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat}
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
 import upickle.default.{Reader, Writer}
@@ -29,17 +30,17 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
 
   val db = couchDatabase.db
 
-  override def findById(id: Id): Future[Option[(Id, Child)]] = findAll.map(_.find(_._1 == id))
+  override def findById(id: Id) = findAll.map(_.find(_.id == id))
 
-  override def findAll: Future[Seq[(Id, Child)]] = {
-    val p: Promise[Seq[(Id, Child)]] = Promise()
+  override def findAll: Future[Seq[EntityWithId[Id, Child]]] = {
+    val p: Promise[Seq[EntityWithId[Id, Child]]] = Promise()
 
     db.docs.getMany.byTypeUsingTemporaryView(MappedDocType(childKind)).includeDocs[Child].build.query.unsafePerformAsync {
-      case \/-(res) => p.success(res.getDocs.map(doc => (doc._id, doc.doc)))
+      case \/-(res) => p.success(res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       case -\/(e)   => p.failure(e)
     }
 
-    p.future.map(_.sortBy(x => (x._2.lastName, x._2.firstName)))
+    p.future.map(_.sortBy(x => (x.entity.lastName, x.entity.firstName)))
   }
 
   override def insert(id: Id, child: Child): Future[Id] = db.docs.create[Child](child, id).toFuture.map(_.id)
@@ -57,8 +58,8 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
     findById(id) flatMap { childWithIdOpt =>
       if(childWithIdOpt.isDefined) {
         val childWithId = childWithIdOpt.get
-        val child = addShifts(childWithId._2, dayId, shifts)
-        update(childWithId._1, child).map(_ => Some( () ))
+        val child = addShifts(childWithId.entity, dayId, shifts)
+        update(childWithId.id, child).map(_ => Some( () ))
       } else Future.successful(None)
     }
   }

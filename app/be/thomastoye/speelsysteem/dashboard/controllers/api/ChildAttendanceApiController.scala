@@ -33,7 +33,7 @@ class ChildAttendanceApiController @Inject()(childRepository: ChildRepository, d
   import ChildAttendanceApiController._
 
   def numberOfChildAttendances: Action[AnyContent] = Action.async { req =>
-    childRepository.findAll map (_.map(_._2)) flatMap dayService.findNumberOfChildAttendances map { all =>
+    childRepository.findAll map (_.map(_.entity)) flatMap dayService.findNumberOfChildAttendances map { all =>
       Ok(Json.toJson(all))
     }
   }

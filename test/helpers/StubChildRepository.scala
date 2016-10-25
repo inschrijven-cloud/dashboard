@@ -1,5 +1,6 @@
 package helpers
 
+import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.ChildRepository
 import be.thomastoye.speelsysteem.models.Child
 import be.thomastoye.speelsysteem.models.Child.Id
@@ -10,9 +11,9 @@ import com.google.inject.AbstractModule
 import scala.concurrent.Future
 
 class StubChildRepository extends ChildRepository {
-  override def findById(id: Id): Future[Option[(Id, Child)]] = ???
+  override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = ???
 
-  override def findAll: Future[Seq[(Id, Child)]] = Future.successful(Seq.empty)
+  override def findAll: Future[Seq[EntityWithId[Child.Id, Child]]] = Future.successful(Seq.empty)
 
   override def insert(id: Id, child: Child): Future[Id] = ???
 

@@ -1,3 +1,4 @@
+import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.{ChildRepository, DayService, FiscalCertificateService}
 import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.ShiftKind
@@ -57,8 +58,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
     }
 
     "return a sheet with data for one child with one attendance" in {
-      val children: Seq[(Child.Id, Child)] = Seq(
-        ("child1", Child(
+      val children: Seq[EntityWithId[Child.Id, Child]] = Seq(
+        EntityWithId("child1", Child(
             "voornaam",
             "achternaam",
             Address(Some("straatlaan"), Some("55"), Some(9999), Some("stad")),
@@ -69,8 +70,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
         )
       )
 
-      val days: Seq[(Day.Id, Day)] = Seq(
-        ("day1", Day(DayDate(17, 5, 2016), Seq(
+      val days: Seq[EntityWithId[Day.Id, Day]] = Seq(
+        EntityWithId("day1", Day(DayDate(17, 5, 2016), Seq(
           Shift("shift1", Price(2, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Afternoon, None, None, None))
         ))
       )
@@ -131,8 +132,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
     }
 
     "return a sheet with data for multiple children" in {
-      val children: Seq[(Child.Id, Child)] = Seq(
-        ("child1", Child(
+      val children: Seq[EntityWithId[Child.Id, Child]] = Seq(
+        EntityWithId("child1", Child(
             "voornaam1",
             "achternaam",
             Address(Some("straatlaan"), Some("55"), Some(9999), Some("stad")),
@@ -144,7 +145,7 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
             )
           )
         ),
-        ("child2", Child(
+        EntityWithId("child2", Child(
             "voornaam2",
             "achternaam",
             Address(Some("straatlaan"), Some("55"), Some(9999), Some("stad")),
@@ -157,7 +158,7 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
             )
           )
         ),
-        ("child3", Child(
+        EntityWithId("child3", Child(
             "voornaam3",
             "achternaam",
             Address(Some("straatlaan"), Some("55"), Some(9999), Some("stad")),
@@ -171,18 +172,18 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
         )
       )
 
-      val days: Seq[(Day.Id, Day)] = Seq(
-        ("day1", Day(DayDate(17, 5, 2015), Seq(
+      val days: Seq[EntityWithId[Day.Id, Day]] = Seq(
+        EntityWithId("day1", Day(DayDate(17, 5, 2015), Seq(
           Shift("shift1", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Morning, None, None, None),
           Shift("shift2", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Noon, None, None, None),
           Shift("shift3", Price(2, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Afternoon, None, None, None))
         )),
-        ("day2", Day(DayDate(18, 5, 2016), Seq(
+        EntityWithId("day2", Day(DayDate(18, 5, 2016), Seq(
           Shift("shift4", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Morning, None, None, None),
           Shift("shift5", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Noon, None, None, None),
           Shift("shift6", Price(2, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Afternoon, None, None, None))
         )),
-        ("day3", Day(DayDate(19, 5, 2015), Seq(
+        EntityWithId("day3", Day(DayDate(19, 5, 2015), Seq(
           Shift("shift7", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Morning, None, None, None),
           Shift("shift8", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Noon, None, None, None),
           Shift("shift9", Price(2, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Afternoon, None, None, None),

@@ -1,3 +1,4 @@
+import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models._
 import helpers.UnimplementedDayService
@@ -25,8 +26,8 @@ class DayServiceSpec extends PlaySpec with FutureAwaits with DefaultAwaitTimeout
 
       // Currently can't be mocked, relies on functionality in the trait
       val dayService = new UnimplementedDayService {
-        override def findAll: Future[Seq[(Id, Day)]] = Future.successful(Seq(
-          ("2016-05-03", days.head), ("2016-05-25", days.last)
+        override def findAll: Future[Seq[EntityWithId[Id, Day]]] = Future.successful(Seq(
+          EntityWithId("2016-05-03", days.head), EntityWithId("2016-05-25", days.last)
         ))
       }
 

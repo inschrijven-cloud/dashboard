@@ -3,6 +3,7 @@ package be.thomastoye.speelsysteem.data
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.models._
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
@@ -24,19 +25,19 @@ class FiscalCertificateService @Inject()(childRepository: ChildRepository, daySe
     totalReceivedAmount: String
   )
 
-  private def shiftIdToAmountPaidOnDay(allDays: Seq[(Day.Id, Day)], dayId: Day.Id, shiftsAttended: Seq[Shift.Id]): Price = {
-    val shifts = allDays.find(_._1 == dayId).get._2.shifts.filter(x => shiftsAttended contains x.id)
+  private def shiftIdToAmountPaidOnDay(allDays: Seq[EntityWithId[Day.Id, Day]], dayId: Day.Id, shiftsAttended: Seq[Shift.Id]): Price = {
+    val shifts = allDays.find(_.id == dayId).get.entity.shifts.filter(x => shiftsAttended contains x.id)
     shifts.map(_.price).fold(Price(0, 0))(_ + _)
   }
 
-  private def getTotalPricePaidForAttendances(attendances: Seq[Attendance], allDays: Seq[(Day.Id, Day)]): Price = {
+  private def getTotalPricePaidForAttendances(attendances: Seq[Attendance], allDays: Seq[EntityWithId[Day.Id, Day]]): Price = {
     val listOfPrices: Seq[Price] = attendances.map(x => shiftIdToAmountPaidOnDay(allDays, x.day, x.shifts))
     val totalPrice = listOfPrices.fold(Price(0, 0))(_ + _)
     totalPrice
   }
 
-  private def child2certificateRow(child: Child, year: Int, allDays: Seq[(Day.Id, Day)]): CertificateRow = {
-    def dayId2Day(id: Day.Id): Day = allDays.filter(_._1 == id).head._2
+  private def child2certificateRow(child: Child, year: Int, allDays: Seq[EntityWithId[Day.Id, Day]]): CertificateRow = {
+    def dayId2Day(id: Day.Id): Day = allDays.filter(_.id == id).head.entity
 
     val attendances = child.attendances.filter(att => dayId2Day(att.day).date.year == year)
 
@@ -58,7 +59,7 @@ class FiscalCertificateService @Inject()(childRepository: ChildRepository, daySe
       allDays <- dayService.findAll
       children <- childRepository.findAll
     } yield {
-      children.map(_._2).map(child2certificateRow(_, year, allDays))
+      children.map(_.entity).map(child2certificateRow(_, year, allDays))
     }
 
     val sheetDataRowsFut = certRows.map(_.map { row =>

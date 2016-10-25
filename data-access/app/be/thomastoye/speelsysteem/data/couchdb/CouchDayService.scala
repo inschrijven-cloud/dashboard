@@ -2,6 +2,7 @@ package be.thomastoye.speelsysteem.data.couchdb
 
 import javax.inject.Inject
 
+import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.{DayService, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat}
 import com.typesafe.scalalogging.StrictLogging
 import upickle.default.{Reader, Writer}
@@ -30,12 +31,12 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
   val db = couchDatabase.db
 
 
-  override def findAll: Future[Seq[(Id, Day)]] = {
+  override def findAll: Future[Seq[EntityWithId[Id, Day]]] = {
     db.docs.getMany
       .byTypeUsingTemporaryView(MappedDocType(dayKind))
       .includeDocs[Day].build.query.toFuture
-      .map(res => res.getDocs.map(doc => (doc._id, doc.doc)))
-      .map(_.sortBy(x => x._2.date).reverse)
+      .map(res => res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
+      .map(_.sortBy(x => x.entity.date).reverse)
   }
 
   override def findAttendancesForChild(id: Child.Id): Future[Seq[Day]] = {
