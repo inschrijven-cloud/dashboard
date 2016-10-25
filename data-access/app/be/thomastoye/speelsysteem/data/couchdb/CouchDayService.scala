@@ -57,4 +57,9 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
     }
   }
 
+  override def insert(day: Day): Future[Unit] = ???
+
+  override def findById(id: Id): Future[Option[Day]] = ???
+
+  override def update(id: Id, day: Day): Future[Unit] = ???
 }

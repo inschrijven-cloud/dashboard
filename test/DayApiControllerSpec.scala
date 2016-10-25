@@ -3,21 +3,22 @@ import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
 import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
 import be.thomastoye.speelsysteem.models._
+import be.thomastoye.speelsysteem.models.JsonFormats.dayFormat
+import helpers.UnimplementedDayService
 
 import scala.concurrent.Future
 import org.scalatestplus.play._
+import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
 
-class DayApiControllerSpec extends PlaySpec with Results {
+class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
   "DayApiController#all" should {
     "return an empty JSON array if there are no days" in {
-      val dayServiceStub = new DayService {
+      val dayServiceStub = new UnimplementedDayService {
         override def findAll: Future[Seq[(Id, Day)]] = Future.successful(Seq.empty[(Id, Day)])
-
-        override def findAttendancesForChild(id: Id): Future[Seq[Day]] = ???
       }
 
       val childRepoStub = new ChildRepository {
@@ -37,7 +38,7 @@ class DayApiControllerSpec extends PlaySpec with Results {
     }
 
     "return a JSON array with all days" in {
-      val dayServiceStub = new DayService {
+      val dayServiceStub = new UnimplementedDayService {
         def shift: (String => Shift) = Shift(_, Price(2,0), true, true, ShiftKind.Afternoon, None, None, None)
 
         override def findAll: Future[Seq[(Shift.Id, Day)]] = Future.successful(
@@ -52,8 +53,6 @@ class DayApiControllerSpec extends PlaySpec with Results {
             )))
           )
         )
-
-        override def findAttendancesForChild(id: Id): Future[Seq[Day]] = ???
       }
 
       val childRepoStub = new ChildRepository {
@@ -110,6 +109,63 @@ class DayApiControllerSpec extends PlaySpec with Results {
           )
         )
       )
+    }
+  }
+
+  "DayApiController#create" should {
+    "create a day" in {
+      val day = Day(DayDate(22, 11, 2020), Seq(Shift("aoeu", Price(2, 5), true, true, ShiftKind.Afternoon, None, None, None)))
+
+      val dayService = mock[DayService]
+
+      (dayService.insert _).expects(day).returning(Future.successful(())).once()
+
+      val controller = new DayApiController(dayService, mock[ChildRepository])
+
+      status(controller.create.apply(FakeRequest().withBody(day))) mustBe OK
+    }
+  }
+
+  "DayApiController#update" should {
+    "update a day" in {
+      val day = Day(DayDate(22, 11, 2020), Seq(Shift("aoeu", Price(2, 5), true, true, ShiftKind.Afternoon, None, None, None)))
+
+      val dayService = mock[DayService]
+
+      (dayService.update _).expects("day-id", day).returning(Future.successful(())).once()
+
+      val controller = new DayApiController(dayService, mock[ChildRepository])
+
+      status(controller.update("day-id").apply(FakeRequest().withBody(day))) mustBe OK
+    }
+  }
+
+  "DayApiController#getById" should {
+    "find existing day" in {
+      val day = Day(DayDate(22, 11, 2020), Seq(Shift("aoeu", Price(2, 5), true, true, ShiftKind.Afternoon, None, None, None)))
+
+      val dayService = mock[DayService]
+
+      (dayService.findById _).expects("day-id").returning(Future.successful(Some(day))).once()
+
+      val controller = new DayApiController(dayService, mock[ChildRepository])
+
+      val res: Future[Result] = controller.getById("day-id").apply(FakeRequest())
+
+      status(res) mustBe OK
+      contentAsJson(res) must be(Json.toJson(day))
+    }
+
+    "return not found for non-existant day" in {
+      val day = Day(DayDate(22, 11, 2020), Seq(Shift("aoeu", Price(2, 5), true, true, ShiftKind.Afternoon, None, None, None)))
+
+      val dayService = mock[DayService]
+
+      (dayService.findById _).expects(*).returning(Future.successful(None)).once()
+
+      val controller = new DayApiController(dayService, mock[ChildRepository])
+
+      status(controller.getById("day-id").apply(FakeRequest())) mustBe NOT_FOUND
     }
   }
 }

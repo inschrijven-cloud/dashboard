@@ -8,7 +8,7 @@ GET           /heartbeat                                            be.thomastoy
 GET           /api/v1/day                                           be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.all
 POST          /api/v1/day                                           be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.create
 GET           /api/v1/day/:id                                       be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.getById(id)
-PUT           /api/v1/day                                           be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.update
+PUT           /api/v1/day/:id                                       be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController.update(id)
 
 # Child API
 

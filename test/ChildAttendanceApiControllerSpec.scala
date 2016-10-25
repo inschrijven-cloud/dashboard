@@ -3,6 +3,7 @@ import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
 import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
 import be.thomastoye.speelsysteem.models.{Shift, _}
+import helpers.UnimplementedDayService
 
 import scala.concurrent.Future
 import org.scalatestplus.play._
@@ -14,7 +15,7 @@ import play.api.test.Helpers._
 class ChildAttendanceApiControllerSpec extends PlaySpec with Results {
   "ChildAttendanceApiController#numberOfChildAttendances" should {
     "return a list with days and the number of children attending each shift" in {
-      val dayServiceStub = new DayService {
+      val dayServiceStub = new UnimplementedDayService {
         def shift: (String => Shift) = Shift(_, Price(2,0), true, true, ShiftKind.Afternoon, None, None, None)
 
         override def findAll: Future[Seq[(Shift.Id, Day)]] = Future.successful(
@@ -29,8 +30,6 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results {
             )))
           )
         )
-
-        override def findAttendancesForChild(id: Id): Future[Seq[Day]] = ???
       }
 
       val childRepoStub = new ChildRepository {

@@ -4,6 +4,7 @@ import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import be.thomastoye.speelsysteem.models._
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
+import helpers.UnimplementedDayService
 import org.scalatest._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -22,9 +23,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
         override def delete(id: Id): Future[Unit] = ???
       }
 
-      val dayService = new DayService {
+      val dayService = new UnimplementedDayService {
         override def findAll: Future[Seq[(Day.Id, Day)]] = Future.successful(Seq.empty)
-        override def findAttendancesForChild(id: Day.Id): Future[Seq[Day]] = ???
       }
 
       val service = new FiscalCertificateService(childRepo, dayService, global)
@@ -93,9 +93,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
         override def delete(id: Id): Future[Unit] = ???
       }
 
-      val dayService = new DayService {
+      val dayService = new UnimplementedDayService {
         override def findAll: Future[Seq[(Day.Id, Day)]] = Future.successful(days)
-        override def findAttendancesForChild(id: Day.Id): Future[Seq[Day]] = ???
       }
 
       val service = new FiscalCertificateService(childRepo, dayService, global)
@@ -217,9 +216,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers{
         override def delete(id: Id): Future[Unit] = ???
       }
 
-      val dayService = new DayService {
+      val dayService = new UnimplementedDayService {
         override def findAll: Future[Seq[(Day.Id, Day)]] = Future.successful(days)
-        override def findAttendancesForChild(id: Day.Id): Future[Seq[Day]] = ???
       }
 
       val service = new FiscalCertificateService(childRepo, dayService, global)
