@@ -54,7 +54,7 @@ object JsonFormats {
 
   implicit val dayFormat = Json.format[Day]
 
-  def entityWithIdWrites[ID, T](implicit idWrites: Writes[ID], entityWrites: Writes[T]) = new Writes[EntityWithId[ID, T]] {
+  def entityWithIdWrites[ID, T](implicit idWrites: Writes[ID], entityWrites: Writes[T]): Writes[EntityWithId[ID, T]] = new Writes[EntityWithId[ID, T]] {
     override def writes(o: EntityWithId[ID, T]): JsValue = {
       Json.obj("id" -> Json.toJson(o.id)(idWrites)) ++ Json.toJson(o.entity)(entityWrites).as[JsObject]
     }

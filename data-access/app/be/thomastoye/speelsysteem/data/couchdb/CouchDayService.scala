@@ -4,18 +4,16 @@ import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.{DayService, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat}
-import com.typesafe.scalalogging.StrictLogging
 import upickle.default.{Reader, Writer}
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
 import be.thomastoye.speelsysteem.models.Day.Id
-import com.ibm.couchdb.{CouchDoc, MappedDocType}
+import com.ibm.couchdb.MappedDocType
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.{Future, Promise}
-import scalaz.{-\/, \/-}
+import scala.concurrent.Future
 
 
 object CouchDayService extends StrictLogging {
@@ -48,7 +46,7 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
     db.docs.getMany[Day](daysChildAttended).toFuture.map(_.getDocs).map { allDays =>
       allDays.map { day =>
         val shiftsAttendedWithDetails = if(daysChildAttended.contains(day._id)) {
-          val shiftsOnDay = allDays.filter(_._id == day._id).head.doc.shifts
+          val shiftsOnDay = allDays.filter(check => check._id == day._id).head.doc.shifts
           val shiftsChildAttended = child.attendances.filter(_.day == day._id).head.shifts
           Some(shiftsOnDay.filter(x => shiftsChildAttended.contains(x.id)))
         } else None

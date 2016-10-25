@@ -30,7 +30,7 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
 
   val db = couchDatabase.db
 
-  override def findById(id: Id) = findAll.map(_.find(_.id == id))
+  override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = findAll.map(all => all.find(check => check.id == id))
 
   override def findAll: Future[Seq[EntityWithId[Id, Child]]] = {
     val p: Promise[Seq[EntityWithId[Id, Child]]] = Promise()
