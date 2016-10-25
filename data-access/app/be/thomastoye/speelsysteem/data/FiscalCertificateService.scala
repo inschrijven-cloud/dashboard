@@ -96,15 +96,7 @@ class FiscalCertificateService @Inject()(childRepository: ChildRepository, daySe
           ) ++ sheetDataRows
         )
         .withColumns(
-          Column(index = 0, autoSized = true),
-          Column(index = 1, autoSized = true),
-          Column(index = 2, autoSized = true),
-          Column(index = 3, autoSized = true),
-          Column(index = 4, autoSized = true),
-          Column(index = 5, autoSized = true),
-          Column(index = 6, autoSized = true),
-          Column(index = 7, autoSized = true),
-          Column(index = 8, autoSized = true)
+          (0 to 8).map(idx => Column(index = idx, autoSized = true)):_*
         )
 
       certSheet
