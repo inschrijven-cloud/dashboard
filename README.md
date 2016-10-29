@@ -9,13 +9,13 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 
 ### Child API
 
-| Implemented | Description                       | Endpoint                               |
-|-------------|-----------------------------------|----------------------------------------|
-| X           | Create new child                  | `POST /api/v1/child`                   |
-| X           | Retrieve all children             | `GET /api/v1/child`                    |
-| X           | Retrieve a child by id            | `GET /api/v1/child/:id`                |
-| X           | Update child                      | `PUT /api/v1/child/:id`                |
-| X           | Delete child                      | `DELETE /api/v1/child/:id`             |
+| Implemented        | Description                       | Endpoint                               |
+|--------------------|-----------------------------------|----------------------------------------|
+| :heavy_check_mark: | Create new child                  | `POST /api/v1/child`                   |
+| :heavy_check_mark: | Retrieve all children             | `GET /api/v1/child`                    |
+| :heavy_check_mark: | Retrieve a child by id            | `GET /api/v1/child/:id`                |
+| :heavy_check_mark: | Update child                      | `PUT /api/v1/child/:id`                |
+| :heavy_check_mark: | Delete child                      | `DELETE /api/v1/child/:id`             |
 
 
 ### Crew API
@@ -31,28 +31,28 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 
 ### Day and shift api
 
-| Implemented | Description                                        | Endpoint                               |
-|-------------|----------------------------------------------------|----------------------------------------|
-| X           | Create day                                         | `POST /api/v1/day`                     |
-|             | Create shift on a day                              |  |
-| X           | Retrieve all days                                  | `GET /api/v1/day`                      |
-|             | Retrieve all shifts on a day                       |  |
-| X           | Retrieve a day by  id                              | `GET /api/v1/day/:id`                  |
-| X           | Update a day                                       | `PUT /api/v1/day`                      |
-|             | Update shift of a day                              |  |
+| Implemented        | Description                                        | Endpoint                               |
+|--------------------|----------------------------------------------------|----------------------------------------|
+| :heavy_check_mark: | Create day                                         | `POST /api/v1/day`                     |
+|                    | Create shift on a day                              |  |
+| :heavy_check_mark: | Retrieve all days                                  | `GET /api/v1/day`                      |
+|                    | Retrieve all shifts on a day                       |  |
+| :heavy_check_mark: | Retrieve a day by  id                              | `GET /api/v1/day/:id`                  |
+| :heavy_check_mark: | Update a day                                       | `PUT /api/v1/day`                      |
+|                    | Update shift of a day                              |  |
 
 
 ### Attendance API
 
 #### Child attendance API
 
-| Implemented | Description                                        | Endpoint                                           |
-|-------------|----------------------------------------------------|----------------------------------------------------|
-| X           | Number of child attendances on a day per shift     | `GET /api/v1/day/attendances/child`                |
-|             | Retrieve children on a day per shift               | `GET /api/v1/day/:id/attendances/child`            |
-| X           | Create attendance for a child                      | `POST /api/v1/child/:childId/attendances/:dayId`   |
-|             | Delete attandance for a child                      | `DELETE /api/v1/child/:childId/attendances/:dayId` |
-| X           | Retrieve attended days with shifts for child       | `GET /api/v1/child/:id/attendances`                |
+| Implemented        | Description                                        | Endpoint                                           |
+|--------------------|----------------------------------------------------|----------------------------------------------------|
+| :heavy_check_mark: | Number of child attendances on a day per shift     | `GET /api/v1/day/attendances/child`                |
+|                    | Retrieve children on a day per shift               | `GET /api/v1/day/:id/attendances/child`            |
+| :heavy_check_mark: | Create attendance for a child                      | `POST /api/v1/child/:childId/attendances/:dayId`   |
+|                    | Delete attandance for a child                      | `DELETE /api/v1/child/:childId/attendances/:dayId` |
+| :heavy_check_mark: | Retrieve attended days with shifts for child       | `GET /api/v1/child/:id/attendances`                |
 
 
 #### Crew attendance API
@@ -69,18 +69,19 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 
 ### Report API
 
-| Implemented | Description                                       | Endpoint                                             |
-|-------------|---------------------------------------------------|------------------------------------------------------|
-| X           | Generate fiscal certificate data                  | `GET /api/v1/files/fiscalCertificate/:year`          |
-|             | Generate fiscal certificate for a child           | `GET /api/v1/files/fiscalCertificate/:year/:childId` |
-|             | Generate compensation certificate data            | `GET /api/v1/files/compensation/:year`               |
-|             | Generate compensation certificate for a volunteer | `GET /api/v1/files/compensation/:year/:crewId`       |
+| Implemented        | Description                                       | Endpoint                                             |
+|--------------------|---------------------------------------------------|------------------------------------------------------|
+| :heavy_check_mark: | Generate fiscal certificate data                  | `GET /api/v1/files/fiscalCertificate/:year`          |
+|                    | Generate fiscal certificate for a child           | `GET /api/v1/files/fiscalCertificate/:year/:childId` |
+|                    | Generate compensation certificate data            | `GET /api/v1/files/compensation/:year`               |
+|                    | Generate compensation certificate for a volunteer | `GET /api/v1/files/compensation/:year/:crewId`       |
 
 
 ### Export API
 
-| Implemented | Description                              | Endpoint                                    |
-|-------------|------------------------------------------|---------------------------------------------|
-|             | List of children                         | `GET /api/v1/files/export/children`         |
-|             | List of crew members                     | `GET /api/v1/files/export/crew`             |
-|             | List of children with medical conditions | `GET /api/v1/files/export/children/medical` |                                  |
+| Implemented        | Description                              | Endpoint                                    |
+|--------------------|------------------------------------------|---------------------------------------------|
+|                    | List of children                         | `GET /api/v1/files/export/children`         |
+|                    | List of crew members                     | `GET /api/v1/files/export/crew`             |
+|                    | List of children with medical conditions | `GET /api/v1/files/export/children/medical` |
+
