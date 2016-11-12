@@ -7,11 +7,9 @@ import be.thomastoye.speelsysteem.data.{ChildRepository, PlayJsonReaderUpickleCo
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
 import upickle.default.{Reader, Writer}
 import be.thomastoye.speelsysteem.models._
-import be.thomastoye.speelsysteem.models.Child.Id
-import be.thomastoye.speelsysteem.models.Day.Id
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.models.Child.Id
-import com.ibm.couchdb.{CouchDoc, MappedDocType}
+import com.ibm.couchdb.{CouchDoc, CouchException, MappedDocType}
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
 
@@ -30,12 +28,24 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
 
   val db = couchDatabase.db
 
-  override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = findAll.map(all => all.find(check => check.id == id))
+  override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = {
+    val p: Promise[Option[EntityWithId[Id, Child]]] = Promise()
+
+    db.docs.get[Child](id).unsafePerformAsync {
+      case \/-(res) => p.success(Some(EntityWithId(res._id, res.doc)))
+      case -\/(e)   => e match {
+        case _: CouchException[_] => p.success(None)
+        case _ => p.failure(e)
+      }
+    }
+
+    p.future
+  }
 
   override def findAll: Future[Seq[EntityWithId[Id, Child]]] = {
     val p: Promise[Seq[EntityWithId[Id, Child]]] = Promise()
 
-    db.docs.getMany.byTypeUsingTemporaryView(MappedDocType(childKind)).includeDocs[Child].build.query.unsafePerformAsync {
+    db.docs.getMany.byType[String]("all", "child", MappedDocType(childKind)).includeDocs.build.query.unsafePerformAsync {
       case \/-(res) => p.success(res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       case -\/(e)   => p.failure(e)
     }
