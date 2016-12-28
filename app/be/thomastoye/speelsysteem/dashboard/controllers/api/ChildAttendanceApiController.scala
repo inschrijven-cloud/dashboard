@@ -38,7 +38,7 @@ class ChildAttendanceApiController @Inject()(childRepository: ChildRepository, d
     }
   }
 
-  def numberOfChildAttendancesOnDay(id: Day.Id): Action[AnyContent] = TODO
+  def childAttendancesOnDay(id: Day.Id): Action[AnyContent] = TODO
 
   def getAttendancesForChild(id: Child.Id): Action[AnyContent] = Action.async { req =>
     dayService.findAttendancesForChild(id).map(att => Ok(Json.toJson(att)))
