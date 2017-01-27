@@ -11,7 +11,7 @@ trait ChildAttendancesService {
 
   def findNumberAttendancesForChild(childId: Child.Id): Future[Option[Int]]
 
-  def findNumberOfChildAttendances: Future[Seq[(Day.Id, Seq[(Shift.Id, Int)])]]
+  def findNumberOfChildAttendances: Future[Map[Day.Id, Map[Shift.Id, Int]]]
 
   def findNumberOfChildAttendances(day: DayDate, shiftId: Shift.Id): Future[Int]
 

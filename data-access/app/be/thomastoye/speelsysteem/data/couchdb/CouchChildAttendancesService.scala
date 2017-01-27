@@ -32,7 +32,19 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
 
   override def findNumberAttendancesForChild(childId: Child.Id): Future[Option[Int]] = findAll.map( _.get(childId).map(_.map(_.shifts.length).sum))
 
-  override def findNumberOfChildAttendances: Future[Seq[(Day.Id, Seq[(Shift.Id, Int)])]] = ???
+  override def findNumberOfChildAttendances: Future[Map[Day.Id, Map[Shift.Id, Int]]] = findAll map { all =>
+    val groupedByDay = all.toSeq flatMap { case (childId, childAttendances) =>
+      childAttendances.flatMap(att => att.shifts.map(shift => (att.day, shift.shift)))
+    } groupBy(_._1)
+
+    groupedByDay map { case (dayId, data) =>
+      val shiftsWithLength = data.groupBy(_._2).map { case (shiftId, seq) =>
+        (shiftId, seq.length)
+      }
+
+      (dayId, shiftsWithLength)
+    }
+  }
 
   override def findNumberOfChildAttendances(day: DayDate, shiftId: Shift.Id): Future[Int] = ???
 

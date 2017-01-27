@@ -40,9 +40,9 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFa
       val childAttendanceService = mock[ChildAttendancesService]
 
       (childAttendanceService.findNumberOfChildAttendances _).expects().returning(Future.successful(
-        Seq(
-          ("2016-11-25", Seq(("shift1", 2), ("shift2", 1))),
-          ("2016-02-01", Seq(("shift3", 1)))
+        Map(
+          "2016-11-25" -> Map("shift1" -> 2, "shift2" -> 1),
+          "2016-02-01" -> Map("shift3" -> 1)
         )
       )).once()
 
@@ -50,20 +50,9 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFa
 
       val body = contentAsJson(controller.numberOfChildAttendances.apply(FakeRequest()))
 
-      body mustBe Json.arr(
-        Json.obj(
-          "dayId" -> "2016-11-25",
-          "shifts" -> Json.arr(
-            Json.obj("id" -> "shift1", "numChildAttendances" -> 2),
-            Json.obj("id" -> "shift2", "numChildAttendances" -> 1)
-          )
-        ),
-        Json.obj(
-          "dayId" -> "2016-02-01",
-          "shifts" -> Json.arr(
-            Json.obj("id" -> "shift3", "numChildAttendances" -> 1)
-          )
-        )
+      body mustBe Json.obj(
+        "2016-11-25" -> Json.obj("shift1" -> 2, "shift2" -> 1),
+        "2016-02-01" -> Json.obj("shift3" -> 1)
       )
     }
   }
