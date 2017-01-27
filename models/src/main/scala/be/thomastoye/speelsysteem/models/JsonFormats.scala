@@ -10,12 +10,13 @@ import play.api.libs.json.Reads._
 object JsonFormats {
   val emptyJsonObject = Json.obj()
 
-  implicit val attendanceFormat = Json.format[Attendance]
+  implicit val dayDateFormat = Json.format[DayDate]
+  implicit val singleAttendanceFormat = Json.format[SingleAttendance]
+  implicit val dayAttendancesFormat = Json.format[DayAttendance]
   implicit val relativeTimeFormat = Json.format[RelativeTime]
   implicit val addressFormat = Json.format[Address]
   implicit val phoneContactFormat = Json.format[PhoneContact]
   implicit val crewContactFormat = Json.format[ContactInfo]
-  implicit val dayDateFormat = Json.format[DayDate]
   implicit val crewFormat = Json.format[Crew]
   implicit val childFormat = Json.format[Child]
   implicit val priceFormat = Json.format[Price]

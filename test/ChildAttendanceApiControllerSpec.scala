@@ -1,8 +1,7 @@
 import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.dashboard.controllers.api.ChildAttendanceApiController
-import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
-import be.thomastoye.speelsysteem.models.Child.Id
-import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
+import be.thomastoye.speelsysteem.data.{ChildAttendancesService, ChildRepository, DayService}
+import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import be.thomastoye.speelsysteem.models.{Shift, _}
 import helpers.UnimplementedDayService
 import org.scalamock.scalatest.MockFactory
@@ -38,19 +37,16 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFa
 
       val childRepo = mock[ChildRepository]
 
-      (childRepo.findAll _).expects().returning(Future.successful(Seq(
-        EntityWithId("child1",
-          Child("aoeu1", "snth", Address(), ContactInfo(Seq.empty, Seq.empty), None,
-            Seq(Attendance("2016-11-25", Seq("shift1"))))
-          ),
-        EntityWithId("child2",
-          Child("aoeu2", "snth", Address(), ContactInfo(Seq.empty, Seq.empty), None,
-            Seq(Attendance("2016-11-25", Seq("shift1", "shift2")), Attendance("2016-02-01", Seq("shift3"))))
-          )
-      ))).once()
+      val childAttendanceService = mock[ChildAttendancesService]
 
+      (childAttendanceService.findNumberOfChildAttendances _).expects().returning(Future.successful(
+        Seq(
+          ("2016-11-25", Seq(("shift1", 2), ("shift2", 1))),
+          ("2016-02-01", Seq(("shift3", 1)))
+        )
+      )).once()
 
-      val controller = new ChildAttendanceApiController(childRepo, dayServiceStub)
+      val controller = new ChildAttendanceApiController(childRepo, dayServiceStub, childAttendanceService)
 
       val body = contentAsJson(controller.numberOfChildAttendances.apply(FakeRequest()))
 

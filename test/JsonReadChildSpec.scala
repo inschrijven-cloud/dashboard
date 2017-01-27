@@ -19,34 +19,6 @@ class JsonReadChildSpec extends PlaySpec {
           |      "street" : "Street",
           |      "number" : "55X"
           |   },
-          |   "attendances" : [
-          |      {
-          |         "shifts" : [
-          |            "ea52cb07-1a90-4438-80cc-0c13a3813f7d",
-          |            "9638293d-7fd7-4408-8654-b2da1632d0a2",
-          |            "a52966ab-5122-40ec-bdce-53a678d5b3a3"
-          |         ],
-          |         "day" : "2015-08-24"
-          |      },
-          |      {
-          |         "shifts" : [
-          |            "4b6cec72-1f7c-4638-8cd6-3d952e887567"
-          |         ],
-          |         "day" : "2015-08-25"
-          |      },
-          |      {
-          |         "shifts" : [
-          |            "c762ddd0-6f02-4770-a4f4-65e6440b77d4"
-          |         ],
-          |         "day" : "2015-08-27"
-          |      },
-          |      {
-          |         "day" : "2015-08-28",
-          |         "shifts" : [
-          |            "e26dd879-66de-47da-8377-2a47a1a716f6"
-          |         ]
-          |      }
-          |   ],
           |   "contact" : {
           |      "email" : [
           |        "john.smith@example.com",
@@ -84,13 +56,7 @@ class JsonReadChildSpec extends PlaySpec {
           PhoneContact(kind = Some("landline"), comment = Some("work phone, call this during business hours"), phoneNumber = "055 55 55 55")),
           Seq("john.smith@example.com", "test@example.com")
         ),
-        Some(DayDate(22, 2, 2002)),
-        Seq(
-          Attendance("2015-08-24", Seq("ea52cb07-1a90-4438-80cc-0c13a3813f7d", "9638293d-7fd7-4408-8654-b2da1632d0a2", "a52966ab-5122-40ec-bdce-53a678d5b3a3")),
-          Attendance("2015-08-25", Seq("4b6cec72-1f7c-4638-8cd6-3d952e887567")),
-          Attendance("2015-08-27", Seq("c762ddd0-6f02-4770-a4f4-65e6440b77d4")),
-          Attendance("2015-08-28", Seq("e26dd879-66de-47da-8377-2a47a1a716f6"))
-        )
+        Some(DayDate(22, 2, 2002))
       )
     }
   }

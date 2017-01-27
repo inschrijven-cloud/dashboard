@@ -2,12 +2,14 @@ package be.thomastoye.speelsysteem.dashboard.controllers.api
 
 import javax.inject.Inject
 
-import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
+import be.thomastoye.speelsysteem.data.{ChildAttendancesService, ChildRepository, DayService}
 import be.thomastoye.speelsysteem.models.{Child, Day, Shift}
-import be.thomastoye.speelsysteem.models.JsonFormats.{dayFormat, dayWithIdWrites}
+import be.thomastoye.speelsysteem.models.JsonFormats._
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc.{Action, AnyContent, BodyParsers}
 import play.api.libs.concurrent.Execution.Implicits._
+
+import scala.concurrent.Future
 
 object ChildAttendanceApiController {
   case class BindShiftIds(shiftIds: Seq[Shift.Id])
@@ -29,11 +31,15 @@ object ChildAttendanceApiController {
   }
 }
 
-class ChildAttendanceApiController @Inject()(childRepository: ChildRepository, dayService: DayService) extends ApiController {
+class ChildAttendanceApiController @Inject()(
+  childRepository: ChildRepository,
+  dayService: DayService,
+  childAttendancesService: ChildAttendancesService
+  ) extends ApiController {
   import ChildAttendanceApiController._
 
   def numberOfChildAttendances: Action[AnyContent] = Action.async { req =>
-    childRepository.findAll map (_.map(_.entity)) flatMap dayService.findNumberOfChildAttendances map { all =>
+    childAttendancesService.findNumberOfChildAttendances map { all =>
       Ok(Json.toJson(all))
     }
   }
@@ -41,14 +47,20 @@ class ChildAttendanceApiController @Inject()(childRepository: ChildRepository, d
   def childAttendancesOnDay(id: Day.Id): Action[AnyContent] = TODO
 
   def getAttendancesForChild(id: Child.Id): Action[AnyContent] = Action.async { req =>
-    dayService.findAttendancesForChild(id).map(att => Ok(Json.toJson(att)))
+    childAttendancesService.findAttendancesForChild(id).map(att => Ok(Json.toJson(att)))
   }
 
   def addAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = Action.async(BodyParsers.parse.json(bindShiftIdsReads)) { req =>
-    childRepository.addAttendancesForChild(childId, dayId, req.body.shiftIds) map { foundOpt =>
-      foundOpt.map(_ => Ok).getOrElse(NotFound)
+    dayService.findById(dayId) flatMap  { dayOpt =>
+      dayOpt map { day =>
+        childAttendancesService.addAttendancesForChild(childId, day.date, req.body.shiftIds) map (_ => Ok)
+      } getOrElse Future.successful(NotFound)
     }
   }
 
   def deleteAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[AnyContent] = TODO
+
+  def findAll: Action[AnyContent] = Action.async { req =>
+    childAttendancesService.findAll.map(all => Ok(Json.toJson(all)))
+  }
 }

@@ -9,7 +9,7 @@ import upickle.default.{Reader, Writer}
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.models.Child.Id
-import com.ibm.couchdb.{CouchDoc, CouchException, MappedDocType}
+import com.ibm.couchdb.{CouchDoc, CouchException, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
 
@@ -26,7 +26,7 @@ object CouchChildRepository {
 class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends ChildRepository with StrictLogging {
   import CouchChildRepository._
 
-  val db = couchDatabase.db
+  val db = couchDatabase.getDb("children", TypeMapping(classOf[Child] -> CouchChildRepository.childKind))
 
   override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = {
     val p: Promise[Option[EntityWithId[Id, Child]]] = Promise()
@@ -45,7 +45,7 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
   override def findAll: Future[Seq[EntityWithId[Id, Child]]] = {
     val p: Promise[Seq[EntityWithId[Id, Child]]] = Promise()
 
-    db.docs.getMany.byType[String]("all", "child", MappedDocType(childKind)).includeDocs.build.query.unsafePerformAsync {
+    db.docs.getMany.byType[String]("all", "children", MappedDocType(childKind)).includeDocs.build.query.unsafePerformAsync {
       case \/-(res) => p.success(res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       case -\/(e)   => p.failure(e)
     }
@@ -64,25 +64,5 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
     } yield { () }
   }
 
-  override def addAttendancesForChild(id: Id, dayId: Id, shifts: Seq[Id]): Future[Option[Unit]] = {
-    findById(id) flatMap { childWithIdOpt =>
-      if(childWithIdOpt.isDefined) {
-        val childWithId = childWithIdOpt.get
-        val child = addShifts(childWithId.entity, dayId, shifts)
-        update(childWithId.id, child).map(_ => Some( () ))
-      } else Future.successful(None)
-    }
-  }
-
   override def delete(id: Id): Future[Unit] = ???
-
-  private def addShifts(child: Child, dayId: Id, shifts: Seq[Id]) = {
-    val newAttendance = child.attendances
-      .find(_.day == dayId).map(att => Attendance(att.day, (att.shifts ++ shifts).distinct))
-      .getOrElse(Attendance(dayId, shifts))
-
-    val newAttendances =  child.attendances.filterNot(_.day == dayId) :+ newAttendance
-
-    child.copy(attendances = newAttendances)
-  }
 }

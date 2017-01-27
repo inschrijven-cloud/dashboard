@@ -1,5 +1,5 @@
 import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.data.{ChildRepository, DayService, FiscalCertificateService}
+import be.thomastoye.speelsysteem.data.{ChildAttendancesService, ChildRepository, DayService, FiscalCertificateService}
 import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import be.thomastoye.speelsysteem.models._
@@ -20,7 +20,10 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
       val dayService = mock[DayService]
       (dayService.findAll _).expects().returning(Future.successful(Seq.empty))
 
-      val service = new FiscalCertificateService(childRepo, dayService, global)
+      val childAttendanceService = mock[ChildAttendancesService]
+      (childAttendanceService.findAll _).expects().returning(Future.successful(Map.empty)).once()
+
+      val service = new FiscalCertificateService(childRepo, dayService, childAttendanceService, global)
 
       val headerStyle = CellStyle(fillPattern = CellFill.Solid, fillForegroundColor = Color.AquaMarine, font = Font(bold = true))
 
@@ -64,14 +67,13 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
             "achternaam",
             Address(Some("straatlaan"), Some("55"), Some(9999), Some("stad")),
             ContactInfo(Seq.empty, Seq.empty),
-            Some(DayDate(20, 1, 2000)),
-            Seq(Attendance("day1", Seq("shift1")))
+            Some(DayDate(20, 1, 2000))
           )
         )
       )
 
       val days: Seq[EntityWithId[Day.Id, Day]] = Seq(
-        EntityWithId("day1", Day(DayDate(17, 5, 2016), Seq(
+        EntityWithId("2016-05-17", Day(DayDate(17, 5, 2016), Seq(
           Shift("shift1", Price(2, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Afternoon, None, None, None))
         ))
       )
@@ -82,7 +84,14 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
       val dayService = mock[DayService]
       (dayService.findAll _).expects().returning(Future.successful(days)).once()
 
-      val service = new FiscalCertificateService(childRepo, dayService, global)
+      val childAttendanceService = mock[ChildAttendancesService]
+      (childAttendanceService.findAll _).expects().returning(Future.successful(
+        Map(
+          "child1" -> Seq(DayAttendance("2016-03-07", Seq(SingleAttendance("shift1", None, None))))
+        )
+      )).once()
+
+      val service = new FiscalCertificateService(childRepo, dayService, childAttendanceService, global)
 
       val headerStyle = CellStyle(fillPattern = CellFill.Solid, fillForegroundColor = Color.AquaMarine, font = Font(bold = true))
 
@@ -138,11 +147,7 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
             "achternaam",
             Address(Some("straatlaan"), Some("55"), Some(9999), Some("stad")),
             ContactInfo(Seq.empty, Seq.empty),
-            Some(DayDate(20, 1, 2000)),
-            Seq(
-              Attendance("day1", Seq("shift1")),
-              Attendance("day2", Seq("shift5"))
-            )
+            Some(DayDate(20, 1, 2000))
           )
         ),
         EntityWithId("child2", Child(
@@ -150,12 +155,7 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
             "achternaam",
             Address(Some("straatlaan"), Some("55"), Some(9999), Some("stad")),
             ContactInfo(Seq.empty, Seq.empty),
-            Some(DayDate(20, 1, 2000)),
-            Seq(
-              Attendance("day1", Seq("shift3")),
-              Attendance("day2", Seq("shift4")),
-              Attendance("day3", Seq("shift10"))
-            )
+            Some(DayDate(20, 1, 2000))
           )
         ),
         EntityWithId("child3", Child(
@@ -163,27 +163,23 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
             "achternaam",
             Address(Some("straatlaan"), Some("55"), Some(9999), Some("stad")),
             ContactInfo(Seq.empty, Seq.empty),
-            Some(DayDate(20, 1, 2000)),
-            Seq(
-              Attendance("day1", Seq("shift1", "shift2", "shift3")),
-              Attendance("day3", Seq("shift7", "shift8", "shift9"))
-            )
+            Some(DayDate(20, 1, 2000))
           )
         )
       )
 
       val days: Seq[EntityWithId[Day.Id, Day]] = Seq(
-        EntityWithId("day1", Day(DayDate(17, 5, 2015), Seq(
+        EntityWithId("2015-05-17", Day(DayDate(17, 5, 2015), Seq(
           Shift("shift1", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Morning, None, None, None),
           Shift("shift2", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Noon, None, None, None),
           Shift("shift3", Price(2, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Afternoon, None, None, None))
         )),
-        EntityWithId("day2", Day(DayDate(18, 5, 2016), Seq(
+        EntityWithId("2016-05-18", Day(DayDate(18, 5, 2016), Seq(
           Shift("shift4", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Morning, None, None, None),
           Shift("shift5", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Noon, None, None, None),
           Shift("shift6", Price(2, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Afternoon, None, None, None))
         )),
-        EntityWithId("day3", Day(DayDate(19, 5, 2015), Seq(
+        EntityWithId("2015-05-19", Day(DayDate(19, 5, 2015), Seq(
           Shift("shift7", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Morning, None, None, None),
           Shift("shift8", Price(1, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Noon, None, None, None),
           Shift("shift9", Price(2, 0), childrenCanBePresent = true, crewCanBePresent = true, ShiftKind.Afternoon, None, None, None),
@@ -197,7 +193,34 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
       val dayService = mock[DayService]
       (dayService.findAll _).expects().returning(Future.successful(days)).once()
 
-      val service = new FiscalCertificateService(childRepo, dayService, global)
+      val childAttendanceService = mock[ChildAttendancesService]
+      (childAttendanceService.findAll _).expects().returning(Future.successful(
+        Map(
+          "child1" -> Seq(
+            DayAttendance("2016-03-05", Seq(SingleAttendance("shift1", None, None))),
+            DayAttendance("2016-03-06", Seq(SingleAttendance("shift5", None, None)))
+          ),
+          "child2" -> Seq(
+            DayAttendance("2016-03-05", Seq(SingleAttendance("shift3", None, None))),
+            DayAttendance("2016-03-06", Seq(SingleAttendance("shift4", None, None))),
+            DayAttendance("2016-03-07", Seq(SingleAttendance("shift10", None, None)))
+          ),
+          "child3" -> Seq(
+            DayAttendance("2016-03-05", Seq(
+              SingleAttendance("shift1", None, None),
+              SingleAttendance("shift2", None, None),
+              SingleAttendance("shift3", None, None)
+            )),
+            DayAttendance("2016-03-07", Seq(
+              SingleAttendance("shift7", None, None),
+              SingleAttendance("shift8", None, None),
+              SingleAttendance("shift9", None, None)
+            ))
+          )
+        )
+      )).once()
+
+      val service = new FiscalCertificateService(childRepo, dayService, childAttendanceService, global)
 
       val headerStyle = CellStyle(fillPattern = CellFill.Solid, fillForegroundColor = Color.AquaMarine, font = Font(bold = true))
 

@@ -22,11 +22,11 @@ class ExportServiceSpec extends WordSpec with Matchers with MockFactory {
         EntityWithId[Child.Id, Child]("child1", Child("firstName", "lastName", Address(
           Some("street"), Some("number"), Some(6666), Some("city")
         ), ContactInfo(Seq(PhoneContact(Some("kind"), Some("comment"), "phoneNumber")), Seq("aoeu@example.com")),
-          Some(DayDate(22, 12, 2016)), Nil)),
+          Some(DayDate(22, 12, 2016)))),
         EntityWithId[Child.Id, Child]("child2", Child("John", "Doe", Address.empty, ContactInfo(Seq(
           PhoneContact(Some("kind"), Some("comment"), "phoneNumber"), PhoneContact(None, None, "phone2"),
           PhoneContact(Some("landline"), None, "phone3")
-        ), Seq("aoeu@example.com", "secondary@example.com")), None, Nil))
+        ), Seq("aoeu@example.com", "secondary@example.com")), None))
       )
 
       (childRepo.findAll _).expects().returns(Future.successful(children))

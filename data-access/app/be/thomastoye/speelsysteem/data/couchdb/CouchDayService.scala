@@ -37,25 +37,6 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
       .map(_.sortBy(x => x.entity.date).reverse)
   }
 
-  override def findAttendancesForChild(id: Child.Id): Future[Seq[Day]] = {
-    db.docs.get[Child](id)(CouchChildRepository.childReader).toFuture.map(_.doc).flatMap(findAttendancesForChild)
-  }
-
-  private def findAttendancesForChild(child: Child): Future[Seq[Day]] = {
-    val daysChildAttended = child.attendances.map(_.day)
-    db.docs.getMany[Day](daysChildAttended).toFuture.map(_.getDocs).map { allDays =>
-      allDays.map { day =>
-        val shiftsAttendedWithDetails = if(daysChildAttended.contains(day._id)) {
-          val shiftsOnDay = allDays.filter(check => check._id == day._id).head.doc.shifts
-          val shiftsChildAttended = child.attendances.filter(_.day == day._id).head.shifts
-          Some(shiftsOnDay.filter(x => shiftsChildAttended.contains(x.id)))
-        } else None
-
-        Day(day.doc.date, shiftsAttendedWithDetails.toSeq.flatten)
-      }
-    }
-  }
-
   override def insert(day: Day): Future[Unit] = ???
 
   override def findById(id: Id): Future[Option[Day]] = ???

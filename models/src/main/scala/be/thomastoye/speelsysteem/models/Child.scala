@@ -7,9 +7,7 @@ case class Child(
   address: Address,
   contact: ContactInfo,
 
-  birthDate: Option[DayDate],
-
-  attendances: Seq[Attendance]
+  birthDate: Option[DayDate]
 )
 
 object Child {

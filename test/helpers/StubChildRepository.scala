@@ -21,8 +21,6 @@ class StubChildRepository extends ChildRepository {
 
   override def update(id: Id, child: Child): Future[Unit] = ???
 
-  override def addAttendancesForChild(id: Id, dayId: Id, shifts: Seq[Id]): Future[Option[Unit]] = ???
-
   override def delete(id: Id): Future[Unit] = ???
 }
 
