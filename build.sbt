@@ -12,7 +12,9 @@ lazy val commonSettings = Seq(
 
 lazy val root = (project in file("."))
   .settings(commonSettings)
-  .settings(packageName in Docker := "speelsysteem-dashboard")
+  .settings(
+    packageName in Docker := "speelsysteem-dashboard"
+  )
   .enablePlugins(PlayScala)
   .dependsOn(dataAccess)
   .aggregate(dataAccess)
@@ -37,7 +39,8 @@ lazy val models = project
 
       "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     ),
-    packageName in Docker := "speelsysteem-dashboard-models"
+    publishLocal in Docker := { },
+    publish in Docker := { }
   )
 
 lazy val dataAccess = Project("data-access", file("data-access"))
@@ -52,7 +55,8 @@ lazy val dataAccess = Project("data-access", file("data-access"))
       "org.scalatest" %% "scalatest" % "3.0.0" % "test",
       "org.scalamock" %% "scalamock-scalatest-support" % "3.3.0" % "test"
     ),
-    packageName in Docker := "speelsysteem-dashboard-data-access"
+    publishLocal in Docker := { },
+    publish in Docker := { }
   )
   .dependsOn(models)
   .aggregate(models)
