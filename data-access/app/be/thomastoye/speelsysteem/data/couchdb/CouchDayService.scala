@@ -9,7 +9,7 @@ import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
 import be.thomastoye.speelsysteem.models.Day.Id
-import com.ibm.couchdb.MappedDocType
+import com.ibm.couchdb.{MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
 
@@ -26,12 +26,11 @@ object CouchDayService extends StrictLogging {
 class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLogging with DayService {
   import CouchDayService._
 
-  val db = couchDatabase.db
-
+  private val db = couchDatabase.getDb("days", TypeMapping.empty)
 
   override def findAll: Future[Seq[EntityWithId[Id, Day]]] = {
     db.docs.getMany
-      .byTypeUsingTemporaryView(MappedDocType(dayKind))
+      .byType[String]("all", "days", MappedDocType(dayKind))
       .includeDocs[Day].build.query.toFuture
       .map(res => res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       .map(_.sortBy(x => x.entity.date).reverse)

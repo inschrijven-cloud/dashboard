@@ -26,7 +26,7 @@ object CouchChildRepository {
 class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends ChildRepository with StrictLogging {
   import CouchChildRepository._
 
-  val db = couchDatabase.getDb("children", TypeMapping(classOf[Child] -> CouchChildRepository.childKind))
+  private val db = couchDatabase.getDb("children", TypeMapping(classOf[Child] -> CouchChildRepository.childKind))
 
   override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = {
     val p: Promise[Option[EntityWithId[Id, Child]]] = Promise()

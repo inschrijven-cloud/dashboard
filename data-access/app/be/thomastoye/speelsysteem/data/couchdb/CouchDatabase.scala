@@ -30,7 +30,6 @@ object CouchDatabase {
 }
 
 trait CouchDatabase {
-  val db: CouchDbApi
   def getDb(suffix: String, typeMapping: TypeMapping): CouchDbApi
 }
 
@@ -46,11 +45,6 @@ class CouchDatabaseImpl @Inject()(config: Configuration) extends CouchDatabase {
     case \/-(res) => Logger.info(s"Successfully connected to CouchDB ${res.version} (vendor: ${res.vendor.name}): ${res.couchdb}")
   }
 
-  override val db: CouchDbApi = couchdb.db(couchConfig.db, TypeMapping(
-    classOf[Crew] -> CouchCrewRepository.crewKind,
-    classOf[Child] -> CouchChildRepository.childKind
-  ))
-
-  override def getDb(suffix: String, typeMapping: TypeMapping) = couchdb.db(couchConfig.db + "-" + suffix, typeMapping)
+  override def getDb(suffix: String, typeMapping: TypeMapping): CouchDbApi = couchdb.db(couchConfig.db + "-" + suffix, typeMapping)
 
 }

@@ -9,7 +9,7 @@ import upickle.default.{Reader, Writer}
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.models.Crew.Id
 import be.thomastoye.speelsysteem.models.JsonFormats._
-import com.ibm.couchdb.{CouchDoc, MappedDocType}
+import com.ibm.couchdb.{CouchDoc, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
 
@@ -26,7 +26,7 @@ object CouchCrewRepository {
 class CouchCrewRepository @Inject() (couchDatabase: CouchDatabase) extends CrewRepository with StrictLogging {
   import CouchCrewRepository._
 
-  val db = couchDatabase.db
+  private val db = couchDatabase.getDb("crew", TypeMapping(classOf[Crew] -> CouchCrewRepository.crewKind))
 
   override def findById(id: Id): Future[Option[EntityWithId[Id, Crew]]] = findAll.map(_.find(_.id == id))
 
