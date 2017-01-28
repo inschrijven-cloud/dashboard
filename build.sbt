@@ -70,17 +70,6 @@ val publishScalaDoc = (ref: ProjectRef) => ReleaseStep(
   action = releaseStepTaskAggregated(GhPagesKeys.pushSite in ref) // publish scaladoc
 )
 
-
-lazy val publishDocker = ReleaseStep(action = st => {
-  val extracted = Project.extract(st)
-  val ref: ProjectRef = extracted.get(thisProjectRef)
-
-  extracted.runAggregated(publish in Docker in ref, st)
-
-  st
-})
-
-
 releaseProcess <<= thisProjectRef apply { ref =>
   import sbtrelease.ReleaseStateTransformations._
 
@@ -93,7 +82,6 @@ releaseProcess <<= thisProjectRef apply { ref =>
     commitReleaseVersion,
     tagRelease,
     //publishArtifacts,
-    publishDocker,
     publishScalaDoc(ref),
     setNextVersion,
     commitNextVersion,
