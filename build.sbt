@@ -6,11 +6,13 @@ name := "speelsysteem-dashboard"
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
-  coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;"""
+  coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;""",
+  dockerRepository in Docker := Some("thomastoye")
 )
 
 lazy val root = (project in file("."))
   .settings(commonSettings)
+  .settings(packageName in Docker := "speelsysteem-dashboard")
   .enablePlugins(PlayScala)
   .dependsOn(dataAccess)
   .aggregate(dataAccess)
@@ -48,7 +50,8 @@ lazy val dataAccess = Project("data-access", file("data-access"))
 
       "org.scalatest" %% "scalatest" % "3.0.0" % "test",
       "org.scalamock" %% "scalamock-scalatest-support" % "3.3.0" % "test"
-    )
+    ),
+    packageName in Docker := "speelsysteem-dashboard-data-access"
   )
   .dependsOn(models)
   .aggregate(models)
@@ -63,6 +66,16 @@ val publishScalaDoc = (ref: ProjectRef) => ReleaseStep(
 )
 
 
+lazy val publishDocker = ReleaseStep(action = st => {
+  val extracted = Project.extract(st)
+  val ref: ProjectRef = extracted.get(thisProjectRef)
+
+  extracted.runAggregated(publish in Docker in ref, st)
+
+  st
+})
+
+
 releaseProcess <<= thisProjectRef apply { ref =>
   import sbtrelease.ReleaseStateTransformations._
 
@@ -75,6 +88,7 @@ releaseProcess <<= thisProjectRef apply { ref =>
     commitReleaseVersion,
     tagRelease,
     //publishArtifacts,
+    publishDocker,
     publishScalaDoc(ref),
     setNextVersion,
     commitNextVersion,
