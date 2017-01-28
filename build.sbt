@@ -36,7 +36,8 @@ lazy val models = project
       "com.typesafe.play" %% "play-json" % "2.5.6",
 
       "org.scalatest" %% "scalatest" % "3.0.0" % "test"
-    )
+    ),
+    packageName in Docker := "speelsysteem-dashboard-models"
   )
 
 lazy val dataAccess = Project("data-access", file("data-access"))

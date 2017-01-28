@@ -1,4 +1,6 @@
 language: scala
+services:
+ - docker
 scala:
  - 2.11.8
 
@@ -11,4 +13,6 @@ script:
 after_success:
   - sbt coveralls
   - sbt codacyCoverage
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - sbt "docker:publish" # here and not as part of release process because it can take a long time
 
