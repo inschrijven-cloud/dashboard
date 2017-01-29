@@ -8,6 +8,7 @@ lazy val commonSettings = Seq(
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
   coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;""",
   dockerRepository in Docker := Some("thomastoye")
+//  dockerUpdateLatest in Docker := true // waiting for https://github.com/playframework/playframework/pull/6924
 )
 
 lazy val root = (project in file("."))
