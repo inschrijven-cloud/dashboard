@@ -71,7 +71,7 @@ val publishScalaDoc = (ref: ProjectRef) => ReleaseStep(
   action = releaseStepTaskAggregated(GhPagesKeys.pushSite in ref) // publish scaladoc
 )
 
-releaseProcess <<= thisProjectRef apply { ref =>
+releaseProcess := (thisProjectRef apply { ref =>
   import sbtrelease.ReleaseStateTransformations._
 
   Seq[ReleaseStep](
@@ -88,7 +88,7 @@ releaseProcess <<= thisProjectRef apply { ref =>
     commitNextVersion,
     pushChanges
   )
-}
+}).value
 
 git.remoteRepo := "git@github.com:speelsysteem/dashboard.git"
 
