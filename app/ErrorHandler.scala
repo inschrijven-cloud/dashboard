@@ -22,7 +22,7 @@ class ErrorHandler extends HttpErrorHandler with StrictLogging {
   }
 
   def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
-    logger.error(exception.toString, exception.getStackTrace)
+    logger.error(exception.toString, exception)
 
     Future.successful(
       InternalServerError(Json.obj(
