@@ -7,6 +7,7 @@ import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.models._
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
+import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -63,7 +64,7 @@ class FiscalCertificateService @Inject()(
       val headers = Seq("Achternaam", "Voornaam", "Straat", "Adres", "Geboortedatum", "Periode", "Aantal dagen", "Prijs", "Totaal betaald")
 
       val certSheet = Sheet(name = "Fiscale attesten")
-        .withRows(Seq(Row(style = headerStyle).withCellValues(headers)) ++ sheetDataRows)
+        .withRows(Seq(Row(style = headerStyle).withCellValues(headers:_*)) ++ sheetDataRows)
         .withColumns((0 to headers.length).map(idx => Column(index = idx, autoSized = true)):_*)
 
       certSheet
