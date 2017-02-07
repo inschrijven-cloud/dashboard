@@ -75,7 +75,7 @@ class FiscalCertificateService @Inject()(
     }
 
     private def getTotalPricePaidForAttendances(attendances: Seq[DayAttendance]): Price = {
-      val listOfPrices: Seq[Price] = attendances.map(x => shiftIdToAmountPaidOnDay(x.day, x.shifts.map(_.shift)))
+      val listOfPrices: Seq[Price] = attendances.map(x => shiftIdToAmountPaidOnDay(x.day, x.shifts.map(_.shiftId)))
       val totalPrice = listOfPrices.fold(Price(0, 0))(_ + _)
       totalPrice
     }

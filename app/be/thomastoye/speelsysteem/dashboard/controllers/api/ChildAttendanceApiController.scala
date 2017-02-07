@@ -51,9 +51,9 @@ class ChildAttendanceApiController @Inject()(
   }
 
   def addAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = Action.async(BodyParsers.parse.json(bindShiftIdsReads)) { req =>
-    dayService.findById(dayId) flatMap  { dayOpt =>
-      dayOpt map { day =>
-        childAttendancesService.addAttendancesForChild(childId, day.date, req.body.shiftIds) map (_ => Ok)
+    dayService.findById(dayId) flatMap  { maybeEntityWithId =>
+      maybeEntityWithId map { entityWithId =>
+        childAttendancesService.addAttendancesForChild(childId, entityWithId.entity.date, req.body.shiftIds) map (_ => Ok)
       } getOrElse Future.successful(NotFound)
     }
   }
