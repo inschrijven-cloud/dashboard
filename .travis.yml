@@ -1,18 +1,17 @@
 language: scala
 services:
- - docker
+- docker
 scala:
- - 2.11.8
-
+- 2.11.8
 jdk:
- - oraclejdk8
-
+- oraclejdk8
 script:
-  - sbt clean coverage test coverageReport &&
-    sbt coverageAggregate
+- sbt clean coverage test coverageReport && sbt coverageAggregate
 after_success:
-  - sbt coveralls
-  - sbt codacyCoverage
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - sbt "docker:publish" # here and not as part of release process because it can take a long time
-
+- sbt coveralls
+- sbt codacyCoverage
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- sbt "docker:publish"
+notifications:
+  slack:
+    secure: cH6UV57xC70nUCTSmugC9TTqxg+umL2NsFGDw7tJXx7AxUtP9pgSExXpisb75HooPLExI6iK6KtWvPsygjwm8uo0dz9cn+kIEtLIzDDf419N1qfsguly4ITh0oyIRzUNq97rar5hKDgCIfDD4Bv5Sl7ZCZBHapvlK7gjZHvlQECN7h4Q3x07znL9zhLBUjM5De5IMVHPP+CnJ7QbX5BPVhCNFEuIr1eH3wX5skuYg6mPb6mPLscJp093YTOPAeTQVPcfziwGFCB68gCC0vEdw5wz7BM2s7IfngkTC7rQjMeWiWKMgzkQBqycGjPqRMi7oJYDg2AVLDeCKbPQkrd4rWRAW0dqriQmk4oa0e6Y1/9NuHX1Eh35TkD3DOafjY6BAJIHpJBACWrms6TB7WQgb9YSimIjLPHWlAEADEGvwSdwVEZEVdFwzuCJqiHrE1aTtYjqOJjCbbqJwz9H5Gesu9PPPPJUggNrjDHogT38/UPhMlCJX1gROioDv9KaMqF5bMt9bpDvdrAR3mUaDRfpLMEYMVzlrhHcNiWjblkMSwHmUMcgeB87uuAAhqqc7sbq/4XTzz6+0u7Sd+/MaEvivRE4ZldzYq3ZcIpib5V0kUdKr+4pLqQ1X6dTrPsDJ1whunLjSkTKw9adyu7EDkIgdccpTPYbl8CK47z5XMxj0CY=
