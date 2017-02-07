@@ -3,7 +3,7 @@ import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
 import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
 import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
 import be.thomastoye.speelsysteem.models._
-import be.thomastoye.speelsysteem.models.JsonFormats.dayFormat
+import be.thomastoye.speelsysteem.models.JsonFormats._
 
 import scala.concurrent.Future
 import org.scalatestplus.play._
@@ -127,14 +127,16 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val dayService = mock[DayService]
 
-      (dayService.findById _).expects("day-id").returning(Future.successful(Some(day))).once()
+      (dayService.findById _).expects("day-id").returning(Future.successful(
+        Some(EntityWithId("day-id", day)))
+      ).once()
 
       val controller = new DayApiController(dayService, mock[ChildRepository])
 
       val res: Future[Result] = controller.getById("day-id").apply(FakeRequest())
 
       status(res) mustBe OK
-      contentAsJson(res) must be(Json.toJson(day))
+      contentAsJson(res) must be(Json.toJson(EntityWithId("day-id", day)))
     }
 
     "return not found for non-existant day" in {

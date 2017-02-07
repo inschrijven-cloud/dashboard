@@ -12,7 +12,7 @@ trait DayService {
 
   def insert(day: Day): Future[Unit]
 
-  def findById(id: Day.Id): Future[Option[Day]]
+  def findById(id: Day.Id): Future[Option[EntityWithId[Id, Day]]]
 
   def update(id: Day.Id, day: Day): Future[Unit]
 }

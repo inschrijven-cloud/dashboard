@@ -11,6 +11,6 @@ import scala.concurrent.Future
 trait UnimplementedDayService extends DayService {
   override def findAll: Future[Seq[EntityWithId[Day.Id, Day]]] = ???
   override def insert(day: Day): Future[Unit] = ???
-  override def findById(id: Id): Future[Option[Day]] = ???
+  override def findById(id: Id): Future[Option[EntityWithId[Id, Day]]] = ???
   override def update(id: Id, day: Day): Future[Unit] = ???
 }

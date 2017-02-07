@@ -9,11 +9,12 @@ import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
 import be.thomastoye.speelsysteem.models.Day.Id
-import com.ibm.couchdb.{MappedDocType, TypeMapping}
+import com.ibm.couchdb.{CouchException, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.Future
+import scala.concurrent.{Future, Promise}
+import scalaz.{-\/, \/-}
 
 
 object CouchDayService extends StrictLogging {
@@ -38,7 +39,19 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
 
   override def insert(day: Day): Future[Unit] = ???
 
-  override def findById(id: Id): Future[Option[Day]] = ???
+  override def findById(id: Id): Future[Option[EntityWithId[Id, Day]]] = {
+    val p: Promise[Option[EntityWithId[Id, Day]]] = Promise()
+
+    db.docs.get[Day](id).unsafePerformAsync {
+      case \/-(res) => p.success(Some(EntityWithId(res._id, res.doc)))
+      case -\/(e)   => e match {
+        case _: CouchException[_] => p.success(None)
+        case _ => p.failure(e)
+      }
+    }
+
+    p.future
+  }
 
   override def update(id: Id, day: Day): Future[Unit] = ???
 }
