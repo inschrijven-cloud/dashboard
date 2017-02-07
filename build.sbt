@@ -3,6 +3,8 @@ import GhPagesKeys._
 
 name := "speelsysteem-dashboard"
 
+lazy val playVersion = "2.5.12"
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
@@ -36,7 +38,7 @@ lazy val models = project
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-json" % "2.5.6",
+      "com.typesafe.play" %% "play-json" % playVersion,
 
       "org.scalatest" %% "scalatest" % "3.0.0" % "test"
     ),
