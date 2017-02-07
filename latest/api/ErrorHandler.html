@@ -45,7 +45,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">ErrorHandler</span><span class="result"> extends <span class="extype" name="play.api.http.HttpErrorHandler">HttpErrorHandler</span></span>
+        <span class="name">ErrorHandler</span><span class="result"> extends <span class="extype" name="play.api.http.HttpErrorHandler">HttpErrorHandler</span> with <span class="extype" name="com.typesafe.scalalogging.StrictLogging">StrictLogging</span></span>
       </span>
       </h4>
       
@@ -54,7 +54,7 @@
               
         </dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="play.api.http.HttpErrorHandler">HttpErrorHandler</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="com.typesafe.scalalogging.StrictLogging">StrictLogging</span>, <span class="extype" name="play.api.http.HttpErrorHandler">HttpErrorHandler</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -72,7 +72,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="ErrorHandler"><span>ErrorHandler</span></li><li class="in" name="play.api.http.HttpErrorHandler"><span>HttpErrorHandler</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="ErrorHandler"><span>ErrorHandler</span></li><li class="in" name="com.typesafe.scalalogging.StrictLogging"><span>StrictLogging</span></li><li class="in" name="play.api.http.HttpErrorHandler"><span>HttpErrorHandler</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -316,6 +316,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.typesafe.scalalogging.StrictLogging#logger" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="logger:com.typesafe.scalalogging.Logger"></a>
+      <a id="logger:Logger"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">logger</span><span class="result">: <span class="extype" name="com.typesafe.scalalogging.Logger">Logger</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="index.html#ErrorHandler@logger:com.typesafe.scalalogging.Logger" title="Permalink" target="_top">
+        <img src="lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>StrictLogging</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -513,7 +530,9 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="play.api.http.HttpErrorHandler">
+        <div class="parent" name="com.typesafe.scalalogging.StrictLogging">
+              <h3>Inherited from <span class="extype" name="com.typesafe.scalalogging.StrictLogging">StrictLogging</span></h3>
+            </div><div class="parent" name="play.api.http.HttpErrorHandler">
               <h3>Inherited from <span class="extype" name="play.api.http.HttpErrorHandler">HttpErrorHandler</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
