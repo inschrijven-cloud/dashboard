@@ -5,10 +5,11 @@ import play.api.mvc.Results._
 import scala.concurrent._
 import javax.inject.Singleton
 
+import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.json.Json
 
 @Singleton
-class ErrorHandler extends HttpErrorHandler {
+class ErrorHandler extends HttpErrorHandler with StrictLogging {
 
   def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     Future.successful(
@@ -21,6 +22,8 @@ class ErrorHandler extends HttpErrorHandler {
   }
 
   def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
+    logger.error(exception.toString, exception.getStackTrace)
+
     Future.successful(
       InternalServerError(Json.obj(
         "status" -> "error",
