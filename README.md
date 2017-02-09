@@ -75,6 +75,7 @@ This is the [speelsysteem](https://github.com/speelsysteem) dashboard API. It's 
 |                    | Generate fiscal certificate for a child           | `GET /api/v1/files/fiscalCertificate/:year/:childId` |
 |                    | Generate compensation certificate data            | `GET /api/v1/files/compensation/:year`               |
 |                    | Generate compensation certificate for a volunteer | `GET /api/v1/files/compensation/:year/:crewId`       |
+| :heavy_check_mark: | Generate data for number of children per day      | `GET /api/v1/files/childrenPerDay/:year`             |
 
 
 ### Export API

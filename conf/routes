@@ -45,6 +45,7 @@ GET           /api/v1/files/fiscalCertificate/:year/:childId        be.thomastoy
 GET           /api/v1/files/compensation/:year                      be.thomastoye.speelsysteem.dashboard.controllers.api.ReportController.downloadCompensation(year: Int)
 GET           /api/v1/files/compensation/:year/:crewId              be.thomastoye.speelsysteem.dashboard.controllers.api.ReportController.downloadCompensationForCrew(year: Int, crewId)
 
+GET           /api/v1/files/childrenPerDay/:year                    be.thomastoye.speelsysteem.dashboard.controllers.api.ReportController.downloadChildrenPerDay(year: Int)
 
 # Export API
 

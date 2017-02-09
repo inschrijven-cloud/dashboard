@@ -2,9 +2,11 @@ package be.thomastoye.speelsysteem.data.couchdb
 
 import java.time.Instant
 
+import be.thomastoye.speelsysteem.data.ChildAttendancesService.{AttendancesOnDay, ShiftWithAttendances}
 import be.thomastoye.speelsysteem.data.{ChildAttendancesService, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat}
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions._
+import be.thomastoye.speelsysteem.models.Day.Id
 import com.google.inject.Inject
 import com.ibm.couchdb.{CouchDbApi, MappedDocType, Res, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
@@ -81,6 +83,26 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
 
         (childId, dayAttendancesReduced.toSeq)
       })
+  }
+
+  override def findAllPerDay: Future[Map[Id, AttendancesOnDay]] = {
+    db.docs.getMany.byType[String]("all", "childattendance", MappedDocType(childAttendanceKind))
+      .includeDocs
+      .build
+      .query
+      .toFuture
+      .map(_.rows.map(doc => createDayAttendance(doc.id, doc.doc.doc)))
+      .map {
+        _.groupBy(_._2.day) map { case (dayId, seq) =>
+          val shiftWithAttendances = seq.map(_._2).flatMap(_.shifts).map(_.shiftId).groupBy(x => x).mapValues(_.length).map { case (shiftId, numAtt) =>
+            ShiftWithAttendances(shiftId, numAtt)
+          }.toSeq
+
+          val uniqueChildren = seq.map(_._1).distinct.length
+
+          (dayId, AttendancesOnDay(uniqueChildren, shiftWithAttendances))
+        }
+      }
   }
 
   private def createDayAttendance(idFromDb: String, persisted: ChildAttendancePersisted): (Child.Id, DayAttendance) = {

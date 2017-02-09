@@ -1,6 +1,6 @@
 import be.thomastoye.speelsysteem.data.couchdb._
 import be.thomastoye.speelsysteem.data.util.{UuidService, UuidServiceImpl}
-import be.thomastoye.speelsysteem.data.{ChildAttendancesService, ChildRepository, CrewRepository, DayService}
+import be.thomastoye.speelsysteem.data._
 import com.google.inject.AbstractModule
 
 class Module extends AbstractModule {
@@ -11,5 +11,6 @@ class Module extends AbstractModule {
     bind(classOf[CouchDatabase]).to(classOf[CouchDatabaseImpl])
     bind(classOf[DayService]).to(classOf[CouchDayService])
     bind(classOf[ChildAttendancesService]).to(classOf[CouchChildAttendancesService])
+    bind(classOf[ReportService]).to(classOf[ReportServiceImpl])
   }
 }

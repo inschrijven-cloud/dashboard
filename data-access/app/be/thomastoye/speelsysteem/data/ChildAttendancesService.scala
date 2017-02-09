@@ -1,12 +1,17 @@
 package be.thomastoye.speelsysteem.data
 
+import be.thomastoye.speelsysteem.data.ChildAttendancesService.AttendancesOnDay
 import be.thomastoye.speelsysteem.models._
 import com.ibm.couchdb.Res
 
 import scala.concurrent.Future
 
-trait ChildAttendancesService {
+object ChildAttendancesService {
+  case class ShiftWithAttendances(shiftId: Shift.Id, numAttendances: Int)
+  case class AttendancesOnDay(uniqueChildren: Int, shiftsWithAttendances: Seq[ShiftWithAttendances])
+}
 
+trait ChildAttendancesService {
   def findAttendancesForChild(childId: Child.Id): Future[Seq[DayAttendance]]
 
   def findNumberAttendancesForChild(childId: Child.Id): Future[Option[Int]]
@@ -26,5 +31,7 @@ trait ChildAttendancesService {
   }
 
   def findAll: Future[Map[Child.Id, Seq[DayAttendance]]]
+
+  def findAllPerDay: Future[Map[Day.Id, AttendancesOnDay]]
 
 }
