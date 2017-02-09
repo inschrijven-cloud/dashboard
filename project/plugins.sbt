@@ -10,9 +10,13 @@ resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/
 // The Typesafe snapshots repository
 resolvers += "Typesafe Snapshots" at "http://repo.typesafe.com/typesafe/snapshots/"
 
+resolvers += Resolver.typesafeRepo("releases")
+
 resolvers += Classpaths.sbtPluginReleases
 
 // Plugins
+
+addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.6.0")
 
 // The Play plugin
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.12")
