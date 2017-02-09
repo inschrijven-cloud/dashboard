@@ -9,15 +9,14 @@ import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
 import com.typesafe.scalalogging.StrictLogging
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
-
-class FiscalCertificateService @Inject()(
-  childRepository: ChildRepository,
-  dayService: DayService,
-  childAttendancesService: ChildAttendancesService,
-  implicit val ec: ExecutionContext)
-{
+class FiscalCertificateService @Inject() (
+    childRepository: ChildRepository,
+    dayService: DayService,
+    childAttendancesService: ChildAttendancesService,
+    implicit val ec: ExecutionContext
+) {
 
   case class CertificateRow(
     lastName: String,
@@ -32,17 +31,17 @@ class FiscalCertificateService @Inject()(
   )
 
   def getFiscalCertificateSheet(year: Int): Future[Sheet] = for {
-      allDays        <- dayService.findAll
-      allChildren    <- childRepository.findAll
-      allAttendances <- childAttendancesService.findAll
-    } yield FiscalCertificateCalculator(year, allDays, allChildren, allAttendances).calculateAll
+    allDays <- dayService.findAll
+    allChildren <- childRepository.findAll
+    allAttendances <- childAttendancesService.findAll
+  } yield FiscalCertificateCalculator(year, allDays, allChildren, allAttendances).calculateAll
 
   private case class FiscalCertificateCalculator(
-    year: Int,
-    allDays: Seq[EntityWithId[Day.Id, Day]],
-    allChildren: Seq[EntityWithId[Child.Id, Child]],
-    allAttendances: Map[Child.Id, Seq[DayAttendance]])
-  {
+      year: Int,
+      allDays: Seq[EntityWithId[Day.Id, Day]],
+      allChildren: Seq[EntityWithId[Child.Id, Child]],
+      allAttendances: Map[Child.Id, Seq[DayAttendance]]
+  ) {
     def calculateAll: Sheet = {
       val certRows = allChildren.map(x => child2certificateRow(x.entity, x.id))
 
@@ -57,15 +56,14 @@ class FiscalCertificateService @Inject()(
           row.numDays,
           row.dayPrice,
           row.totalReceivedAmount
-        )
-      )
+        ))
 
       val headerStyle = CellStyle(fillPattern = CellFill.Solid, fillForegroundColor = Color.AquaMarine, font = Font(bold = true))
       val headers = Seq("Achternaam", "Voornaam", "Straat", "Adres", "Geboortedatum", "Periode", "Aantal dagen", "Prijs", "Totaal betaald")
 
       val certSheet = Sheet(name = "Fiscale attesten")
-        .withRows(Seq(Row(style = headerStyle).withCellValues(headers:_*)) ++ sheetDataRows)
-        .withColumns((0 to headers.length).map(idx => Column(index = idx, autoSized = true)):_*)
+        .withRows(Seq(Row(style = headerStyle).withCellValues(headers: _*)) ++ sheetDataRows)
+        .withColumns((0 to headers.length).map(idx => Column(index = idx, autoSized = true)): _*)
 
       certSheet
     }

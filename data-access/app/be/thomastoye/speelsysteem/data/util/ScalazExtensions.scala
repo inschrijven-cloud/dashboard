@@ -1,8 +1,8 @@
 package be.thomastoye.speelsysteem.data.util
 
 import scala.language.implicitConversions
-import scala.concurrent.{Future, Promise}
-import scalaz.{-\/, \/-}
+import scala.concurrent.{ Future, Promise }
+import scalaz.{ -\/, \/- }
 import scalaz.concurrent.Task
 
 // TODO replace by delorean https://github.com/Verizon/delorean

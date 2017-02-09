@@ -29,27 +29,26 @@ object JsonFormats {
   }
 
   private val shiftWrites: Writes[Shift] = (
-      (JsPath \ "id").write[String] and
-      (JsPath \ "price").write[Price] and
-      (JsPath \ "childrenCanBePresent").write[Boolean] and
-      (JsPath \ "crewCanBePresent").write[Boolean] and
-      (JsPath \ "kind").write[ShiftKind] and
-      (JsPath \ "location").writeNullable[String] and
-      (JsPath \ "description").writeNullable[String] and
-      (JsPath \ "startAndEnd").writeNullable[StartAndEndTime]
-    )(unlift(Shift.unapply))
+    (JsPath \ "id").write[String] and
+    (JsPath \ "price").write[Price] and
+    (JsPath \ "childrenCanBePresent").write[Boolean] and
+    (JsPath \ "crewCanBePresent").write[Boolean] and
+    (JsPath \ "kind").write[ShiftKind] and
+    (JsPath \ "location").writeNullable[String] and
+    (JsPath \ "description").writeNullable[String] and
+    (JsPath \ "startAndEnd").writeNullable[StartAndEndTime]
+  )(unlift(Shift.unapply))
 
   private val shiftReads: Reads[Shift] = (
-      (JsPath \ "id").read[String] and
-      (JsPath \ "price").read[Price] and
-      (JsPath \ "childrenCanBePresent").read[Boolean] and
-      (JsPath \ "crewCanBePresent").read[Boolean] and
-      (JsPath \ "kind").read[ShiftKind] and
-      (JsPath \ "location").readNullable[String] and
-      (JsPath \ "description").readNullable[String] and
-      (JsPath \ "startAndEnd").readNullable[StartAndEndTime]
-    )(Shift.apply _)
-
+    (JsPath \ "id").read[String] and
+    (JsPath \ "price").read[Price] and
+    (JsPath \ "childrenCanBePresent").read[Boolean] and
+    (JsPath \ "crewCanBePresent").read[Boolean] and
+    (JsPath \ "kind").read[ShiftKind] and
+    (JsPath \ "location").readNullable[String] and
+    (JsPath \ "description").readNullable[String] and
+    (JsPath \ "startAndEnd").readNullable[StartAndEndTime]
+  )(Shift.apply _)
 
   implicit val shiftFormat: Format[Shift] = Format(shiftReads, shiftWrites)
 

@@ -3,18 +3,18 @@ package be.thomastoye.speelsysteem.data.couchdb
 import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.data.{ChildRepository, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat}
+import be.thomastoye.speelsysteem.data.{ ChildRepository, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat }
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
-import upickle.default.{Reader, Writer}
+import upickle.default.{ Reader, Writer }
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.models.Child.Id
-import com.ibm.couchdb.{CouchDoc, CouchException, MappedDocType, TypeMapping}
+import com.ibm.couchdb.{ CouchDoc, CouchException, MappedDocType, TypeMapping }
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.{Future, Promise}
-import scalaz.{-\/, \/-}
+import scala.concurrent.{ Future, Promise }
+import scalaz.{ -\/, \/- }
 
 object CouchChildRepository {
   val childKind = "type/child/v1"
@@ -33,7 +33,7 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
 
     db.docs.get[Child](id).unsafePerformAsync {
       case \/-(res) => p.success(Some(EntityWithId(res._id, res.doc)))
-      case -\/(e)   => e match {
+      case -\/(e) => e match {
         case _: CouchException[_] => p.success(None)
         case _ => p.failure(e)
       }
@@ -47,7 +47,7 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
 
     db.docs.getMany.byType[String]("all", "children", MappedDocType(childKind)).includeDocs.build.query.unsafePerformAsync {
       case \/-(res) => p.success(res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
-      case -\/(e)   => p.failure(e)
+      case -\/(e) => p.failure(e)
     }
 
     p.future.map(_.sortBy(x => (x.entity.lastName, x.entity.firstName)))
@@ -58,9 +58,9 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
   override def count: Future[Int] = findAll.map(_.length)
 
   override def update(id: Id, child: Child): Future[Unit] = {
-    for{
+    for {
       currentRev <- db.docs.get[Child](id).toFuture.map(_._rev)
-      res        <- db.docs.update[Child](CouchDoc(child, childKind, _id = id, _rev = currentRev)).toFuture
+      res <- db.docs.update[Child](CouchDoc(child, childKind, _id = id, _rev = currentRev)).toFuture
     } yield { () }
   }
 

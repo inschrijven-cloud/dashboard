@@ -5,7 +5,7 @@ import play.api.libs.json._
 import upickle.Js.Value
 import upickle.default._
 import upickle.json.FastRenderer
-import upickle.{json => upicklejson}
+import upickle.{ json => upicklejson }
 
 class PlayJsonReaderUpickleCompat[T](implicit reads: Reads[T]) extends Reader[T] with StrictLogging {
   override def read0: PartialFunction[Value, T] = {

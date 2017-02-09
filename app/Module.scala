@@ -1,5 +1,5 @@
 import be.thomastoye.speelsysteem.data.couchdb._
-import be.thomastoye.speelsysteem.data.util.{UuidService, UuidServiceImpl}
+import be.thomastoye.speelsysteem.data.util.{ UuidService, UuidServiceImpl }
 import be.thomastoye.speelsysteem.data._
 import com.google.inject.AbstractModule
 

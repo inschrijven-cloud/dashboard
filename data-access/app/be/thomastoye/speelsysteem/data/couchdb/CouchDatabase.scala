@@ -1,14 +1,14 @@
 package be.thomastoye.speelsysteem.data.couchdb
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 
 import be.thomastoye.speelsysteem.exceptions.ConfigurationMissingFieldException
-import be.thomastoye.speelsysteem.models.{Child, Crew}
+import be.thomastoye.speelsysteem.models.{ Child, Crew }
 import com.ibm.couchdb._
 import play.Logger
 import play.api.Configuration
 
-import scalaz.{-\/, \/-}
+import scalaz.{ -\/, \/- }
 
 object CouchConfiguration {
   def fromConfig(config: Configuration): CouchConfiguration = {
@@ -34,11 +34,10 @@ trait CouchDatabase {
 }
 
 @Singleton
-class CouchDatabaseImpl @Inject()(config: Configuration) extends CouchDatabase {
+class CouchDatabaseImpl @Inject() (config: Configuration) extends CouchDatabase {
   private val couchConfig = CouchConfiguration.fromConfig(config)
   val couchdb = (for (user <- couchConfig.user; pass <- couchConfig.pass)
-    yield CouchDb(couchConfig.host, couchConfig.port, couchConfig.https, user, pass)
-    ) getOrElse CouchDb(couchConfig.host, couchConfig.port, couchConfig.https)
+    yield CouchDb(couchConfig.host, couchConfig.port, couchConfig.https, user, pass)) getOrElse CouchDb(couchConfig.host, couchConfig.port, couchConfig.https)
 
   couchdb.server.info.unsafePerformAsync {
     case -\/(e) => Logger.warn("Could not connect to CouchDB", e)

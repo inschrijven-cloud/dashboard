@@ -5,9 +5,9 @@ import javax.inject.Inject
 import com.norbitltd.spoiwo.model.enums.CellFill
 import com.norbitltd.spoiwo.model._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
-class ExportService @Inject()(childRepository: ChildRepository, crewRepository: CrewRepository, implicit val ec: ExecutionContext) {
+class ExportService @Inject() (childRepository: ChildRepository, crewRepository: CrewRepository, implicit val ec: ExecutionContext) {
   private val headerStyle = CellStyle(fillPattern = CellFill.Solid, fillForegroundColor = Color.AquaMarine, font = Font(bold = true))
 
   def childSheet: Future[Sheet] = {
@@ -48,7 +48,7 @@ class ExportService @Inject()(childRepository: ChildRepository, crewRepository: 
           ) ++ rows
         )
         .withColumns(
-          (0 to 9).map(idx => Column(index = idx, autoSized = true)):_*
+          (0 to 9).map(idx => Column(index = idx, autoSized = true)): _*
         )
     }
   }
@@ -95,7 +95,7 @@ class ExportService @Inject()(childRepository: ChildRepository, crewRepository: 
           ) ++ rows
         )
         .withColumns(
-          (0 to 11).map(idx => Column(index = idx, autoSized = true)):_*
+          (0 to 11).map(idx => Column(index = idx, autoSized = true)): _*
         )
     }
   }

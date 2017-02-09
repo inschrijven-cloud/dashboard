@@ -2,11 +2,11 @@ package be.thomastoye.speelsysteem.dashboard.controllers.api
 
 import javax.inject.Inject
 
-import be.thomastoye.speelsysteem.data.{ChildAttendancesService, ChildRepository, DayService}
-import be.thomastoye.speelsysteem.models.{Child, Day, Shift}
+import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, ChildRepository, DayService }
+import be.thomastoye.speelsysteem.models.{ Child, Day, Shift }
 import be.thomastoye.speelsysteem.models.JsonFormats._
-import play.api.libs.json.{JsValue, Json, Writes}
-import play.api.mvc.{Action, AnyContent, BodyParsers}
+import play.api.libs.json.{ JsValue, Json, Writes }
+import play.api.mvc.{ Action, AnyContent, BodyParsers }
 import play.api.libs.concurrent.Execution.Implicits._
 
 import scala.concurrent.Future
@@ -31,11 +31,11 @@ object ChildAttendanceApiController {
   }
 }
 
-class ChildAttendanceApiController @Inject()(
-  childRepository: ChildRepository,
-  dayService: DayService,
-  childAttendancesService: ChildAttendancesService
-  ) extends ApiController {
+class ChildAttendanceApiController @Inject() (
+    childRepository: ChildRepository,
+    dayService: DayService,
+    childAttendancesService: ChildAttendancesService
+) extends ApiController {
   import ChildAttendanceApiController._
 
   def numberOfChildAttendances: Action[AnyContent] = Action.async { req =>
@@ -51,7 +51,7 @@ class ChildAttendanceApiController @Inject()(
   }
 
   def addAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = Action.async(BodyParsers.parse.json(bindShiftIdsReads)) { req =>
-    dayService.findById(dayId) flatMap  { maybeEntityWithId =>
+    dayService.findById(dayId) flatMap { maybeEntityWithId =>
       maybeEntityWithId map { entityWithId =>
         childAttendancesService.addAttendancesForChild(childId, entityWithId.entity.date, req.body.shiftIds) map (_ => Ok)
       } getOrElse Future.successful(NotFound)

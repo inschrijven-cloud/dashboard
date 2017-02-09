@@ -4,8 +4,8 @@ import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.ChildRepository
 import be.thomastoye.speelsysteem.data.util.UuidService
-import be.thomastoye.speelsysteem.models.{Child, JsonFormats}
-import be.thomastoye.speelsysteem.models.JsonFormats.{childWithIdWrites, childFormat}
+import be.thomastoye.speelsysteem.models.{ Child, JsonFormats }
+import be.thomastoye.speelsysteem.models.JsonFormats.{ childWithIdWrites, childFormat }
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc._

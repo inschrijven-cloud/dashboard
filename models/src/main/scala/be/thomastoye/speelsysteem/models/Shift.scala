@@ -22,7 +22,7 @@ object Shift {
   /** Common shift kinds */
   object ShiftKind {
     case object Early extends ShiftKind {
-      override val mnemonic  = "VRO"
+      override val mnemonic = "VRO"
       override val description: String = "Vroeg"
     }
 
@@ -58,10 +58,10 @@ object Shift {
 
     def apply(mnemonic: String): ShiftKind = mnemonic match {
       case "VRO" => Early
-      case "VM"  => Morning
+      case "VM" => Morning
       case "MID" => Noon
-      case "NM"  => Afternoon
-      case "AV"  => Evening
+      case "NM" => Afternoon
+      case "AV" => Evening
       case "EXT" => External
       case "LEI" => CrewActivity
     }
@@ -69,14 +69,14 @@ object Shift {
 }
 
 case class Shift(
-  id: Shift.Id,
-  price: Price,
-  childrenCanBePresent: Boolean,
-  crewCanBePresent: Boolean,
-  kind: ShiftKind,
-  location: Option[String],
-  desciption: Option[String],
-  startAndEnd: Option[StartAndEndTime]
+    id: Shift.Id,
+    price: Price,
+    childrenCanBePresent: Boolean,
+    crewCanBePresent: Boolean,
+    kind: ShiftKind,
+    location: Option[String],
+    desciption: Option[String],
+    startAndEnd: Option[StartAndEndTime]
 ) extends Ordered[Shift] { // with Ordering[Shift] {
 
   override def compare(that: Shift): Int = {

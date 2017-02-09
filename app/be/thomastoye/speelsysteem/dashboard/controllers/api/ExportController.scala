@@ -6,13 +6,13 @@ import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.ExportService
 import be.thomastoye.speelsysteem.models.DayDate
-import play.api.mvc.{Action, AnyContent, Controller}
+import play.api.mvc.{ Action, AnyContent, Controller }
 import play.api.libs.concurrent.Execution.Implicits._
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
 
-class ExportController @Inject()(exportService: ExportService) extends Controller {
+class ExportController @Inject() (exportService: ExportService) extends Controller {
   def downloadChildren: Action[AnyContent] = Action.async { req =>
-    exportService.childSheet  map { sheet =>
+    exportService.childSheet map { sheet =>
       val file = File.createTempFile("kinderen.xlsx", System.nanoTime().toString)
       sheet.saveAsXlsx(file.getAbsolutePath)
 
