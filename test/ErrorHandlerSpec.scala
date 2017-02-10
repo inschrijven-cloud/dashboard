@@ -5,7 +5,6 @@ import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
 
-
 class ErrorHandlerSpec extends PlaySpec with Results {
   "Error handler" should {
     "return JSON on server error" in {

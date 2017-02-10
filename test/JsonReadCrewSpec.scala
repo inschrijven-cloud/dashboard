@@ -47,7 +47,8 @@ class JsonReadCrewSpec extends PlaySpec {
           |  "bankAccount": "BE66 6666 6666 6666",
           |  "yearStarted": 2016
           |}
-        """.stripMargin)
+        """.stripMargin
+      )
 
       val res = json.validate[Crew]
 
@@ -57,8 +58,8 @@ class JsonReadCrewSpec extends PlaySpec {
         Address(Some("Street"), Some("55X"), Some(6666), Some("Some-City")),
         Some("BE66 6666 6666 6666"),
         ContactInfo(Seq(
-          PhoneContact(Some("mobile"), None, "0478 78 78 78"),
-          PhoneContact(Some("landline"), Some("work phone, call this during business hours"), "055 55 55 55")
+          PhoneContact("0478 78 78 78", Some("mobile"), None),
+          PhoneContact("055 55 55 55", Some("landline"), Some("work phone, call this during business hours"))
         ), Seq("john.smith@example.com", "test@example.com")),
         Some(2016),
         Some(DayDate(22, 2, 2002))

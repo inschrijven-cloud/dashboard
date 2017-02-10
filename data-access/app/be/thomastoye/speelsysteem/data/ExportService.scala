@@ -18,12 +18,12 @@ class ExportService @Inject() (childRepository: ChildRepository, crewRepository:
           child.entity.firstName,
           child.entity.lastName,
           child.entity.birthDate.map(_.toString).getOrElse(""),
-          child.entity.address.street.getOrElse(""),
-          child.entity.address.number.getOrElse(""),
-          child.entity.address.zipCode.map(_.toString).getOrElse(""),
-          child.entity.address.city.getOrElse(""),
-          child.entity.contact.email.mkString(", "),
-          child.entity.contact.phone.map { phoneContact =>
+          child.entity.legacyAddress.street.getOrElse(""),
+          child.entity.legacyAddress.number.getOrElse(""),
+          child.entity.legacyAddress.zipCode.map(_.toString).getOrElse(""),
+          child.entity.legacyAddress.city.getOrElse(""),
+          child.entity.legacyContact.email.mkString(", "),
+          child.entity.legacyContact.phone.map { phoneContact =>
             phoneContact.phoneNumber + phoneContact.comment.map(x => s" ($x)").getOrElse("") +
               phoneContact.kind.map(x => s" ($x)").getOrElse("")
           }.mkString(", ")

@@ -1,3 +1,3 @@
 package be.thomastoye.speelsysteem.models
 
-case class PhoneContact(kind: Option[String] = None, comment: Option[String] = None, phoneNumber: String)
+case class PhoneContact(phoneNumber: String, kind: Option[String] = None, comment: Option[String] = None)

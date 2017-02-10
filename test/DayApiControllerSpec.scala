@@ -1,7 +1,7 @@
 import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
-import be.thomastoye.speelsysteem.data.{ChildRepository, DayService}
-import be.thomastoye.speelsysteem.models.Shift.{Id, ShiftKind}
+import be.thomastoye.speelsysteem.data.{ ChildRepository, DayService }
+import be.thomastoye.speelsysteem.models.Shift.{ Id, ShiftKind }
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.models.JsonFormats._
 
@@ -45,7 +45,7 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
       )).once()
 
       val childRepo = mock[ChildRepository]
-      
+
       val controller = new DayApiController(dayService, childRepo)
 
       val body = contentAsJson(controller.all.apply(FakeRequest()))
@@ -128,8 +128,8 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
       val dayService = mock[DayService]
 
       (dayService.findById _).expects("day-id").returning(Future.successful(
-        Some(EntityWithId("day-id", day)))
-      ).once()
+        Some(EntityWithId("day-id", day))
+      )).once()
 
       val controller = new DayApiController(dayService, mock[ChildRepository])
 

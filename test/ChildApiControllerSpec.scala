@@ -2,11 +2,11 @@ import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController
 import be.thomastoye.speelsysteem.data.ChildRepository
 import be.thomastoye.speelsysteem.data.util.UuidService
-import be.thomastoye.speelsysteem.models.{Address, Child, ContactInfo}
+import be.thomastoye.speelsysteem.models.{ Address, Child, MedicalInformation, ContactInfo }
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.{AnyContentAsJson, Request, Results}
+import play.api.mvc.{ AnyContentAsJson, Request, Results }
 import play.api.libs.json.Json
 import play.api.test._
 import play.api.test.Helpers._
@@ -15,7 +15,7 @@ import scala.concurrent.Future
 
 class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
   "ChildApiController#getById" should {
-    val child = Child("first", "last", Address.empty, ContactInfo.empty, None)
+    val child = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty)
 
     val uuidService = mock[UuidService]
 
@@ -41,8 +41,8 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
   }
 
   "ChildApiController#all" should {
-    val child1 = Child("first", "last", Address.empty, ContactInfo.empty, None)
-    val child2 = Child("first2", "last2", Address.empty, ContactInfo.empty, None)
+    val child1 = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty)
+    val child2 = Child("first2", "last2", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty)
 
     val uuidService = mock[UuidService]
 
@@ -80,7 +80,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
   "ChildApiController#update" should {
     "update a child" in {
       val childRepo = mock[ChildRepository]
-      val child = Child("first", "last", Address.empty, ContactInfo.empty, None)
+      val child = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty)
 
       (childRepo.update _).expects("the-id-to-update", child).returning(Future.successful(())).once()
       val controller = new ChildApiController(childRepo, mock[UuidService])

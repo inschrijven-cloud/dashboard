@@ -4,7 +4,7 @@ import be.thomastoye.speelsysteem.models
 import be.thomastoye.speelsysteem.models.DayDate
 import org.scalatest._
 
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
 
 class DayDateSpec extends WordSpec with Matchers {
 
@@ -82,7 +82,7 @@ class DayDateSpec extends WordSpec with Matchers {
     }
 
     "not parse 2000-02-34" in {
-      DayDate.createFromDayId("2000-02-34") shouldBe a [Failure[_]]
+      DayDate.createFromDayId("2000-02-34") shouldBe a[Failure[_]]
     }
   }
 }

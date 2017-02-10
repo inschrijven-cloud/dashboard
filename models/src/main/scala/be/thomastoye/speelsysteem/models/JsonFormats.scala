@@ -1,7 +1,6 @@
 package be.thomastoye.speelsysteem.models
 
 import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.models.Child.Id
 import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -18,6 +17,9 @@ object JsonFormats {
   implicit val phoneContactFormat = Json.format[PhoneContact]
   implicit val crewContactFormat = Json.format[ContactInfo]
   implicit val crewFormat = Json.format[Crew]
+  implicit val allergiesFormat = Json.format[Allergies]
+  implicit val conditionsFormat = Json.format[Conditions]
+  implicit val childMedicalInformationFormat = Json.format[MedicalInformation]
   implicit val childFormat = Json.format[Child]
   implicit val priceFormat = Json.format[Price]
   implicit val startAndEndTimeFormat = Json.format[StartAndEndTime]

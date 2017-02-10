@@ -89,8 +89,8 @@ class FiscalCertificateService @Inject() (
       CertificateRow(
         child.lastName,
         child.firstName,
-        child.address.street.map(_ + " ").getOrElse("") + child.address.number.getOrElse(""),
-        child.address.zipCode.map(_ + " ").getOrElse("") + child.address.city.getOrElse(""),
+        child.legacyAddress.street.map(_ + " ").getOrElse("") + child.legacyAddress.number.getOrElse(""),
+        child.legacyAddress.zipCode.map(_ + " ").getOrElse("") + child.legacyAddress.city.getOrElse(""),
         child.birthDate.map(_.toLocalDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).getOrElse(""),
         "Paas- en grote vakantie " + year,
         attendances.length,
