@@ -70,7 +70,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
           None,
           Seq.empty,
           Some(DayDate(20, 1, 2000)),
-          MedicalInformation.empty
+          MedicalInformation.empty,
+          None
         ))
       )
 
@@ -152,7 +153,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
           None,
           Seq.empty,
           Some(DayDate(20, 1, 2000)),
-          MedicalInformation.empty
+          MedicalInformation.empty,
+          None
         )),
         EntityWithId("child2", Child(
           "voornaam2",
@@ -162,7 +164,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
           None,
           Seq.empty,
           Some(DayDate(20, 1, 2000)),
-          MedicalInformation.empty
+          MedicalInformation.empty,
+          None
         )),
         EntityWithId("child3", Child(
           "voornaam3",
@@ -172,7 +175,8 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
           None,
           Seq.empty,
           Some(DayDate(20, 1, 2000)),
-          MedicalInformation.empty
+          MedicalInformation.empty,
+          None
         ))
       )
 

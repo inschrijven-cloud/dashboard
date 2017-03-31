@@ -43,7 +43,12 @@ case class Child(
     /**
      * Medical information about the child
      */
-    medicalInformation: MedicalInformation
+    medicalInformation: MedicalInformation,
+
+    /**
+     * Other remarks
+     */
+    remarks: Option[String]
 ) {
   def primaryContactPersonId: Option[ContactPerson.Id] = contactPeople.headOption
 }

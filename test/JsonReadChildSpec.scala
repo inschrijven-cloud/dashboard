@@ -52,7 +52,8 @@ class JsonReadChildSpec extends PlaySpec {
           |     "tetanusLastVaccinationYear": 2015,
           |     "otherRemarks": "Other remarks"
           |   },
-          |   "contactPeople" : ["contact-person-a", "contact-person-b"]
+          |   "contactPeople" : ["contact-person-a", "contact-person-b"],
+          |   "remarks": "aoeu"
           |}
         """.stripMargin
       )
@@ -76,7 +77,39 @@ class JsonReadChildSpec extends PlaySpec {
           Some(Conditions(Seq("ADHD"), Some("Extra information on conditions"))),
           Some("Stuff you should be aware of"),
           Some(2015), Some("Other remarks")
-        ))
+        ), Some("aoeu"))
+    }
+
+    "work for a serialized child with incomplete address" in {
+      val json = Json.parse(
+        """
+          |{
+          |   "legacyAddress" : {
+          |      "zipCode" : 6666,
+          |      "street" : "Street",
+          |      "number" : "55X"
+          |   },
+          |   "legacyContact" : {
+          |      "email" : [],
+          |      "phone" : []
+          |   },
+          |   "lastName" : "Doe",
+          |   "firstName" : "John",
+          |   "medicalInformation": {},
+          |   "contactPeople" : []
+          |}
+        """.stripMargin
+      )
+
+      val res = json.validate[Child]
+
+      res.isSuccess mustBe true
+      res.get mustBe Child("John", "Doe",
+        Address(Some("Street"), Some("55X"), Some(6666), None),
+        ContactInfo(Seq.empty, Seq.empty),
+        None,
+        Seq.empty,
+        None, MedicalInformation.empty, None)
     }
   }
 }

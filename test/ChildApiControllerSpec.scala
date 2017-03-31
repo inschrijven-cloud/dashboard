@@ -15,7 +15,7 @@ import scala.concurrent.Future
 
 class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
   "ChildApiController#getById" should {
-    val child = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty)
+    val child = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty, None)
 
     val uuidService = mock[UuidService]
 
@@ -41,8 +41,8 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
   }
 
   "ChildApiController#all" should {
-    val child1 = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty)
-    val child2 = Child("first2", "last2", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty)
+    val child1 = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty, None)
+    val child2 = Child("first2", "last2", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty, None)
 
     val uuidService = mock[UuidService]
 
@@ -80,7 +80,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
   "ChildApiController#update" should {
     "update a child" in {
       val childRepo = mock[ChildRepository]
-      val child = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty)
+      val child = Child("first", "last", Address.empty, ContactInfo.empty, None, Seq.empty, None, MedicalInformation.empty, None)
 
       (childRepo.update _).expects("the-id-to-update", child).returning(Future.successful(())).once()
       val controller = new ChildApiController(childRepo, mock[UuidService])
