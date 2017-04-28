@@ -5,6 +5,8 @@ name := "speelsysteem-dashboard"
 
 lazy val playVersion = "2.5.12"
 
+javaOptions in Test += "-Dconfig.file=conf/application.testing.conf" // use different config file when testing
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
