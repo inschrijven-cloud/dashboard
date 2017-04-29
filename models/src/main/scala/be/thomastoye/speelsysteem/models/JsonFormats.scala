@@ -21,6 +21,7 @@ object JsonFormats {
   implicit val conditionsFormat = Json.format[Conditions]
   implicit val childMedicalInformationFormat = Json.format[MedicalInformation]
   implicit val childFormat = Json.format[Child]
+  implicit val contactPersonFormat = Json.format[ContactPerson]
   implicit val priceFormat = Json.format[Price]
   implicit val startAndEndTimeFormat = Json.format[StartAndEndTime]
 
@@ -63,6 +64,6 @@ object JsonFormats {
   }
 
   implicit val dayWithIdWrites = entityWithIdWrites[Day.Id, Day]
-
   implicit val childWithIdWrites = entityWithIdWrites[Child.Id, Child]
+  implicit val contactPersonWithIdWrites = entityWithIdWrites[ContactPerson.Id, ContactPerson]
 }
