@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule
 class Module extends AbstractModule {
   override def configure(): Unit = {
     bind(classOf[ChildRepository]).to(classOf[CouchChildRepository])
+    bind(classOf[ContactPersonRepository]).to(classOf[CouchContactPersonRepository])
     bind(classOf[CrewRepository]).to(classOf[CouchCrewRepository])
     bind(classOf[UuidService]).to(classOf[UuidServiceImpl])
     bind(classOf[CouchDatabase]).to(classOf[CouchDatabaseImpl])
