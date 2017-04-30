@@ -18,6 +18,14 @@ GET           /api/v1/child/:id                                     be.thomastoy
 PUT           /api/v1/child/:id                                     be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.update(id)
 DELETE        /api/v1/child/:id                                     be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.delete(id)
 
+# Contact person API
+
+GET           /api/v1/contactperson                                 be.thomastoye.speelsysteem.dashboard.controllers.api.ContactPersonApiController.all
+POST          /api/v1/contactperson                                 be.thomastoye.speelsysteem.dashboard.controllers.api.ContactPersonApiController.create
+GET           /api/v1/contactperson/:id                             be.thomastoye.speelsysteem.dashboard.controllers.api.ContactPersonApiController.getById(id)
+PUT           /api/v1/contactperson/:id                             be.thomastoye.speelsysteem.dashboard.controllers.api.ContactPersonApiController.update(id)
+DELETE        /api/v1/contactperson/:id                             be.thomastoye.speelsysteem.dashboard.controllers.api.ContactPersonApiController.delete(id)
+
 # Crew API
 
 POST          /api/v1/crew                                          be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController.create
