@@ -15,7 +15,7 @@ import scala.concurrent.Future
 
 class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFactory {
   "ContactPersonApiController#getById" should {
-    val cp = ContactPerson("first", "last", Address.empty, "father", Seq(PhoneContact("555 555 555")))
+    val cp = ContactPerson("first", "last", Address.empty, Seq(PhoneContact("555 555 555")))
 
     val uuidService = mock[UuidService]
 
@@ -41,8 +41,8 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
   }
 
   "ContactPersonApiController#all" should {
-    val person1 = ContactPerson("first", "last", Address.empty, "father", Seq(PhoneContact("555 555 555")))
-    val person2 = ContactPerson("voor", "achter", Address.empty, "father", Seq(PhoneContact("666 666 666")))
+    val person1 = ContactPerson("first", "last", Address.empty, Seq(PhoneContact("555 555 555")))
+    val person2 = ContactPerson("voor", "achter", Address.empty, Seq(PhoneContact("666 666 666")))
 
     val uuidService = mock[UuidService]
 
@@ -80,7 +80,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
   "ContactPersonApiController#update" should {
     "update a contact person" in {
       val contactPersonRepository = mock[ContactPersonRepository]
-      val cp = ContactPerson("first", "last", Address.empty, "father", Seq(PhoneContact("555 555 555")))
+      val cp = ContactPerson("first", "last", Address.empty, Seq(PhoneContact("555 555 555")))
 
       (contactPersonRepository.update _).expects("the-id-to-update", cp).returning(Future.successful(())).once()
       val controller = new ContactPersonApiController(contactPersonRepository, mock[UuidService])

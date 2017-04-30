@@ -33,7 +33,7 @@ case class Child(
     /**
      * Ids of people that can be contacted. First one is the primary contact person.
      */
-    contactPeople: Seq[ContactPerson.Id],
+    contactPeople: Seq[ContactPerson.Id], // TODO should be a tuple: (contact person id, relationship [e.g. father])
 
     /**
      * Date on which the child was born
