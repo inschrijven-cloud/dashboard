@@ -57,9 +57,21 @@ object JsonFormats {
 
   implicit val dayFormat = Json.format[Day]
 
-  def entityWithIdWrites[ID, T](implicit idWrites: Writes[ID], entityWrites: Writes[T]): Writes[EntityWithId[ID, T]] = new Writes[EntityWithId[ID, T]] {
+  implicit def entityWithIdWrites[ID, T](implicit idWrites: Writes[ID], entityWrites: Writes[T]): Writes[EntityWithId[ID, T]] = new Writes[EntityWithId[ID, T]] {
     override def writes(o: EntityWithId[ID, T]): JsValue = {
       Json.obj("id" -> Json.toJson(o.id)(idWrites)) ++ Json.toJson(o.entity)(entityWrites).as[JsObject]
+    }
+  }
+
+  implicit def entityWithIdReads[ID, T](implicit idReads: Reads[ID], entityReads: Reads[T]) = new Reads[EntityWithId[ID, T]] {
+    override def reads(json: JsValue): JsResult[EntityWithId[ID, T]] = {
+      val idResult = (json \ "id").validate[ID]
+      val entityResult = json.validate[JsObject].map(_ - "id").flatMap(_.validate[T](entityReads))
+
+      for {
+        id <- idResult
+        entity <- entityResult
+      } yield EntityWithId(id, entity)
     }
   }
 

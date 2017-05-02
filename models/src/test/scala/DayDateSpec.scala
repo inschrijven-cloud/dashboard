@@ -1,6 +1,5 @@
 import java.time.LocalDate
 
-import be.thomastoye.speelsysteem.models
 import be.thomastoye.speelsysteem.models.DayDate
 import org.scalatest._
 
