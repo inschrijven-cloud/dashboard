@@ -1,7 +1,6 @@
 import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.dashboard.controllers.api.ContactPersonApiController
 import be.thomastoye.speelsysteem.data.ContactPersonRepository
-import be.thomastoye.speelsysteem.data.util.UuidService
 import be.thomastoye.speelsysteem.models.{ Address, ContactPerson, PhoneContact }
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import org.scalatestplus.play.PlaySpec
@@ -16,8 +15,6 @@ import scala.concurrent.Future
 class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFactory {
   "ContactPersonApiController#getById" should {
     val cp = ContactPerson("first", "last", Address.empty, Seq(PhoneContact("555 555 555")))
-
-    val uuidService = mock[UuidService]
 
     "return NotFound if the contact person is not in the database" in {
       val contactPersonRepository = mock[ContactPersonRepository]
@@ -44,8 +41,6 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
     val person1 = ContactPerson("first", "last", Address.empty, Seq(PhoneContact("555 555 555")))
     val person2 = ContactPerson("voor", "achter", Address.empty, Seq(PhoneContact("666 666 666")))
 
-    val uuidService = mock[UuidService]
-
     "return list of contact people in the database" in {
       val contactPersonRepository = mock[ContactPersonRepository]
       (contactPersonRepository.findAll _).expects().returning(Future.successful(Seq(EntityWithId("first-id", person1), EntityWithId("second-id", person2)))).once()
@@ -68,9 +63,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
     "delete a contact person by id" in {
       val contactPersonRepository = mock[ContactPersonRepository]
       (contactPersonRepository.delete _).expects("the-id-to-delete").returning(Future.successful(())).once()
-
-      val uuidService = mock[UuidService]
-
+      
       val controller = new ContactPersonApiController(contactPersonRepository)
 
       status(controller.delete("the-id-to-delete").apply(FakeRequest())) mustBe OK
