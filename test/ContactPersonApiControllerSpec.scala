@@ -24,7 +24,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       (contactPersonRepository.findById _).expects("existing-id").returning(Future.successful(Some(EntityWithId("existing-id", cp)))).never()
       (contactPersonRepository.findById _).expects(*).returning(Future.successful(None)).once()
 
-      val controller = new ContactPersonApiController(contactPersonRepository, uuidService)
+      val controller = new ContactPersonApiController(contactPersonRepository)
       status(controller.getById("non-existant-id").apply(FakeRequest())) mustBe NOT_FOUND
     }
 
@@ -33,7 +33,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       (contactPersonRepository.findById _).expects("existing-id").returning(Future.successful(Some(EntityWithId("existing-id", cp)))).once()
       (contactPersonRepository.findById _).expects(*).returning(Future.successful(None)).never()
 
-      val controller = new ContactPersonApiController(contactPersonRepository, uuidService)
+      val controller = new ContactPersonApiController(contactPersonRepository)
       val res = controller.getById("existing-id").apply(FakeRequest())
       status(res) mustBe OK
       contentAsJson(res) mustBe Json.toJson(cp)
@@ -50,7 +50,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       val contactPersonRepository = mock[ContactPersonRepository]
       (contactPersonRepository.findAll _).expects().returning(Future.successful(Seq(EntityWithId("first-id", person1), EntityWithId("second-id", person2)))).once()
 
-      val controller = new ContactPersonApiController(contactPersonRepository, uuidService)
+      val controller = new ContactPersonApiController(contactPersonRepository)
       contentAsJson(controller.all.apply(FakeRequest())) mustBe Json.arr(Json.toJson(EntityWithId("first-id", person1)), Json.toJson(EntityWithId("second-id", person2)))
     }
 
@@ -59,7 +59,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
 
       (contactPersonRepository.findAll _).expects().returning(Future.successful(Seq.empty))
 
-      val controller = new ContactPersonApiController(contactPersonRepository, uuidService)
+      val controller = new ContactPersonApiController(contactPersonRepository)
       contentAsJson(controller.all.apply(FakeRequest())) mustBe Json.arr()
     }
   }
@@ -71,7 +71,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
 
       val uuidService = mock[UuidService]
 
-      val controller = new ContactPersonApiController(contactPersonRepository, uuidService)
+      val controller = new ContactPersonApiController(contactPersonRepository)
 
       status(controller.delete("the-id-to-delete").apply(FakeRequest())) mustBe OK
     }
@@ -83,7 +83,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       val cp = ContactPerson("first", "last", Address.empty, Seq(PhoneContact("555 555 555")))
 
       (contactPersonRepository.update _).expects("the-id-to-update", cp).returning(Future.successful(())).once()
-      val controller = new ContactPersonApiController(contactPersonRepository, mock[UuidService])
+      val controller = new ContactPersonApiController(contactPersonRepository)
 
       val body: FakeRequest[ContactPerson] = FakeRequest().withBody[ContactPerson](cp)
       status(controller.update("the-id-to-update").apply(body)) mustBe OK
