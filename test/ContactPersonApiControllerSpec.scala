@@ -63,7 +63,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
     "delete a contact person by id" in {
       val contactPersonRepository = mock[ContactPersonRepository]
       (contactPersonRepository.delete _).expects("the-id-to-delete").returning(Future.successful(())).once()
-      
+
       val controller = new ContactPersonApiController(contactPersonRepository)
 
       status(controller.delete("the-id-to-delete").apply(FakeRequest())) mustBe OK
