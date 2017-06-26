@@ -34,4 +34,6 @@ trait ChildAttendancesService {
 
   def findAllPerDay: Future[Map[Day.Id, AttendancesOnDay]]
 
+  def findAllRaw: Future[Seq[(Day.Id, Shift.Id, Child.Id)]]
+
 }

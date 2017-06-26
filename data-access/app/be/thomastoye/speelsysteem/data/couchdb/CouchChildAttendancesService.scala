@@ -109,12 +109,24 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
       }
   }
 
+  override def findAllRaw: Future[Seq[(Day.Id, Shift.Id, Child.Id)]] = {
+    db.docs.getMany.byType[String]("all", "childattendance", MappedDocType(childAttendanceKind))
+      .build
+      .query
+      .toFuture
+      .map(x => x.rows.map(y => createFromChildAttendanceId(y.id)))
+  }
+
   private def createDayAttendance(idFromDb: String, persisted: ChildAttendancePersisted): (Child.Id, DayAttendance) = {
-    val dayId = idFromDb.split("--")(0)
-    val shiftId = idFromDb.split("--")(1)
-    val childId = idFromDb.split("--")(2)
+    val dayId = createFromChildAttendanceId(idFromDb)._1
+    val shiftId = createFromChildAttendanceId(idFromDb)._2
+    val childId = createFromChildAttendanceId(idFromDb)._3
 
     (childId, DayAttendance(dayId, Seq(SingleAttendance(shiftId, persisted.registeredByCrew, persisted.registeredTimeStamp))))
+  }
+
+  private def createFromChildAttendanceId(id: String): (Day.Id, Shift.Id, Child.Id) = {
+    (id.split("--")(0), id.split("--")(1), id.split("--")(2))
   }
 
   private def createChildAttendanceId(dayId: Day.Id, shiftId: Shift.Id, childId: Child.Id): String = s"$dayId--$shiftId--$childId"

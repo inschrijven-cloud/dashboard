@@ -2,9 +2,13 @@ package be.thomastoye.speelsysteem.dashboard.controllers.api
 
 import javax.inject.Inject
 
+import be.thomastoye.speelsysteem.data.ChildAttendancesService.{ AttendancesOnDay, ShiftWithAttendances }
 import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, ChildRepository, DayService }
+import be.thomastoye.speelsysteem.models.Child.Id
+import be.thomastoye.speelsysteem.models.Day.Id
 import be.thomastoye.speelsysteem.models.{ Child, Day, Shift }
 import be.thomastoye.speelsysteem.models.JsonFormats._
+import be.thomastoye.speelsysteem.models.Shift.Id
 import play.api.libs.json.{ JsValue, Json, Writes }
 import play.api.mvc.{ Action, AnyContent, BodyParsers }
 import play.api.libs.concurrent.Execution.Implicits._
@@ -60,7 +64,25 @@ class ChildAttendanceApiController @Inject() (
 
   def deleteAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[AnyContent] = TODO
 
-  def findAll: Action[AnyContent] = Action.async { req =>
+  def findAllPerChild: Action[AnyContent] = Action.async { req =>
     childAttendancesService.findAll.map(all => Ok(Json.toJson(all)))
+  }
+
+  def findAllPerDay: Action[AnyContent] = Action.async { req =>
+    implicit val shiftWithAttendancesFormat = Json.format[ShiftWithAttendances]
+    implicit val attendancesOnDayFormat = Json.format[AttendancesOnDay]
+    childAttendancesService.findAllPerDay.map(all => Ok(Json.toJson(all)))
+  }
+
+  def findAllRaw: Action[AnyContent] = Action.async { req =>
+    implicit val writes = new Writes[(Day.Id, Shift.Id, Child.Id)] {
+      override def writes(o: (Day.Id, Shift.Id, Child.Id)): JsValue = Json.obj(
+        "dayId" -> o._1,
+        "shiftId" -> o._2,
+        "childId" -> o._3
+      )
+    }
+
+    childAttendancesService.findAllRaw.map(all => Ok(Json.toJson(all)))
   }
 }
