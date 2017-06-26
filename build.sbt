@@ -10,6 +10,7 @@ javaOptions in Test += "-Dconfig.file=conf/application.testing.conf" // use diff
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
+  scalacOptions in Compile ++= Seq("-Xmax-classfile-name", "128"),
   coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;""",
   dockerRepository in Docker := Some("thomastoye"),
   dockerUpdateLatest in Docker := true
