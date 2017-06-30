@@ -52,7 +52,10 @@ class JsonReadChildSpec extends PlaySpec {
           |     "tetanusLastVaccinationYear": 2015,
           |     "otherRemarks": "Other remarks"
           |   },
-          |   "contactPeople" : ["contact-person-a", "contact-person-b"],
+          |   "contactPeople" : [
+          |     { "contactPersonId": "contact-person-a", "relationship": "mother" },
+          |     { "contactPersonId": "contact-person-b", "relationship": "father" }
+          |   ],
           |   "remarks": "aoeu"
           |}
         """.stripMargin
@@ -71,7 +74,7 @@ class JsonReadChildSpec extends PlaySpec {
           Seq("john.smith@example.com", "test@example.com")
         ),
         Some("male"),
-        Seq("contact-person-a", "contact-person-b"),
+        Seq(ContactPersonRelationship("contact-person-a", "mother"), ContactPersonRelationship("contact-person-b", "father")),
         Some(DayDate(22, 2, 2002)), MedicalInformation(
           Some("Dr. XYZZ"), Some(Allergies(Seq("dust", "paint"), Some("Sometimes water too"))),
           Some(Conditions(Seq("ADHD"), Some("Extra information on conditions"))),

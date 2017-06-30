@@ -33,7 +33,7 @@ case class Child(
     /**
      * Ids of people that can be contacted. First one is the primary contact person.
      */
-    contactPeople: Seq[ContactPerson.Id], // TODO should be a tuple: (contact person id, relationship [e.g. father])
+    contactPeople: Seq[ContactPersonRelationship],
 
     /**
      * Date on which the child was born
@@ -50,7 +50,7 @@ case class Child(
      */
     remarks: Option[String]
 ) {
-  def primaryContactPersonId: Option[ContactPerson.Id] = contactPeople.headOption
+  def primaryContactPersonId: Option[ContactPersonRelationship] = contactPeople.headOption
 }
 
 object Child {
