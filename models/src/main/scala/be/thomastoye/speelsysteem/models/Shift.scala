@@ -73,11 +73,11 @@ case class Shift(
     price: Price,
     childrenCanBePresent: Boolean,
     crewCanBePresent: Boolean,
-    kind: ShiftKind,
+    kind: ShiftKind, // refactor out ShiftKind eventually
     location: Option[String],
     desciption: Option[String],
     startAndEnd: Option[StartAndEndTime]
-) extends Ordered[Shift] { // with Ordering[Shift] {
+) extends Ordered[Shift] {
 
   override def compare(that: Shift): Int = {
     val defaultStartEnd = StartAndEndTime(RelativeTime(23, 59), RelativeTime(23, 59))
