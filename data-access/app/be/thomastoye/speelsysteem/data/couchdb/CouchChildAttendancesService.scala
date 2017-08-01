@@ -57,7 +57,11 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
       createChildAttendanceId(day.getDayId, shiftId, childId) -> ChildAttendancePersisted(Some(Instant.now), None)
     }: _*)
 
-    db.docs.createMany(many).toFuture
+    // Only insert attendances that do not exist already
+    // TODO what happens with deleted attendances?
+    db.docs.getMany.allowMissing.withIds(many.keys.toSeq).build.query.toFuture.map(_.rows.flatMap(_.toList).map(_.id)) flatMap { existingIds =>
+      db.docs.createMany(many.filterNot { case (key, value) => existingIds.contains(key) }).toFuture
+    }
   }
 
   override def addAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id): Future[Res.DocOk] = {
