@@ -6,8 +6,8 @@ import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.models._
 import com.norbitltd.spoiwo.model.enums.CellFill
 import com.norbitltd.spoiwo.model._
-import play.api.libs.concurrent.Execution.Implicits._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait ReportService {

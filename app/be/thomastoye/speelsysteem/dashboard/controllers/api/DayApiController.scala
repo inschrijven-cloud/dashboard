@@ -3,20 +3,20 @@ package be.thomastoye.speelsysteem.dashboard.controllers.api
 import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.{ ChildRepository, DayService }
-import be.thomastoye.speelsysteem.models.JsonFormats.{ dayWithIdWrites, dayFormat }
-import be.thomastoye.speelsysteem.models.Shift.Id
-import be.thomastoye.speelsysteem.models.{ Child, Day, Shift }
-import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.json.{ JsValue, Json, Writes }
+import be.thomastoye.speelsysteem.models.JsonFormats.{ dayFormat, dayWithIdWrites }
+import be.thomastoye.speelsysteem.models.Day
+import play.api.libs.json.Json
 import play.api.mvc._
 
-class DayApiController @Inject() (dayService: DayService, childRepository: ChildRepository) extends ApiController {
+import scala.concurrent.ExecutionContext
+
+class DayApiController @Inject() (dayService: DayService, childRepository: ChildRepository)(implicit ec: ExecutionContext) extends ApiController {
 
   def all: Action[AnyContent] = Action.async { req =>
     dayService.findAll.map(days => Ok(Json.toJson(days)))
   }
 
-  def create: Action[Day] = Action.async(BodyParsers.parse.json(dayFormat)) { req =>
+  def create: Action[Day] = Action.async(parse.json(dayFormat)) { req =>
     dayService.insert(req.body).map(_ => Ok)
   }
 
@@ -26,7 +26,7 @@ class DayApiController @Inject() (dayService: DayService, childRepository: Child
     }
   }
 
-  def update(id: Day.Id): Action[Day] = Action.async(BodyParsers.parse.json(dayFormat)) { req =>
+  def update(id: Day.Id): Action[Day] = Action.async(parse.json(dayFormat)) { req =>
     dayService.update(id, req.body).map(_ => Ok)
   }
 }

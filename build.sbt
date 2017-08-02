@@ -3,7 +3,7 @@ import GhPagesKeys._
 
 name := "speelsysteem-dashboard"
 
-lazy val playVersion = "2.5.12"
+lazy val playVersion = "2.6.1"
 
 javaOptions in Test += "-Dconfig.file=conf/application.testing.conf" // use different config file when testing
 
@@ -31,8 +31,10 @@ coverageEnabled in Test := true
 
 libraryDependencies ++= Seq(
   filters,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test",
-  "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
+  guice,
+  "com.typesafe.play" %% "play-json" % playVersion,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % "test",
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
 )
 
 routesGenerator := InjectedRoutesGenerator
@@ -43,7 +45,7 @@ lazy val models = project
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-json" % playVersion,
 
-      "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.3" % "test"
     ),
     publishLocal in Docker := { },
     publish in Docker := { }
@@ -55,11 +57,11 @@ lazy val dataAccess = Project("data-access", file("data-access"))
   .settings(
     libraryDependencies ++= Seq(
       "com.ibm" %% "couchdb-scala" % "0.7.2",
-      "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
       "com.norbitltd" % "spoiwo" % "1.0.3",
 
-      "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-      "org.scalamock" %% "scalamock-scalatest-support" % "3.3.0" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.3" % "test",
+      "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
     ),
     publishLocal in Docker := { },
     publish in Docker := { }

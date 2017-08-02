@@ -11,6 +11,7 @@ import play.api.test._
 import play.api.test.Helpers._
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
   "ChildApiController#getById" should {
@@ -22,6 +23,8 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
       (childRepo.findById _).expects(*).returning(Future.successful(None)).once()
 
       val controller = new ChildApiController(childRepo)
+      controller.setControllerComponents(stubControllerComponents())
+
       status(controller.getById("non-existant-id").apply(FakeRequest())) mustBe NOT_FOUND
     }
 
@@ -31,6 +34,8 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
       (childRepo.findById _).expects(*).returning(Future.successful(None)).never()
 
       val controller = new ChildApiController(childRepo)
+      controller.setControllerComponents(stubControllerComponents())
+
       val res = controller.getById("existing-id").apply(FakeRequest())
       status(res) mustBe OK
       contentAsJson(res) mustBe Json.toJson(child)
@@ -46,6 +51,8 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
       (childRepo.findAll _).expects().returning(Future.successful(Seq(EntityWithId("first-id", child1), EntityWithId("second-id", child2)))).once()
 
       val controller = new ChildApiController(childRepo)
+      controller.setControllerComponents(stubControllerComponents())
+
       contentAsJson(controller.all.apply(FakeRequest())) mustBe Json.arr(Json.toJson(EntityWithId("first-id", child1)), Json.toJson(EntityWithId("second-id", child2)))
     }
 
@@ -55,6 +62,8 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
       (childRepo.findAll _).expects().returning(Future.successful(Seq.empty))
 
       val controller = new ChildApiController(childRepo)
+      controller.setControllerComponents(stubControllerComponents())
+
       contentAsJson(controller.all.apply(FakeRequest())) mustBe Json.arr()
     }
   }
@@ -65,6 +74,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
       (childRepo.delete _).expects("the-id-to-delete").returning(Future.successful(())).once()
 
       val controller = new ChildApiController(childRepo)
+      controller.setControllerComponents(stubControllerComponents())
 
       status(controller.delete("the-id-to-delete").apply(FakeRequest())) mustBe OK
     }
@@ -77,6 +87,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       (childRepo.update _).expects("the-id-to-update", child).returning(Future.successful(())).once()
       val controller = new ChildApiController(childRepo)
+      controller.setControllerComponents(stubControllerComponents())
 
       val body: FakeRequest[Child] = FakeRequest().withBody[Child](child)
       status(controller.update("the-id-to-update").apply(body)) mustBe OK

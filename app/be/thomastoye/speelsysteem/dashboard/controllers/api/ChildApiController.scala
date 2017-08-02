@@ -6,17 +6,18 @@ import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.ChildRepository
 import be.thomastoye.speelsysteem.models.{ Child, JsonFormats }
 import be.thomastoye.speelsysteem.models.JsonFormats.{ childFormat, childWithIdWrites, entityWithIdReads }
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc._
 
-class ChildApiController @Inject() (childRepository: ChildRepository) extends ApiController {
+import scala.concurrent.ExecutionContext
+
+class ChildApiController @Inject() (childRepository: ChildRepository)(implicit ec: ExecutionContext) extends ApiController {
 
   def all: Action[AnyContent] = Action.async { req =>
     childRepository.findAll.map(all => Ok(Json.toJson(all)))
   }
 
-  def create: Action[EntityWithId[Child.Id, Child]] = Action.async(BodyParsers.parse.json(entityWithIdReads[Child.Id, Child])) { req =>
+  def create: Action[EntityWithId[Child.Id, Child]] = Action.async(parse.json(entityWithIdReads[Child.Id, Child])) { req =>
     childRepository.insert(req.body.id, req.body.entity).map(created)
   }
 

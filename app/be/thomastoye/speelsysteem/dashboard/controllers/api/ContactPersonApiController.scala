@@ -7,12 +7,13 @@ import be.thomastoye.speelsysteem.data.ContactPersonRepository
 import be.thomastoye.speelsysteem.models.{ ContactPerson, JsonFormats }
 import be.thomastoye.speelsysteem.models.JsonFormats.{ contactPersonFormat, contactPersonWithIdWrites, entityWithIdReads }
 import play.api.libs.json.Json
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{ Action, AnyContent }
+
+import scala.concurrent.ExecutionContext
 
 class ContactPersonApiController @Inject() (
     contactPersonRepository: ContactPersonRepository
-) extends ApiController {
+)(implicit ec: ExecutionContext) extends ApiController {
 
   def all: Action[AnyContent] = Action.async { req =>
     contactPersonRepository.findAll.map(all => Ok(Json.toJson(all)))

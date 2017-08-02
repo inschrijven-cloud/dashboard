@@ -7,6 +7,7 @@ import helpers.UnimplementedDayService
 import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.scalatestplus.play._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -47,6 +48,7 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFa
       )).once()
 
       val controller = new ChildAttendanceApiController(childRepo, dayServiceStub, childAttendanceService)
+      controller.setControllerComponents(stubControllerComponents())
 
       val body = contentAsJson(controller.numberOfChildAttendances.apply(FakeRequest()))
 

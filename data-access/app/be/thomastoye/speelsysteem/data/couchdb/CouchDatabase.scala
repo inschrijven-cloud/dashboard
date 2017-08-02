@@ -2,7 +2,6 @@ package be.thomastoye.speelsysteem.data.couchdb
 
 import javax.inject.{ Inject, Singleton }
 
-import be.thomastoye.speelsysteem.exceptions.ConfigurationMissingFieldException
 import be.thomastoye.speelsysteem.models.{ Child, Crew }
 import com.ibm.couchdb._
 import play.Logger
@@ -13,12 +12,12 @@ import scalaz.{ -\/, \/- }
 object CouchConfiguration {
   def fromConfig(config: Configuration): CouchConfiguration = {
     CouchConfiguration(
-      config.getString("couchdb.server.host").getOrElse(throw ConfigurationMissingFieldException("couchdb.db.host")),
-      config.getInt("couchdb.server.port").getOrElse(throw ConfigurationMissingFieldException("couchdb.db.port")),
-      config.getBoolean("couchdb.server.https").getOrElse(throw ConfigurationMissingFieldException("couchdb.db.https")),
-      config.getString("couchdb.server.user"),
-      config.getString("couchdb.server.pass"),
-      config.getString("couchdb.server.db").getOrElse(throw ConfigurationMissingFieldException("couchdb.server.db"))
+      config.get[String]("couchdb.server.host"),
+      config.get[Int]("couchdb.server.port"),
+      config.get[Boolean]("couchdb.server.https"),
+      config.getOptional[String]("couchdb.server.user"),
+      config.getOptional[String]("couchdb.server.pass"),
+      config.get[String]("couchdb.server.db")
     )
   }
 }

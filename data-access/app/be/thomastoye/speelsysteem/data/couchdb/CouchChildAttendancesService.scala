@@ -1,17 +1,18 @@
 package be.thomastoye.speelsysteem.data.couchdb
 
 import java.time.Instant
+import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.ChildAttendancesService.{ AttendancesOnDay, ShiftWithAttendances }
 import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat }
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions._
 import be.thomastoye.speelsysteem.models.Day.Id
-import com.google.inject.Inject
 import com.ibm.couchdb.{ CouchDbApi, MappedDocType, Res, TypeMapping }
 import com.typesafe.scalalogging.StrictLogging
 import upickle.default.{ Reader, Writer }
-import play.api.libs.concurrent.Execution.Implicits._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.Json
 
 import scala.concurrent.Future

@@ -11,9 +11,8 @@ import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.models.Shift.Id
 import play.api.libs.json.{ JsValue, Json, Writes }
 import play.api.mvc.{ Action, AnyContent, BodyParsers }
-import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
 object ChildAttendanceApiController {
   case class BindShiftIds(shiftIds: Seq[Shift.Id])
@@ -39,7 +38,7 @@ class ChildAttendanceApiController @Inject() (
     childRepository: ChildRepository,
     dayService: DayService,
     childAttendancesService: ChildAttendancesService
-) extends ApiController {
+)(implicit ec: ExecutionContext) extends ApiController {
   import ChildAttendanceApiController._
 
   def numberOfChildAttendances: Action[AnyContent] = Action.async { req =>
@@ -54,7 +53,7 @@ class ChildAttendanceApiController @Inject() (
     childAttendancesService.findAttendancesForChild(id).map(att => Ok(Json.toJson(att)))
   }
 
-  def addAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = Action.async(BodyParsers.parse.json(bindShiftIdsReads)) { req =>
+  def addAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = Action.async(parse.json(bindShiftIdsReads)) { req =>
     dayService.findById(dayId) flatMap { maybeEntityWithId =>
       maybeEntityWithId map { entityWithId =>
         childAttendancesService.addAttendancesForChild(childId, entityWithId.entity.date, req.body.shiftIds) map (_ => Ok)

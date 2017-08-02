@@ -4,15 +4,16 @@ import java.io.File
 import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.{ FiscalCertificateService, ReportService }
-import play.api.mvc.{ Action, AnyContent, Controller }
-import play.api.libs.concurrent.Execution.Implicits._
+import play.api.mvc.{ Action, AnyContent, InjectedController }
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
 import com.typesafe.scalalogging.StrictLogging
+
+import scala.concurrent.ExecutionContext
 
 class ReportController @Inject() (
     fiscalCertificateService: FiscalCertificateService,
     reportService: ReportService
-) extends Controller with StrictLogging {
+)(implicit ec: ExecutionContext) extends InjectedController with StrictLogging {
 
   def downloadFiscalCertificates(year: Int): Action[AnyContent] = Action.async {
     fiscalCertificateService.getFiscalCertificateSheet(year) map { sheet =>

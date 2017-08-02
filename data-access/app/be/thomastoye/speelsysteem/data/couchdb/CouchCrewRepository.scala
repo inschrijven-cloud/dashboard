@@ -11,8 +11,8 @@ import be.thomastoye.speelsysteem.models.Crew.Id
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import com.ibm.couchdb.{ CouchDoc, MappedDocType, TypeMapping }
 import com.typesafe.scalalogging.StrictLogging
-import play.api.libs.concurrent.Execution.Implicits._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ Future, Promise }
 import scalaz.{ -\/, \/- }
 

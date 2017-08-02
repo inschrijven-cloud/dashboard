@@ -11,8 +11,8 @@ import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
 import be.thomastoye.speelsysteem.models.Day.Id
 import com.ibm.couchdb.{ CouchException, MappedDocType, TypeMapping }
 import com.typesafe.scalalogging.StrictLogging
-import play.api.libs.concurrent.Execution.Implicits._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ Future, Promise }
 import scalaz.{ -\/, \/- }
 
