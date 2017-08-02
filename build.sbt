@@ -3,17 +3,17 @@ import GhPagesKeys._
 
 name := "speelsysteem-dashboard"
 
-lazy val playVersion = "2.6.1"
+lazy val playVersion = "2.6.2"
 
 javaOptions in Test += "-Dconfig.file=conf/application.testing.conf" // use different config file when testing
 
 lazy val commonSettings = Seq(
-  scalaVersion := "2.11.8",
+  scalaVersion := "2.11.11",
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
   scalacOptions in Compile ++= Seq("-Xmax-classfile-name", "128"),
   coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;""",
-  dockerRepository in Docker := Some("thomastoye"),
-  dockerUpdateLatest in Docker := true
+  dockerRepository := Some("thomastoye"),
+  dockerUpdateLatest := true
 )
 
 lazy val root = (project in file("."))
@@ -25,7 +25,7 @@ lazy val root = (project in file("."))
   .dependsOn(dataAccess)
   .aggregate(dataAccess)
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.11.11"
 
 coverageEnabled in Test := true
 
@@ -58,7 +58,7 @@ lazy val dataAccess = Project("data-access", file("data-access"))
     libraryDependencies ++= Seq(
       "com.ibm" %% "couchdb-scala" % "0.7.2",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
-      "com.norbitltd" % "spoiwo" % "1.0.3",
+      "com.norbitltd" % "spoiwo" % "1.0.6",
 
       "org.scalatest" %% "scalatest" % "3.0.3" % "test",
       "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
