@@ -1,6 +1,5 @@
 package be.thomastoye.speelsysteem.data.util
 
-import scala.language.implicitConversions
 import scala.concurrent.{ Future, Promise }
 import scalaz.{ -\/, \/- }
 import scalaz.concurrent.Task

@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.ChildRepository
-import be.thomastoye.speelsysteem.models.{ Child, JsonFormats }
+import be.thomastoye.speelsysteem.models.Child
 import be.thomastoye.speelsysteem.models.JsonFormats.{ childFormat, childWithIdWrites, entityWithIdReads }
 import play.api.libs.json.Json
 import play.api.mvc._

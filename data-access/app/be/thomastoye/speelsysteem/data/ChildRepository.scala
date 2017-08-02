@@ -1,7 +1,7 @@
 package be.thomastoye.speelsysteem.data
 
 import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.models.{ Child, Day, Shift }
+import be.thomastoye.speelsysteem.models.Child
 import be.thomastoye.speelsysteem.models.Child.Id
 
 import scala.concurrent.Future

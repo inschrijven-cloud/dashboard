@@ -4,13 +4,10 @@ import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.ChildAttendancesService.{ AttendancesOnDay, ShiftWithAttendances }
 import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, ChildRepository, DayService }
-import be.thomastoye.speelsysteem.models.Child.Id
-import be.thomastoye.speelsysteem.models.Day.Id
 import be.thomastoye.speelsysteem.models.{ Child, Day, Shift }
 import be.thomastoye.speelsysteem.models.JsonFormats._
-import be.thomastoye.speelsysteem.models.Shift.Id
 import play.api.libs.json.{ JsValue, Json, Writes }
-import play.api.mvc.{ Action, AnyContent, BodyParsers }
+import play.api.mvc.{ Action, AnyContent }
 
 import scala.concurrent.{ ExecutionContext, Future }
 

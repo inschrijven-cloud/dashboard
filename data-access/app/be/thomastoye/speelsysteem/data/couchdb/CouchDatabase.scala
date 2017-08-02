@@ -2,7 +2,6 @@ package be.thomastoye.speelsysteem.data.couchdb
 
 import javax.inject.{ Inject, Singleton }
 
-import be.thomastoye.speelsysteem.models.{ Child, Crew }
 import com.ibm.couchdb._
 import play.Logger
 import play.api.Configuration

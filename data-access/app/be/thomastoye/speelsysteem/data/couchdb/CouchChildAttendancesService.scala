@@ -8,7 +8,7 @@ import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, PlayJsonReader
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions._
 import be.thomastoye.speelsysteem.models.Day.Id
-import com.ibm.couchdb.{ CouchDbApi, MappedDocType, Res, TypeMapping }
+import com.ibm.couchdb.{ MappedDocType, Res, TypeMapping }
 import com.typesafe.scalalogging.StrictLogging
 import upickle.default.{ Reader, Writer }
 

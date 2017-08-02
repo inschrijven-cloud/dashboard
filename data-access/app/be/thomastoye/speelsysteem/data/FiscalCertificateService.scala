@@ -7,7 +7,6 @@ import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.models._
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
-import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.{ ExecutionContext, Future }
 
