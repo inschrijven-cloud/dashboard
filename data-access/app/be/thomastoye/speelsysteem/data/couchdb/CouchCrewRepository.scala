@@ -41,7 +41,7 @@ class CouchCrewRepository @Inject() (couchDatabase: CouchDatabase) extends CrewR
     p.future.map(_.sortBy(x => (x.entity.lastName, x.entity.firstName)))
   }
 
-  override def insert(crewMember: Crew): Future[Unit] = db.docs.create(crewMember).toFuture.map(_ => ())
+  override def insert(id: Crew.Id, crewMember: Crew): Future[Crew.Id] = db.docs.create(crewMember, id).toFuture.map(_.id)
 
   override def count: Future[Int] = findAll.map(_.length)
 
@@ -51,4 +51,6 @@ class CouchCrewRepository @Inject() (couchDatabase: CouchDatabase) extends CrewR
       res <- db.docs.update[Crew](CouchDoc(crewMember, crewKind, _id = id, _rev = currentRev)).toFuture
     } yield { () }
   }
+
+  override def delete(id: Id) = ???
 }

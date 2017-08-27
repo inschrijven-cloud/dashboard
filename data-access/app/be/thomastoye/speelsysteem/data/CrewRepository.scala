@@ -11,9 +11,11 @@ trait CrewRepository {
 
   def findAll: Future[Seq[EntityWithId[Crew.Id, Crew]]]
 
-  def insert(crewMember: Crew): Future[Unit] // TODO return Future[Crew.Id]
+  def insert(id: Crew.Id, crewMember: Crew): Future[Crew.Id]
 
   def count: Future[Int]
 
   def update(id: Crew.Id, crewMember: Crew): Future[Unit]
+
+  def delete(id: Crew.Id): Future[Unit] // TODO Correct? What do we want when id does not exist?
 }

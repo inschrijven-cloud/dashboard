@@ -79,4 +79,5 @@ object JsonFormats {
   implicit val dayWithIdWrites = entityWithIdWrites[Day.Id, Day]
   implicit val childWithIdWrites = entityWithIdWrites[Child.Id, Child]
   implicit val contactPersonWithIdWrites = entityWithIdWrites[ContactPerson.Id, ContactPerson]
+  implicit val crewWithIdWrites = entityWithIdWrites[Crew.Id, Crew]
 }

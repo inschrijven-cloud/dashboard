@@ -7,7 +7,7 @@ case class Crew(
   bankAccount: Option[String] = None,
   contact: ContactInfo,
   yearStarted: Option[Int] = None,
-  birthDate: Option[DayDate]
+  birthDate: Option[DayDate] // TODO add "active" field (boolean)
 )
 
 object Crew {

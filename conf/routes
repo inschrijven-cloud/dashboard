@@ -31,7 +31,7 @@ DELETE        /api/v1/contactperson/:id                             be.thomastoy
 POST          /api/v1/crew                                          be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController.create
 GET           /api/v1/crew                                          be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController.all
 GET           /api/v1/crew/:id                                      be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController.getById(id)
-PUT           /api/v1/crew                                          be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController.update
+PUT           /api/v1/crew/:id                                      be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController.update(id)
 DELETE        /api/v1/crew/:id                                      be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController.delete(id)
 
 
