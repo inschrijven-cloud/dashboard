@@ -88,8 +88,8 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController"></a>
+              <ol><li name="be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(crewRepository:be.thomastoye.speelsysteem.data.CrewRepository)(implicitec:scala.concurrent.ExecutionContext):be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController"></a>
       <a id="&lt;init&gt;:CrewApiController"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -97,14 +97,17 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">CrewApiController</span><span class="params">()</span>
+        <span class="name">CrewApiController</span><span class="params">(<span name="crewRepository">crewRepository: <span class="extype" name="be.thomastoye.speelsysteem.data.CrewRepository">CrewRepository</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController@&lt;init&gt;():be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController" title="Permalink" target="_top">
+      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController@&lt;init&gt;(crewRepository:be.thomastoye.speelsysteem.data.CrewRepository)(implicitec:scala.concurrent.ExecutionContext):be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController" title="Permalink" target="_top">
         <img src="../../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Inject</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li></ol>
             </div>
 
@@ -3354,18 +3357,18 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>InjectedController → BaseControllerHelpers</dd></dl></div>
     </li><li name="be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController#create" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="create:play.api.mvc.Action[play.api.mvc.AnyContent]"></a>
-      <a id="create:Action[AnyContent]"></a>
+      <a id="create:play.api.mvc.Action[be.thomastoye.speelsysteem.EntityWithId[be.thomastoye.speelsysteem.models.Crew.Id,be.thomastoye.speelsysteem.models.Crew]]"></a>
+      <a id="create:Action[EntityWithId[Id,Crew]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">create</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>]</span>
+        <span class="name">create</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="be.thomastoye.speelsysteem.EntityWithId">EntityWithId</span>[<span class="extype" name="be.thomastoye.speelsysteem.models.Crew.Id">Id</span>, <span class="extype" name="be.thomastoye.speelsysteem.models.Crew">Crew</span>]]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController@create:play.api.mvc.Action[play.api.mvc.AnyContent]" title="Permalink" target="_top">
+      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController@create:play.api.mvc.Action[be.thomastoye.speelsysteem.EntityWithId[be.thomastoye.speelsysteem.models.Crew.Id,be.thomastoye.speelsysteem.models.Crew]]" title="Permalink" target="_top">
         <img src="../../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -3771,18 +3774,18 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController#update" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="update:play.api.mvc.Action[play.api.mvc.AnyContent]"></a>
-      <a id="update:Action[AnyContent]"></a>
+      <a id="update(id:be.thomastoye.speelsysteem.models.Crew.Id):play.api.mvc.Action[be.thomastoye.speelsysteem.models.Crew]"></a>
+      <a id="update(Id):Action[Crew]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">update</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>]</span>
+        <span class="name">update</span><span class="params">(<span name="id">id: <span class="extype" name="be.thomastoye.speelsysteem.models.Crew.Id">Id</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="be.thomastoye.speelsysteem.models.Crew">Crew</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController@update:play.api.mvc.Action[play.api.mvc.AnyContent]" title="Permalink" target="_top">
+      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController@update(id:be.thomastoye.speelsysteem.models.Crew.Id):play.api.mvc.Action[be.thomastoye.speelsysteem.models.Crew]" title="Permalink" target="_top">
         <img src="../../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
