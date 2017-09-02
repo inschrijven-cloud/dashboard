@@ -44,8 +44,9 @@ class ReportServiceImpl @Inject() (
 
             Seq(
               Row().withCellValues(
-                CellStyle().copy(font = Some(Font().copy(italic = Some(true)))),
                 DayDate.createFromDayId(dayId).get.toString, "", "", attendances.uniqueChildren
+              ).withStyle(
+                CellStyle().copy(font = Some(Font().copy(italic = Some(true))))
               )
             ) ++ shiftRows
         }
