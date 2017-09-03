@@ -22,6 +22,8 @@ class StubChildRepository extends ChildRepository {
   override def update(id: Id, child: Child): Future[Unit] = ???
 
   override def delete(id: Id): Future[Unit] = ???
+
+  override def setMerged(retiredId: Id, absorpedIntoId: Id): Future[Unit] = ???
 }
 
 class StubChildRepositoryModule extends AbstractModule {

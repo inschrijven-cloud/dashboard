@@ -14,6 +14,7 @@ PUT           /api/v1/day/:id                                       be.thomastoy
 
 GET           /api/v1/child                                         be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.all
 POST          /api/v1/child                                         be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.create
+POST          /api/v1/child/:id/merge-with/:mergeId                 be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.merge(id, mergeId)
 GET           /api/v1/child/:id                                     be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.getById(id)
 PUT           /api/v1/child/:id                                     be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.update(id)
 DELETE        /api/v1/child/:id                                     be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController.delete(id)

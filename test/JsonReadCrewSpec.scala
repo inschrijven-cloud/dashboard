@@ -46,7 +46,8 @@ class JsonReadCrewSpec extends PlaySpec {
           |    "year": 2002
           |  },
           |  "bankAccount": "BE66 6666 6666 6666",
-          |  "yearStarted": 2016
+          |  "yearStarted": 2016,
+          |  "remarks": "some remarks"
           |}
         """.stripMargin
       )
@@ -64,7 +65,8 @@ class JsonReadCrewSpec extends PlaySpec {
           PhoneContact("055 55 55 55", Some("landline"), Some("work phone, call this during business hours"))
         ), Seq("john.smith@example.com", "test@example.com")),
         Some(2016),
-        Some(DayDate(22, 2, 2002))
+        Some(DayDate(22, 2, 2002)),
+        "some remarks"
       )
     }
   }

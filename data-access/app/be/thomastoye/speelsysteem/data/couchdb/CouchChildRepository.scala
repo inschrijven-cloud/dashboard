@@ -11,6 +11,7 @@ import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.models.Child.Id
 import com.ibm.couchdb.{ CouchDoc, CouchException, MappedDocType, TypeMapping }
 import com.typesafe.scalalogging.StrictLogging
+import play.api.libs.json.{ Json, OWrites }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ Future, Promise }
@@ -18,15 +19,27 @@ import scalaz.{ -\/, \/- }
 
 object CouchChildRepository {
   val childKind = "type/child/v1"
+  val mergedChildKind = "type/mergedchild/v1"
 
   implicit val childReader: Reader[Child] = new PlayJsonReaderUpickleCompat[Child]
   implicit val childWriter: Writer[Child] = new PlayJsonWriterUpickleCompat[Child]
+
+  case class MergedChild(firstName: String, lastName: String, legacyAddress: Address, legacyContact: ContactInfo, gender: Option[String],
+    contactPeople: Seq[ContactPersonRelationship], birthDate: Option[DayDate], medicalInformation: MedicalInformation,
+    remarks: Option[String], mergedWith: Child.Id)
+
+  implicit val mergedChildWrites: OWrites[MergedChild] = Json.writes[MergedChild]
+  implicit val mergedChildWriter: Writer[MergedChild] = new PlayJsonWriterUpickleCompat[MergedChild]
+
 }
 
 class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends ChildRepository with StrictLogging {
   import CouchChildRepository._
 
-  private val db = couchDatabase.getDb("children", TypeMapping(classOf[Child] -> CouchChildRepository.childKind))
+  private val db = couchDatabase.getDb("children", TypeMapping(
+    classOf[Child] -> CouchChildRepository.childKind,
+    classOf[MergedChild] -> CouchChildRepository.mergedChildKind
+  ))
 
   override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = {
     val p: Promise[Option[EntityWithId[Id, Child]]] = Promise()
@@ -64,5 +77,17 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
     } yield { () }
   }
 
-  override def delete(id: Id): Future[Unit] = ???
+  override def delete(id: Id): Future[Unit] = db.docs.get[Child](id).toFuture flatMap { doc =>
+    db.docs.delete[Child](doc).toFuture.map(_ => ())
+  }
+
+  override def setMerged(retiredId: Id, absorpedIntoId: Id): Future[Unit] = {
+    db.docs.get[Child](retiredId).toFuture flatMap { childDoc =>
+      val child = childDoc.doc
+      val mergedChild = MergedChild(child.firstName, child.lastName, child.legacyAddress, child.legacyContact, child.gender,
+        child.contactPeople, child.birthDate, child.medicalInformation, child.remarks, absorpedIntoId)
+
+      db.docs.update[MergedChild](CouchDoc(mergedChild, mergedChildKind, childDoc._id, childDoc._rev)).toFuture.map(_ => ())
+    }
+  }
 }

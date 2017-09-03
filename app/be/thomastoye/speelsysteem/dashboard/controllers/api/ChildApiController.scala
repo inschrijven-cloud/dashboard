@@ -34,4 +34,8 @@ class ChildApiController @Inject() (childRepository: ChildRepository)(implicit e
   def delete(id: Child.Id): Action[AnyContent] = Action.async { req =>
     childRepository.delete(id).map(_ => Ok)
   }
+
+  def merge(retiredId: Child.Id, absorpedIntoId: Child.Id): Action[AnyContent] = Action.async { req =>
+    childRepository.setMerged(retiredId, absorpedIntoId).map(_ => Ok)
+  }
 }
