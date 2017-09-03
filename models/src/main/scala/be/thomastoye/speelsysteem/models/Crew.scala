@@ -4,6 +4,7 @@ case class Crew(
   firstName: String,
   lastName: String,
   address: Address,
+  active: Boolean = true,
   bankAccount: Option[String] = None,
   contact: ContactInfo,
   yearStarted: Option[Int] = None,

@@ -68,7 +68,7 @@ class ExportServiceSpec extends WordSpec with Matchers with MockFactory {
 
       val crew = Seq(
         EntityWithId[Crew.Id, Crew](
-          "crew1", Crew("first", "last", Address(Some("street"), Some("number"), Some(6666), Some("city")), Some("bank"),
+          "crew1", Crew("first", "last", Address(Some("street"), Some("number"), Some(6666), Some("city")), true, Some("bank"),
             ContactInfo(Seq(PhoneContact("phoneNumber", Some("kind"), Some("comment"))), Seq("aoeu@example.com")),
             Some(2006), Some(DayDate(27, 7, 1997)))
         )

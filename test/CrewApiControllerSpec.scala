@@ -15,7 +15,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
   "CrewApiController#getById" should {
-    val crew = Crew("first", "last", Address.empty, None, ContactInfo.empty, None, None)
+    val crew = Crew("first", "last", Address.empty, true, None, ContactInfo.empty, None, None)
 
     "return NotFound if the crew member is not in the database" in {
       val crewRepo = mock[CrewRepository]
@@ -43,8 +43,8 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
   }
 
   "CrewApiController#all" should {
-    val crew1 = Crew("first", "last", Address.empty, None, ContactInfo.empty, None, None)
-    val crew2 = Crew("first2", "last2", Address.empty, None, ContactInfo.empty, None, None)
+    val crew1 = Crew("first", "last", Address.empty, true, None, ContactInfo.empty, None, None)
+    val crew2 = Crew("first2", "last2", Address.empty, true, None, ContactInfo.empty, None, None)
 
     "return list of crew members in the database" in {
       val crewRepo = mock[CrewRepository]
@@ -83,7 +83,7 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
   "CrewApiController#update" should {
     "update a crew member" in {
       val crewRepo = mock[CrewRepository]
-      val crew = Crew("first", "last", Address.empty, None, ContactInfo.empty, None, None)
+      val crew = Crew("first", "last", Address.empty, true, None, ContactInfo.empty, None, None)
 
       (crewRepo.update _).expects("the-id-to-update", crew).returning(Future.successful(())).once()
       val controller = new CrewApiController(crewRepo)

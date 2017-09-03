@@ -39,6 +39,7 @@ class JsonReadCrewSpec extends PlaySpec {
           |    "zipCode": 6666,
           |    "city": "Some-City"
           |  },
+          |  "active": false,
           |  "birthDate": {
           |    "day": 22,
           |    "month": 2,
@@ -56,6 +57,7 @@ class JsonReadCrewSpec extends PlaySpec {
       res.get mustBe Crew(
         "John", "Doe",
         Address(Some("Street"), Some("55X"), Some(6666), Some("Some-City")),
+        active = false,
         Some("BE66 6666 6666 6666"),
         ContactInfo(Seq(
           PhoneContact("0478 78 78 78", Some("mobile"), None),
