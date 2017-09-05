@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import be.thomastoye.speelsysteem.data.ChildAttendancesService.{ AttendancesOnDay, ShiftWithAttendances }
 import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, ChildRepository, DayService }
-import be.thomastoye.speelsysteem.models.{ Child, Day, Shift }
+import be.thomastoye.speelsysteem.models.{ Child, Day, DayDate, Shift }
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import play.api.libs.json.{ JsValue, Json, Writes }
 import play.api.mvc.{ Action, AnyContent }
@@ -58,7 +58,11 @@ class ChildAttendanceApiController @Inject() (
     }
   }
 
-  def deleteAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[AnyContent] = TODO
+  def deleteAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = Action.async(parse.json(bindShiftIdsReads)) { req =>
+    DayDate.createFromDayId(dayId) map { day =>
+      childAttendancesService.removeAttendancesForChild(childId, day, req.body.shiftIds).map(_ => NoContent)
+    } getOrElse Future.successful(BadRequest("Could not parse day id"))
+  }
 
   def findAllPerChild: Action[AnyContent] = Action.async { req =>
     childAttendancesService.findAll.map(all => Ok(Json.toJson(all)))

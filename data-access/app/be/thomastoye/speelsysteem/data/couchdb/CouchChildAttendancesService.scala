@@ -8,7 +8,7 @@ import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, PlayJsonReader
 import be.thomastoye.speelsysteem.models._
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions._
 import be.thomastoye.speelsysteem.models.Day.Id
-import com.ibm.couchdb.{ MappedDocType, Res, TypeMapping }
+import com.ibm.couchdb.{ CouchDoc, CouchException, MappedDocType, Res, TypeMapping }
 import com.typesafe.scalalogging.StrictLogging
 import upickle.default.{ Reader, Writer }
 
@@ -59,19 +59,34 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
     }: _*)
 
     // Only insert attendances that do not exist already
-    // TODO what happens with deleted attendances?
+    // what happens with deleted attendances?
+    //  -> They still exist in the database. Getting them yields {"error":"not_found","reason":"deleted"}
+    //  You can PUT deleted documents to create a new one. Just POST'ing doesn't do the trick.
+
     db.docs.getMany.allowMissing.withIds(many.keys.toSeq).build.query.toFuture.map(_.rows.flatMap(_.toList).map(_.id)) flatMap { existingIds =>
-      db.docs.createMany(many.filterNot { case (key, value) => existingIds.contains(key) }).toFuture
+      db.docs.createMany {
+        many.filterNot { case (key, value) => existingIds.contains(key) }
+      }.toFuture flatMap { seq =>
+        Future.sequence(existingIds map (id => isDeleted(id) map ((id, _)))) map (_.filter(_._2)) flatMap { list =>
+          Future.sequence(
+            list
+              .map(_._1)
+              .map(id => db.docs.update[ChildAttendancePersisted](CouchDoc(ChildAttendancePersisted(registeredTimeStamp = Some(Instant.now), None), kind = childAttendanceKind, _id = id)).toFuture)
+          ) map (_ ++ seq)
+        }
+      }
     }
   }
 
   override def addAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id): Future[Res.DocOk] = {
-    db
-      .docs.create(ChildAttendancePersisted(Some(Instant.now), None), id = createChildAttendanceId(day.getDayId, shift, childId))
-      .toFuture
+    addAttendancesForChild(childId, day, Seq(shift)).map(_.head)
   }
 
-  override def removeAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id]): Future[Unit] = ???
+  override def removeAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id]): Future[Unit] = {
+    db.docs.getMany(shifts.map(shiftId => createChildAttendanceId(day.getDayId, shiftId, childId))).toFuture flatMap { docs =>
+      db.docs.deleteMany(docs.getDocs).toFuture.map(_ => ())
+    }
+  }
 
   override def findAll: Future[Map[Child.Id, Seq[DayAttendance]]] = {
     db
@@ -121,6 +136,14 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
       .toFuture
       .map(x => x.rows.map(y => createFromChildAttendanceId(y.id)))
   }
+
+  private def isDeleted(attendanceId: String): Future[Boolean] = db.docs.get(attendanceId)
+    .toFuture
+    .map(_ => false) // exists
+    .recover {
+      case e: CouchException[Res.Error] => e.content.reason == "deleted" // either "deleted" or "missing"
+      case _ => false // other error
+    }
 
   private def createDayAttendance(idFromDb: String, persisted: ChildAttendancePersisted): (Child.Id, DayAttendance) = {
     val dayId = createFromChildAttendanceId(idFromDb)._1
