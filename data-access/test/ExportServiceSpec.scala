@@ -86,6 +86,7 @@ class ExportServiceSpec extends WordSpec with Matchers with MockFactory {
               "Voornaam",
               "Familienaam",
               "Geboortedatum",
+              "Actief",
               "Jaar gestart",
               "Straat",
               "Nummer",
@@ -95,7 +96,7 @@ class ExportServiceSpec extends WordSpec with Matchers with MockFactory {
               "Email",
               "Telefoon"
             ),
-            Row().withCellValues("crew1", "first", "last", "1997-07-27", "2006", "street", "number", "6666", "city", "bank", "aoeu@example.com", "phoneNumber (comment) (kind)")
+            Row().withCellValues("crew1", "first", "last", "1997-07-27", 1, "2006", "street", "number", "6666", "city", "bank", "aoeu@example.com", "phoneNumber (comment) (kind)")
           )
         ).withColumns(
             (0 to 11).map(idx => Column(index = idx, autoSized = true)): _*
