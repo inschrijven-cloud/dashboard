@@ -18,8 +18,21 @@ import play.api.libs.json.Json
 import scala.concurrent.Future
 
 object CouchChildAttendancesService {
-  val childAttendanceKind = "type/childattendance/v1"
-  case class ChildAttendancePersisted(registeredTimeStamp: Option[Instant], registeredByCrew: Option[Crew.Id])
+  val childAttendanceKind = "type/childattendance/v2"
+  case class ChildAttendancePersisted(
+    /** When the child was enrolled (intention to participate in an activity) */
+    enrolled: Option[Instant] = None,
+    /** Who registered the child's intent to participate in an activity */
+    enrolledRegisteredBy: Option[Crew.Id] = None,
+    /** When the child arrived to participate in an activity */
+    arrived: Option[Instant] = None,
+    /** Which crew member registered the child as arrived */
+    arrivedRegisteredBy: Option[Crew.Id] = None,
+    /** When the child left/went home after the activity */
+    left: Option[Instant] = None,
+    /** Who registered the child leaving */
+    leftRegisteredBy: Option[Crew.Id] = None
+  )
 
   implicit val childAttendancePersistedReader: Reader[ChildAttendancePersisted] = new PlayJsonReaderUpickleCompat[ChildAttendancePersisted]()(Json.format[ChildAttendancePersisted])
   implicit val childAttendancePersistedWriter: Writer[ChildAttendancePersisted] = new PlayJsonWriterUpickleCompat[ChildAttendancePersisted]()(Json.format[ChildAttendancePersisted])
@@ -55,7 +68,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
 
   override def addAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id]): Future[Seq[Res.DocOk]] = {
     val many: Map[String, ChildAttendancePersisted] = Map(shifts.map { shiftId =>
-      createChildAttendanceId(day.getDayId, shiftId, childId) -> ChildAttendancePersisted(Some(Instant.now), None)
+      createChildAttendanceId(day.getDayId, shiftId, childId) -> ChildAttendancePersisted(arrived = Some(Instant.now))
     }: _*)
 
     // Only insert attendances that do not exist already
@@ -71,7 +84,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
           Future.sequence(
             list
               .map(_._1)
-              .map(id => db.docs.update[ChildAttendancePersisted](CouchDoc(ChildAttendancePersisted(registeredTimeStamp = Some(Instant.now), None), kind = childAttendanceKind, _id = id)).toFuture)
+              .map(id => db.docs.update[ChildAttendancePersisted](CouchDoc(ChildAttendancePersisted(arrived = Some(Instant.now)), kind = childAttendanceKind, _id = id)).toFuture)
           ) map (_ ++ seq)
         }
       }
@@ -150,7 +163,12 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
     val shiftId = createFromChildAttendanceId(idFromDb)._2
     val childId = createFromChildAttendanceId(idFromDb)._3
 
-    (childId, DayAttendance(dayId, Seq(SingleAttendance(shiftId, persisted.registeredByCrew, persisted.registeredTimeStamp))))
+    (childId, DayAttendance(dayId, Seq(SingleAttendance(
+      shiftId,
+      persisted.enrolled, persisted.enrolledRegisteredBy,
+      persisted.arrived, persisted.arrivedRegisteredBy,
+      persisted.left, persisted.leftRegisteredBy
+    ))))
   }
 
   private def createFromChildAttendanceId(id: String): (Day.Id, Shift.Id, Child.Id) = {

@@ -1,14 +1,10 @@
 package be.thomastoye.speelsysteem.models
 
 case class Child(
-    /**
-     * The first name of the child
-     */
+    /** The first name of the child */
     firstName: String,
 
-    /**
-     * The last name of the child
-     */
+    /** The last name of the child */
     lastName: String,
 
     /**
@@ -25,29 +21,19 @@ case class Child(
      */
     legacyContact: ContactInfo,
 
-    /**
-     * "male", "female", "other"
-     */
+    /** "male", "female", "other" */
     gender: Option[String],
 
-    /**
-     * Ids of people that can be contacted. First one is the primary contact person.
-     */
+    /** Ids of people that can be contacted. First one is the primary contact person. */
     contactPeople: Seq[ContactPersonRelationship],
 
-    /**
-     * Date on which the child was born
-     */
+    /** Date on which the child was born */
     birthDate: Option[DayDate],
 
-    /**
-     * Medical information about the child
-     */
+    /** Medical information about the child */
     medicalInformation: MedicalInformation,
 
-    /**
-     * Other remarks
-     */
+    /** Other remarks */
     remarks: Option[String]
 ) {
   def primaryContactPersonId: Option[ContactPersonRelationship] = contactPeople.headOption

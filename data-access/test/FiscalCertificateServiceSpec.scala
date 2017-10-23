@@ -209,24 +209,24 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
       (childAttendanceService.findAll _).expects().returning(Future.successful(
         Map(
           "child1" -> Seq(
-            DayAttendance("2016-03-05", Seq(SingleAttendance("shift1", None, None))),
-            DayAttendance("2016-03-06", Seq(SingleAttendance("shift5", None, None)))
+            DayAttendance("2016-03-05", Seq(SingleAttendance("shift1"))),
+            DayAttendance("2016-03-06", Seq(SingleAttendance("shift5")))
           ),
           "child2" -> Seq(
-            DayAttendance("2016-03-05", Seq(SingleAttendance("shift3", None, None))),
-            DayAttendance("2016-03-06", Seq(SingleAttendance("shift4", None, None))),
-            DayAttendance("2016-03-07", Seq(SingleAttendance("shift10", None, None)))
+            DayAttendance("2016-03-05", Seq(SingleAttendance("shift3"))),
+            DayAttendance("2016-03-06", Seq(SingleAttendance("shift4"))),
+            DayAttendance("2016-03-07", Seq(SingleAttendance("shift10")))
           ),
           "child3" -> Seq(
             DayAttendance("2016-03-05", Seq(
-              SingleAttendance("shift1", None, None),
-              SingleAttendance("shift2", None, None),
-              SingleAttendance("shift3", None, None)
+              SingleAttendance("shift1"),
+              SingleAttendance("shift2"),
+              SingleAttendance("shift3")
             )),
             DayAttendance("2016-03-07", Seq(
-              SingleAttendance("shift7", None, None),
-              SingleAttendance("shift8", None, None),
-              SingleAttendance("shift9", None, None)
+              SingleAttendance("shift7"),
+              SingleAttendance("shift8"),
+              SingleAttendance("shift9")
             ))
           )
         )
