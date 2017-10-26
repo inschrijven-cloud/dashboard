@@ -26,7 +26,7 @@ object CouchCrewRepository {
 class CouchCrewRepository @Inject() (couchDatabase: CouchDatabase) extends CrewRepository with StrictLogging {
   import CouchCrewRepository._
 
-  private val db = couchDatabase.getDb("crew", TypeMapping(classOf[Crew] -> CouchCrewRepository.crewKind))
+  private val db = couchDatabase.getDb(TypeMapping(classOf[Crew] -> CouchCrewRepository.crewKind))
 
   override def findById(id: Id): Future[Option[EntityWithId[Id, Crew]]] = findAll.map(_.find(_.id == id))
 

@@ -5,7 +5,7 @@ import com.google.inject.AbstractModule
 import com.ibm.couchdb.{ CouchDbApi, TypeMapping }
 
 class StubCouchDatabase extends CouchDatabase {
-  override def getDb(suffix: String, typeMapping: TypeMapping): CouchDbApi = null
+  override def getDb(typeMapping: TypeMapping): CouchDbApi = null
 }
 
 class StubCouchDatabaseModule extends AbstractModule {

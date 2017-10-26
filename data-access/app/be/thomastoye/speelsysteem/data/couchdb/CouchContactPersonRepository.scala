@@ -26,7 +26,7 @@ object CouchContactPersonRepository {
 class CouchContactPersonRepository @Inject() (couchDatabase: CouchDatabase) extends ContactPersonRepository with StrictLogging {
   import CouchContactPersonRepository._
 
-  private val db = couchDatabase.getDb("contactpeople", TypeMapping(classOf[ContactPerson] -> CouchContactPersonRepository.contactPersonKind))
+  private val db = couchDatabase.getDb(TypeMapping(classOf[ContactPerson] -> CouchContactPersonRepository.contactPersonKind))
 
   override def findById(id: Id): Future[Option[EntityWithId[Id, ContactPerson]]] = {
     val p: Promise[Option[EntityWithId[Id, ContactPerson]]] = Promise()

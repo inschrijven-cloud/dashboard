@@ -36,7 +36,7 @@ object CouchChildRepository {
 class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends ChildRepository with StrictLogging {
   import CouchChildRepository._
 
-  private val db = couchDatabase.getDb("children", TypeMapping(
+  private val db = couchDatabase.getDb(TypeMapping(
     classOf[Child] -> CouchChildRepository.childKind,
     classOf[MergedChild] -> CouchChildRepository.mergedChildKind
   ))

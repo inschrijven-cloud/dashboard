@@ -26,7 +26,7 @@ object CouchDayService extends StrictLogging {
 class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLogging with DayService {
   import CouchDayService._
 
-  private val db = couchDatabase.getDb("days", TypeMapping(classOf[Day] -> CouchDayService.dayKind))
+  private val db = couchDatabase.getDb(TypeMapping(classOf[Day] -> CouchDayService.dayKind))
 
   override def findAll: Future[Seq[EntityWithId[Id, Day]]] = {
     db.docs.getMany

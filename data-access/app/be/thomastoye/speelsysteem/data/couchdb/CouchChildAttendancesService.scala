@@ -41,7 +41,7 @@ object CouchChildAttendancesService {
 class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) extends ChildAttendancesService with StrictLogging {
   import CouchChildAttendancesService._
 
-  private val db = couchDatabase.getDb("childattendance", TypeMapping(classOf[ChildAttendancePersisted] -> childAttendanceKind))
+  private val db = couchDatabase.getDb(TypeMapping(classOf[ChildAttendancePersisted] -> childAttendanceKind))
 
   override def findAttendancesForChild(childId: Child.Id): Future[Seq[DayAttendance]] = findAll map { _.getOrElse(childId, Seq.empty) }
 

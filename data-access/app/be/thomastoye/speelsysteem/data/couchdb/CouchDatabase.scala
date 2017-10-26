@@ -28,7 +28,7 @@ object CouchDatabase {
 }
 
 trait CouchDatabase {
-  def getDb(suffix: String, typeMapping: TypeMapping): CouchDbApi
+  def getDb(typeMapping: TypeMapping): CouchDbApi
 }
 
 @Singleton
@@ -42,6 +42,6 @@ class CouchDatabaseImpl @Inject() (config: Configuration) extends CouchDatabase 
     case \/-(res) => Logger.info(s"Successfully connected to CouchDB ${res.version} (vendor: ${res.vendor.name}): ${res.couchdb}")
   }
 
-  override def getDb(suffix: String, typeMapping: TypeMapping): CouchDbApi = couchdb.db(couchConfig.db + "-" + suffix, typeMapping)
+  override def getDb(typeMapping: TypeMapping): CouchDbApi = couchdb.db(couchConfig.db, typeMapping)
 
 }
