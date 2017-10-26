@@ -30,7 +30,7 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
 
   override def findAll: Future[Seq[EntityWithId[Id, Day]]] = {
     db.docs.getMany
-      .byType[String]("all", "days", MappedDocType(dayKind))
+      .byType[String]("all-days", "default", MappedDocType(dayKind))
       .includeDocs[Day].build.query.toFuture
       .map(res => res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       .map(_.sortBy(x => x.entity.date).reverse)

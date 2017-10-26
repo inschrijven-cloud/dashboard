@@ -103,7 +103,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
 
   override def findAll: Future[Map[Child.Id, Seq[DayAttendance]]] = {
     db
-      .docs.getMany.byType[String]("all", "childattendance", MappedDocType(childAttendanceKind))
+      .docs.getMany.byType[String]("all-child-attendances", "default", MappedDocType(childAttendanceKind))
       .includeDocs
       .build
       .query
@@ -121,7 +121,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
   }
 
   override def findAllPerDay: Future[Map[Id, AttendancesOnDay]] = {
-    db.docs.getMany.byType[String]("all", "childattendance", MappedDocType(childAttendanceKind))
+    db.docs.getMany.byType[String]("all-child-attendances", "default", MappedDocType(childAttendanceKind))
       .includeDocs
       .build
       .query
@@ -143,7 +143,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
   }
 
   override def findAllRaw: Future[Seq[(Day.Id, Shift.Id, Child.Id)]] = {
-    db.docs.getMany.byType[String]("all", "childattendance", MappedDocType(childAttendanceKind))
+    db.docs.getMany.byType[String]("all-child-attendances", "default", MappedDocType(childAttendanceKind))
       .build
       .query
       .toFuture

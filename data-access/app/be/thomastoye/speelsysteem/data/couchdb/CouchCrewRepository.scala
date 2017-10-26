@@ -31,14 +31,10 @@ class CouchCrewRepository @Inject() (couchDatabase: CouchDatabase) extends CrewR
   override def findById(id: Id): Future[Option[EntityWithId[Id, Crew]]] = findAll.map(_.find(_.id == id))
 
   override def findAll: Future[Seq[EntityWithId[Id, Crew]]] = {
-    val p: Promise[Seq[EntityWithId[Id, Crew]]] = Promise()
-
-    db.docs.getMany.byTypeUsingTemporaryView(MappedDocType(crewKind)).includeDocs[Crew].build.query.unsafePerformAsync {
-      case \/-(res) => p.success(res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
-      case -\/(e) => p.failure(e)
-    }
-
-    p.future.map(_.sortBy(x => (x.entity.lastName, x.entity.firstName)))
+    db.docs.getMany
+      .byType[String]("all-contactperson", "default", MappedDocType(crewKind))
+      .includeDocs[Crew].build.query.toFuture
+      .map(res => res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
   }
 
   override def insert(id: Crew.Id, crewMember: Crew): Future[Crew.Id] = db.docs.create(crewMember, id).toFuture.map(_.id)

@@ -58,7 +58,7 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
   override def findAll: Future[Seq[EntityWithId[Id, Child]]] = {
     val p: Promise[Seq[EntityWithId[Id, Child]]] = Promise()
 
-    db.docs.getMany.byType[String]("all", "children", MappedDocType(childKind)).includeDocs.build.query.unsafePerformAsync {
+    db.docs.getMany.byType[String]("all-children", "default", MappedDocType(childKind)).includeDocs.build.query.unsafePerformAsync {
       case \/-(res) => p.success(res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       case -\/(e) => p.failure(e)
     }

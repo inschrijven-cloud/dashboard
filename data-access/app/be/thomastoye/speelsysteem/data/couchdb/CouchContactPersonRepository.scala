@@ -45,7 +45,7 @@ class CouchContactPersonRepository @Inject() (couchDatabase: CouchDatabase) exte
   override def findAll: Future[Seq[EntityWithId[Id, ContactPerson]]] = {
     val p: Promise[Seq[EntityWithId[Id, ContactPerson]]] = Promise()
 
-    db.docs.getMany.byType[String]("all", "contactpeople", MappedDocType(contactPersonKind)).includeDocs.build.query.unsafePerformAsync {
+    db.docs.getMany.byType[String]("all-contactperson", "default", MappedDocType(contactPersonKind)).includeDocs.build.query.unsafePerformAsync {
       case \/-(res) => p.success(res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       case -\/(e) => p.failure(e)
     }
