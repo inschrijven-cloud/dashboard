@@ -1,6 +1,8 @@
 import be.thomastoye.speelsysteem.EntityWithId
+import be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainAction
 import be.thomastoye.speelsysteem.dashboard.controllers.api.ChildAttendanceApiController
 import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, ChildRepository, DayService }
+import be.thomastoye.speelsysteem.models.Day.Id
 import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import be.thomastoye.speelsysteem.models.{ Shift, _ }
 import helpers.UnimplementedDayService
@@ -15,6 +17,9 @@ import play.api.test._
 import play.api.test.Helpers._
 
 class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFactory {
+  val domainAction = new DomainAction(new BodyParsers.Default(stubControllerComponents().parsers))
+  val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+
   "ChildAttendanceApiController#numberOfChildAttendances" should {
     "return a list with days and the number of children attending each shift" in {
 
@@ -22,7 +27,7 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFa
       val dayServiceStub = new UnimplementedDayService {
         def shift: (String => Shift) = Shift(_, Price(2, 0), true, true, ShiftKind.Afternoon, None, None, None)
 
-        override def findAll: Future[Seq[EntityWithId[Shift.Id, Day]]] = Future.successful(
+        override def findAll(implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Day]]] = Future.successful(
           Seq(
             EntityWithId("2016-11-25", Day(DayDate(25, 11, 2016), Seq(
               Shift("shift1", Price(1, 0), true, true, ShiftKind.Morning, None, None, None),
@@ -40,17 +45,17 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFa
 
       val childAttendanceService = mock[ChildAttendancesService]
 
-      (childAttendanceService.findNumberOfChildAttendances _).expects().returning(Future.successful(
+      (childAttendanceService.findNumberOfChildAttendances(_: Tenant)).expects(*).returning(Future.successful(
         Map(
           "2016-11-25" -> Map("shift1" -> 2, "shift2" -> 1),
           "2016-02-01" -> Map("shift3" -> 1)
         )
       )).once()
 
-      val controller = new ChildAttendanceApiController(childRepo, dayServiceStub, childAttendanceService)
+      val controller = new ChildAttendanceApiController(childRepo, dayServiceStub, childAttendanceService, domainAction)
       controller.setControllerComponents(stubControllerComponents())
 
-      val body = contentAsJson(controller.numberOfChildAttendances.apply(FakeRequest()))
+      val body = contentAsJson(controller.numberOfChildAttendances.apply(fakeReq))
 
       body mustBe Json.obj(
         "2016-11-25" -> Json.obj("shift1" -> 2, "shift2" -> 1),

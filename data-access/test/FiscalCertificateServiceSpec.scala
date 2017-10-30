@@ -12,16 +12,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with MockFactory {
+  implicit val testTenant = Tenant("test")
+
   "Fiscal certificate service" should {
     "return a sheet with no date rows when there are no children" in {
       val childRepo = mock[ChildRepository]
-      (childRepo.findAll _).expects().returning(Future.successful(Seq.empty)).once()
+      (childRepo.findAll(_: Tenant)).expects(*).returning(Future.successful(Seq.empty)).once()
 
       val dayService = mock[DayService]
-      (dayService.findAll _).expects().returning(Future.successful(Seq.empty))
+      (dayService.findAll(_: Tenant)).expects(*).returning(Future.successful(Seq.empty))
 
       val childAttendanceService = mock[ChildAttendancesService]
-      (childAttendanceService.findAll _).expects().returning(Future.successful(Map.empty)).once()
+      (childAttendanceService.findAll(_: Tenant)).expects(*).returning(Future.successful(Map.empty)).once()
 
       val service = new FiscalCertificateService(childRepo, dayService, childAttendanceService, global)
 
@@ -82,13 +84,13 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
       )
 
       val childRepo = mock[ChildRepository]
-      (childRepo.findAll _).expects().returning(Future.successful(children))
+      (childRepo.findAll(_: Tenant)).expects(*).returning(Future.successful(children))
 
       val dayService = mock[DayService]
-      (dayService.findAll _).expects().returning(Future.successful(days)).once()
+      (dayService.findAll(_: Tenant)).expects(*).returning(Future.successful(days)).once()
 
       val childAttendanceService = mock[ChildAttendancesService]
-      (childAttendanceService.findAll _).expects().returning(Future.successful(
+      (childAttendanceService.findAll(_: Tenant)).expects(*).returning(Future.successful(
         Map(
           "child1" -> Seq(DayAttendance("2016-03-07", Seq(SingleAttendance("shift1", None, None))))
         )
@@ -200,13 +202,13 @@ class FiscalCertificateServiceSpec extends AsyncWordSpec with Matchers with Mock
       )
 
       val childRepo = mock[ChildRepository]
-      (childRepo.findAll _).expects().returning(Future.successful(children))
+      (childRepo.findAll(_: Tenant)).expects(*).returning(Future.successful(children))
 
       val dayService = mock[DayService]
-      (dayService.findAll _).expects().returning(Future.successful(days)).once()
+      (dayService.findAll(_: Tenant)).expects(*).returning(Future.successful(days)).once()
 
       val childAttendanceService = mock[ChildAttendancesService]
-      (childAttendanceService.findAll _).expects().returning(Future.successful(
+      (childAttendanceService.findAll(_: Tenant)).expects(*).returning(Future.successful(
         Map(
           "child1" -> Seq(
             DayAttendance("2016-03-05", Seq(SingleAttendance("shift1"))),

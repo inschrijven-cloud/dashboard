@@ -2,6 +2,7 @@ package be.thomastoye.speelsysteem.data
 
 import javax.inject.Inject
 
+import be.thomastoye.speelsysteem.models.Tenant
 import com.norbitltd.spoiwo.model.enums.CellFill
 import com.norbitltd.spoiwo.model._
 
@@ -10,7 +11,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 class ExportService @Inject() (childRepository: ChildRepository, crewRepository: CrewRepository, implicit val ec: ExecutionContext) {
   private val headerStyle = CellStyle(fillPattern = CellFill.Solid, fillForegroundColor = Color.AquaMarine, font = Font(bold = true))
 
-  def childSheet: Future[Sheet] = {
+  def childSheet(implicit tenant: Tenant): Future[Sheet] = {
     childRepository.findAll.map { children =>
       val rows = children.map { child =>
         Row().withCellValues(
@@ -53,7 +54,7 @@ class ExportService @Inject() (childRepository: ChildRepository, crewRepository:
     }
   }
 
-  def crewSheet: Future[Sheet] = {
+  def crewSheet(implicit tenant: Tenant): Future[Sheet] = {
     crewRepository.findAll map { crew =>
       val rows = crew.map { crewMember =>
         Row().withCellValues(

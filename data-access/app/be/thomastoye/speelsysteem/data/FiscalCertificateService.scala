@@ -29,7 +29,7 @@ class FiscalCertificateService @Inject() (
     totalReceivedAmount: String
   )
 
-  def getFiscalCertificateSheet(year: Int): Future[Sheet] = for {
+  def getFiscalCertificateSheet(year: Int)(implicit tenant: Tenant): Future[Sheet] = for {
     allDays <- dayService.findAll
     allChildren <- childRepository.findAll
     allAttendances <- childAttendancesService.findAll

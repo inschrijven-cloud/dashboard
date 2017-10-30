@@ -25,6 +25,7 @@ object JsonFormats {
   implicit val contactPersonFormat = Json.format[ContactPerson]
   implicit val priceFormat = Json.format[Price]
   implicit val startAndEndTimeFormat = Json.format[StartAndEndTime]
+  implicit val configFormat = Json.format[ConfigWrapper]
 
   implicit val shiftKindFormat: Format[ShiftKind] = new Format[ShiftKind] {
     override def writes(o: ShiftKind): JsValue = JsString(o.mnemonic)

@@ -1,29 +1,24 @@
 package helpers
 
-import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.ChildRepository
-import be.thomastoye.speelsysteem.models.Child
-import be.thomastoye.speelsysteem.models.Child.Id
-import be.thomastoye.speelsysteem.models.Day.Id
+import be.thomastoye.speelsysteem.models.{ Child, Tenant }
 import be.thomastoye.speelsysteem.models.Shift.Id
 import com.google.inject.AbstractModule
 
-import scala.concurrent.Future
-
 class StubChildRepository extends ChildRepository {
-  override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = ???
+  override def findById(id: Id)(implicit tenant: Tenant) = ???
 
-  override def findAll: Future[Seq[EntityWithId[Child.Id, Child]]] = Future.successful(Seq.empty)
+  override def findAll(implicit tenant: Tenant) = ???
 
-  override def insert(id: Id, child: Child): Future[Id] = ???
+  override def insert(id: Id, child: Child)(implicit tenant: Tenant) = ???
 
-  override def count: Future[Int] = ???
+  override def count(implicit tenant: Tenant) = ???
 
-  override def update(id: Id, child: Child): Future[Unit] = ???
+  override def update(id: Id, child: Child)(implicit tenant: Tenant) = ???
 
-  override def delete(id: Id): Future[Unit] = ???
+  override def delete(id: Id)(implicit tenant: Tenant) = ???
 
-  override def setMerged(retiredId: Id, absorpedIntoId: Id): Future[Unit] = ???
+  override def setMerged(retiredId: Id, absorpedIntoId: Id)(implicit tenant: Tenant) = ???
 }
 
 class StubChildRepositoryModule extends AbstractModule {

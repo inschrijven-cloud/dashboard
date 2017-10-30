@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait ReportService {
-  def getChildrenPerDay(year: Int): Future[Sheet]
+  def getChildrenPerDay(year: Int)(implicit tenant: Tenant): Future[Sheet]
 
 }
 
@@ -20,7 +20,7 @@ class ReportServiceImpl @Inject() (
     dayService: DayService
 
 ) extends ReportService {
-  override def getChildrenPerDay(year: Int): Future[Sheet] = {
+  override def getChildrenPerDay(year: Int)(implicit tenant: Tenant): Future[Sheet] = {
     for {
       allAttendances <- childAttendancesService.findAllPerDay
       allDays <- dayService.findAll

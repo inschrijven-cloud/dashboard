@@ -41,13 +41,13 @@ object CouchChildAttendancesService {
 class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) extends ChildAttendancesService with StrictLogging {
   import CouchChildAttendancesService._
 
-  private val db = couchDatabase.getDb(TypeMapping(classOf[ChildAttendancePersisted] -> childAttendanceKind))
+  private def db(implicit tenant: Tenant) = couchDatabase.getDb(TypeMapping(classOf[ChildAttendancePersisted] -> childAttendanceKind), tenant)
 
-  override def findAttendancesForChild(childId: Child.Id): Future[Seq[DayAttendance]] = findAll map { _.getOrElse(childId, Seq.empty) }
+  override def findAttendancesForChild(childId: Child.Id)(implicit tenant: Tenant): Future[Seq[DayAttendance]] = findAll map { _.getOrElse(childId, Seq.empty) }
 
-  override def findNumberAttendancesForChild(childId: Child.Id): Future[Option[Int]] = findAll.map(_.get(childId).map(_.map(_.shifts.length).sum))
+  override def findNumberAttendancesForChild(childId: Child.Id)(implicit tenant: Tenant): Future[Option[Int]] = findAll.map(_.get(childId).map(_.map(_.shifts.length).sum))
 
-  override def findNumberOfChildAttendances: Future[Map[Day.Id, Map[Shift.Id, Int]]] = findAll map { all =>
+  override def findNumberOfChildAttendances(implicit tenant: Tenant): Future[Map[Day.Id, Map[Shift.Id, Int]]] = findAll map { all =>
     val groupedByDay = all.toSeq flatMap {
       case (childId, childAttendances) =>
         childAttendances.flatMap(att => att.shifts.map(shift => (att.day, shift.shiftId)))
@@ -64,9 +64,9 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
     }
   }
 
-  override def findNumberOfChildAttendances(day: DayDate, shiftId: Shift.Id): Future[Int] = ???
+  override def findNumberOfChildAttendances(day: DayDate, shiftId: Shift.Id)(implicit tenant: Tenant): Future[Int] = ???
 
-  override def addAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id]): Future[Seq[Res.DocOk]] = {
+  override def addAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id])(implicit tenant: Tenant): Future[Seq[Res.DocOk]] = {
     val many: Map[String, ChildAttendancePersisted] = Map(shifts.map { shiftId =>
       createChildAttendanceId(day.getDayId, shiftId, childId) -> ChildAttendancePersisted(arrived = Some(Instant.now))
     }: _*)
@@ -91,17 +91,17 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
     }
   }
 
-  override def addAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id): Future[Res.DocOk] = {
+  override def addAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id)(implicit tenant: Tenant): Future[Res.DocOk] = {
     addAttendancesForChild(childId, day, Seq(shift)).map(_.head)
   }
 
-  override def removeAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id]): Future[Unit] = {
+  override def removeAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id])(implicit tenant: Tenant): Future[Unit] = {
     db.docs.getMany(shifts.map(shiftId => createChildAttendanceId(day.getDayId, shiftId, childId))).toFuture flatMap { docs =>
       db.docs.deleteMany(docs.getDocs).toFuture.map(_ => ())
     }
   }
 
-  override def findAll: Future[Map[Child.Id, Seq[DayAttendance]]] = {
+  override def findAll(implicit tenant: Tenant): Future[Map[Child.Id, Seq[DayAttendance]]] = {
     db
       .docs.getMany.byType[String]("all-child-attendances", "default", MappedDocType(childAttendanceKind))
       .includeDocs
@@ -120,7 +120,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
       })
   }
 
-  override def findAllPerDay: Future[Map[Id, AttendancesOnDay]] = {
+  override def findAllPerDay(implicit tenant: Tenant): Future[Map[Id, AttendancesOnDay]] = {
     db.docs.getMany.byType[String]("all-child-attendances", "default", MappedDocType(childAttendanceKind))
       .includeDocs
       .build
@@ -142,7 +142,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
       }
   }
 
-  override def findAllRaw: Future[Seq[(Day.Id, Shift.Id, Child.Id)]] = {
+  override def findAllRaw(implicit tenant: Tenant): Future[Seq[(Day.Id, Shift.Id, Child.Id)]] = {
     db.docs.getMany.byType[String]("all-child-attendances", "default", MappedDocType(childAttendanceKind))
       .build
       .query
@@ -150,7 +150,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
       .map(x => x.rows.map(y => createFromChildAttendanceId(y.id)))
   }
 
-  private def isDeleted(attendanceId: String): Future[Boolean] = db.docs.get(attendanceId)
+  private def isDeleted(attendanceId: String)(implicit tenant: Tenant): Future[Boolean] = db.docs.get(attendanceId)
     .toFuture
     .map(_ => false) // exists
     .recover {
@@ -158,7 +158,7 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
       case _ => false // other error
     }
 
-  private def createDayAttendance(idFromDb: String, persisted: ChildAttendancePersisted): (Child.Id, DayAttendance) = {
+  private def createDayAttendance(idFromDb: String, persisted: ChildAttendancePersisted)(implicit tenant: Tenant): (Child.Id, DayAttendance) = {
     val dayId = createFromChildAttendanceId(idFromDb)._1
     val shiftId = createFromChildAttendanceId(idFromDb)._2
     val childId = createFromChildAttendanceId(idFromDb)._3
@@ -171,9 +171,9 @@ class CouchChildAttendancesService @Inject() (couchDatabase: CouchDatabase) exte
     ))))
   }
 
-  private def createFromChildAttendanceId(id: String): (Day.Id, Shift.Id, Child.Id) = {
+  private def createFromChildAttendanceId(id: String)(implicit tenant: Tenant): (Day.Id, Shift.Id, Child.Id) = {
     (id.split("--")(0), id.split("--")(1), id.split("--")(2))
   }
 
-  private def createChildAttendanceId(dayId: Day.Id, shiftId: Shift.Id, childId: Child.Id): String = s"$dayId--$shiftId--$childId"
+  private def createChildAttendanceId(dayId: Day.Id, shiftId: Shift.Id, childId: Child.Id)(implicit tenant: Tenant): String = s"$dayId--$shiftId--$childId"
 }

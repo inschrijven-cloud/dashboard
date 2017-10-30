@@ -26,27 +26,27 @@ object CouchCrewRepository {
 class CouchCrewRepository @Inject() (couchDatabase: CouchDatabase) extends CrewRepository with StrictLogging {
   import CouchCrewRepository._
 
-  private val db = couchDatabase.getDb(TypeMapping(classOf[Crew] -> CouchCrewRepository.crewKind))
+  private def db(tenant: Tenant) = couchDatabase.getDb(TypeMapping(classOf[Crew] -> CouchCrewRepository.crewKind), tenant)
 
-  override def findById(id: Id): Future[Option[EntityWithId[Id, Crew]]] = findAll.map(_.find(_.id == id))
+  override def findById(id: Id)(implicit tenant: Tenant): Future[Option[EntityWithId[Id, Crew]]] = findAll.map(_.find(_.id == id))
 
-  override def findAll: Future[Seq[EntityWithId[Id, Crew]]] = {
-    db.docs.getMany
+  override def findAll(implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Crew]]] = {
+    db(tenant).docs.getMany
       .byType[String]("all-contactperson", "default", MappedDocType(crewKind))
       .includeDocs[Crew].build.query.toFuture
       .map(res => res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
   }
 
-  override def insert(id: Crew.Id, crewMember: Crew): Future[Crew.Id] = db.docs.create(crewMember, id).toFuture.map(_.id)
+  override def insert(id: Crew.Id, crewMember: Crew)(implicit tenant: Tenant): Future[Crew.Id] = db(tenant).docs.create(crewMember, id).toFuture.map(_.id)
 
-  override def count: Future[Int] = findAll.map(_.length)
+  override def count(implicit tenant: Tenant): Future[Int] = findAll.map(_.length)
 
-  override def update(id: Id, crewMember: Crew): Future[Unit] = {
+  override def update(id: Id, crewMember: Crew)(implicit tenant: Tenant): Future[Unit] = {
     for {
-      currentRev <- db.docs.get[Crew](id).toFuture.map(_._rev)
-      res <- db.docs.update[Crew](CouchDoc(crewMember, crewKind, _id = id, _rev = currentRev)).toFuture
+      currentRev <- db(tenant).docs.get[Crew](id).toFuture.map(_._rev)
+      res <- db(tenant).docs.update[Crew](CouchDoc(crewMember, crewKind, _id = id, _rev = currentRev)).toFuture
     } yield { () }
   }
 
-  override def delete(id: Id) = ???
+  override def delete(id: Id)(implicit tenant: Tenant) = ???
 }

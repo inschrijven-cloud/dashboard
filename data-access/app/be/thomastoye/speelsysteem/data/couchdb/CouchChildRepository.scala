@@ -36,12 +36,12 @@ object CouchChildRepository {
 class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends ChildRepository with StrictLogging {
   import CouchChildRepository._
 
-  private val db = couchDatabase.getDb(TypeMapping(
+  private def db(implicit tenant: Tenant) = couchDatabase.getDb(TypeMapping(
     classOf[Child] -> CouchChildRepository.childKind,
     classOf[MergedChild] -> CouchChildRepository.mergedChildKind
-  ))
+  ), tenant)
 
-  override def findById(id: Id): Future[Option[EntityWithId[Id, Child]]] = {
+  override def findById(id: Id)(implicit tenant: Tenant): Future[Option[EntityWithId[Id, Child]]] = {
     val p: Promise[Option[EntityWithId[Id, Child]]] = Promise()
 
     db.docs.get[Child](id).unsafePerformAsync {
@@ -55,7 +55,7 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
     p.future
   }
 
-  override def findAll: Future[Seq[EntityWithId[Id, Child]]] = {
+  override def findAll(implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Child]]] = {
     val p: Promise[Seq[EntityWithId[Id, Child]]] = Promise()
 
     db.docs.getMany.byType[String]("all-children", "default", MappedDocType(childKind)).includeDocs.build.query.unsafePerformAsync {
@@ -66,22 +66,22 @@ class CouchChildRepository @Inject() (couchDatabase: CouchDatabase) extends Chil
     p.future.map(_.sortBy(x => (x.entity.lastName, x.entity.firstName)))
   }
 
-  override def insert(id: Id, child: Child): Future[Id] = db.docs.create[Child](child, id).toFuture.map(_.id)
+  override def insert(id: Id, child: Child)(implicit tenant: Tenant): Future[Id] = db.docs.create[Child](child, id).toFuture.map(_.id)
 
-  override def count: Future[Int] = findAll.map(_.length)
+  override def count(implicit tenant: Tenant): Future[Int] = findAll.map(_.length)
 
-  override def update(id: Id, child: Child): Future[Unit] = {
+  override def update(id: Id, child: Child)(implicit tenant: Tenant): Future[Unit] = {
     for {
       currentRev <- db.docs.get[Child](id).toFuture.map(_._rev)
       res <- db.docs.update[Child](CouchDoc(child, childKind, _id = id, _rev = currentRev)).toFuture
     } yield { () }
   }
 
-  override def delete(id: Id): Future[Unit] = db.docs.get[Child](id).toFuture flatMap { doc =>
+  override def delete(id: Id)(implicit tenant: Tenant): Future[Unit] = db.docs.get[Child](id).toFuture flatMap { doc =>
     db.docs.delete[Child](doc).toFuture.map(_ => ())
   }
 
-  override def setMerged(retiredId: Id, absorpedIntoId: Id): Future[Unit] = {
+  override def setMerged(retiredId: Id, absorpedIntoId: Id)(implicit tenant: Tenant): Future[Unit] = {
     db.docs.get[Child](retiredId).toFuture flatMap { childDoc =>
       val child = childDoc.doc
       val mergedChild = MergedChild(child.firstName, child.lastName, child.legacyAddress, child.legacyContact, child.gender,

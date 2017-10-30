@@ -2,6 +2,7 @@ package be.thomastoye.speelsysteem.dashboard.controllers.api
 
 import javax.inject.Inject
 
+import be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainAction
 import be.thomastoye.speelsysteem.data.ChildAttendancesService.{ AttendancesOnDay, ShiftWithAttendances }
 import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, ChildRepository, DayService }
 import be.thomastoye.speelsysteem.models.{ Child, Day, DayDate, Shift }
@@ -34,47 +35,48 @@ object ChildAttendanceApiController {
 class ChildAttendanceApiController @Inject() (
     childRepository: ChildRepository,
     dayService: DayService,
-    childAttendancesService: ChildAttendancesService
+    childAttendancesService: ChildAttendancesService,
+    domainAction: DomainAction
 )(implicit ec: ExecutionContext) extends ApiController {
   import ChildAttendanceApiController._
 
-  def numberOfChildAttendances: Action[AnyContent] = Action.async { req =>
-    childAttendancesService.findNumberOfChildAttendances map { all =>
+  def numberOfChildAttendances: Action[AnyContent] = (Action andThen domainAction).async { req =>
+    childAttendancesService.findNumberOfChildAttendances(req.tenant) map { all =>
       Ok(Json.toJson(all))
     }
   }
 
   def childAttendancesOnDay(id: Day.Id): Action[AnyContent] = TODO
 
-  def getAttendancesForChild(id: Child.Id): Action[AnyContent] = Action.async { req =>
-    childAttendancesService.findAttendancesForChild(id).map(att => Ok(Json.toJson(att)))
+  def getAttendancesForChild(id: Child.Id): Action[AnyContent] = (Action andThen domainAction).async { req =>
+    childAttendancesService.findAttendancesForChild(id)(req.tenant).map(att => Ok(Json.toJson(att)))
   }
 
-  def addAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = Action.async(parse.json(bindShiftIdsReads)) { req =>
-    dayService.findById(dayId) flatMap { maybeEntityWithId =>
+  def addAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = (Action andThen domainAction).async(parse.json(bindShiftIdsReads)) { req =>
+    dayService.findById(dayId)(req.tenant) flatMap { maybeEntityWithId =>
       maybeEntityWithId map { entityWithId =>
-        childAttendancesService.addAttendancesForChild(childId, entityWithId.entity.date, req.body.shiftIds) map (_ => Ok)
+        childAttendancesService.addAttendancesForChild(childId, entityWithId.entity.date, req.body.shiftIds)(req.tenant) map (_ => Ok)
       } getOrElse Future.successful(NotFound)
     }
   }
 
-  def deleteAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = Action.async(parse.json(bindShiftIdsReads)) { req =>
+  def deleteAttendancesForChild(childId: Child.Id, dayId: Day.Id): Action[BindShiftIds] = (Action andThen domainAction).async(parse.json(bindShiftIdsReads)) { req =>
     DayDate.createFromDayId(dayId) map { day =>
-      childAttendancesService.removeAttendancesForChild(childId, day, req.body.shiftIds).map(_ => NoContent)
+      childAttendancesService.removeAttendancesForChild(childId, day, req.body.shiftIds)(req.tenant).map(_ => NoContent)
     } getOrElse Future.successful(BadRequest("Could not parse day id"))
   }
 
-  def findAllPerChild: Action[AnyContent] = Action.async { req =>
-    childAttendancesService.findAll.map(all => Ok(Json.toJson(all)))
+  def findAllPerChild: Action[AnyContent] = (Action andThen domainAction).async { req =>
+    childAttendancesService.findAll(req.tenant).map(all => Ok(Json.toJson(all)))
   }
 
-  def findAllPerDay: Action[AnyContent] = Action.async { req =>
+  def findAllPerDay: Action[AnyContent] = (Action andThen domainAction).async { req =>
     implicit val shiftWithAttendancesFormat = Json.format[ShiftWithAttendances]
     implicit val attendancesOnDayFormat = Json.format[AttendancesOnDay]
-    childAttendancesService.findAllPerDay.map(all => Ok(Json.toJson(all)))
+    childAttendancesService.findAllPerDay(req.tenant).map(all => Ok(Json.toJson(all)))
   }
 
-  def findAllRaw: Action[AnyContent] = Action.async { req =>
+  def findAllRaw: Action[AnyContent] = (Action andThen domainAction).async { req =>
     implicit val writes = new Writes[(Day.Id, Shift.Id, Child.Id)] {
       override def writes(o: (Day.Id, Shift.Id, Child.Id)): JsValue = Json.obj(
         "dayId" -> o._1,
@@ -83,6 +85,6 @@ class ChildAttendanceApiController @Inject() (
       )
     }
 
-    childAttendancesService.findAllRaw.map(all => Ok(Json.toJson(all)))
+    childAttendancesService.findAllRaw(req.tenant).map(all => Ok(Json.toJson(all)))
   }
 }

@@ -12,28 +12,28 @@ object ChildAttendancesService {
 }
 
 trait ChildAttendancesService {
-  def findAttendancesForChild(childId: Child.Id): Future[Seq[DayAttendance]]
+  def findAttendancesForChild(childId: Child.Id)(implicit tenant: Tenant): Future[Seq[DayAttendance]]
 
-  def findNumberAttendancesForChild(childId: Child.Id): Future[Option[Int]]
+  def findNumberAttendancesForChild(childId: Child.Id)(implicit tenant: Tenant): Future[Option[Int]]
 
-  def findNumberOfChildAttendances: Future[Map[Day.Id, Map[Shift.Id, Int]]]
+  def findNumberOfChildAttendances(implicit tenant: Tenant): Future[Map[Day.Id, Map[Shift.Id, Int]]]
 
-  def findNumberOfChildAttendances(day: DayDate, shiftId: Shift.Id): Future[Int]
+  def findNumberOfChildAttendances(day: DayDate, shiftId: Shift.Id)(implicit tenant: Tenant): Future[Int]
 
-  def addAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id]): Future[Seq[Res.DocOk]]
+  def addAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id])(implicit tenant: Tenant): Future[Seq[Res.DocOk]]
 
-  def addAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id): Future[Res.DocOk]
+  def addAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id)(implicit tenant: Tenant): Future[Res.DocOk]
 
-  def removeAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id]): Future[Unit]
+  def removeAttendancesForChild(childId: Child.Id, day: DayDate, shifts: Seq[Shift.Id])(implicit tenant: Tenant): Future[Unit]
 
-  def removeAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id): Future[Unit] = {
+  def removeAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id)(implicit tenant: Tenant): Future[Unit] = {
     removeAttendancesForChild(childId, day, Seq(shift))
   }
 
-  def findAll: Future[Map[Child.Id, Seq[DayAttendance]]]
+  def findAll(implicit tenant: Tenant): Future[Map[Child.Id, Seq[DayAttendance]]]
 
-  def findAllPerDay: Future[Map[Day.Id, AttendancesOnDay]]
+  def findAllPerDay(implicit tenant: Tenant): Future[Map[Day.Id, AttendancesOnDay]]
 
-  def findAllRaw: Future[Seq[(Day.Id, Shift.Id, Child.Id)]]
+  def findAllRaw(implicit tenant: Tenant): Future[Seq[(Day.Id, Shift.Id, Child.Id)]]
 
 }

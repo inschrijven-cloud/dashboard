@@ -1,4 +1,5 @@
 import be.thomastoye.speelsysteem.EntityWithId
+import be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainAction
 import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
 import be.thomastoye.speelsysteem.data.{ ChildRepository, DayService }
 import be.thomastoye.speelsysteem.models.Shift.{ Id, ShiftKind }
@@ -15,25 +16,29 @@ import play.api.test._
 import play.api.test.Helpers._
 
 class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
+  val domainAction = new DomainAction(new BodyParsers.Default(stubControllerComponents().parsers))
+  val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+
   "DayApiController#all" should {
+
     "return an empty JSON array if there are no days" in {
       val dayService = mock[DayService]
 
-      (dayService.findAll _).expects().returning(Future.successful(Seq.empty[EntityWithId[Id, Day]])).once()
+      (dayService.findAll(_: Tenant)).expects(*).returning(Future.successful(Seq.empty[EntityWithId[Id, Day]])).once()
 
       val childRepo = mock[ChildRepository]
 
-      val controller = new DayApiController(dayService, childRepo)
+      val controller = new DayApiController(dayService, childRepo, domainAction)
       controller.setControllerComponents(stubControllerComponents())
 
-      val body = contentAsJson(controller.all.apply(FakeRequest()))
+      val body = contentAsJson(controller.all.apply(fakeReq))
       body mustBe Json.arr()
     }
 
     "return a JSON array with all days" in {
       val dayService = mock[DayService]
 
-      (dayService.findAll _).expects().returning(Future.successful(
+      (dayService.findAll(_: Tenant)).expects(*).returning(Future.successful(
         Seq(
           EntityWithId("2016-11-25", Day(DayDate(25, 11, 2016), Seq(
             Shift("shift1", Price(1, 0), true, true, ShiftKind.Morning, None, None, None),
@@ -48,10 +53,10 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val childRepo = mock[ChildRepository]
 
-      val controller = new DayApiController(dayService, childRepo)
+      val controller = new DayApiController(dayService, childRepo, domainAction)
       controller.setControllerComponents(stubControllerComponents())
 
-      val body = contentAsJson(controller.all.apply(FakeRequest()))
+      val body = contentAsJson(controller.all.apply(fakeReq))
       body mustBe Json.arr(
         Json.obj(
           "id" -> "2016-11-25",
@@ -102,12 +107,12 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val dayService = mock[DayService]
 
-      (dayService.insert _).expects(day).returning(Future.successful(())).once()
+      (dayService.insert(_: Day)(_: Tenant)).expects(day, *).returning(Future.successful(())).once()
 
-      val controller = new DayApiController(dayService, mock[ChildRepository])
+      val controller = new DayApiController(dayService, mock[ChildRepository], domainAction)
       controller.setControllerComponents(stubControllerComponents())
 
-      status(controller.create.apply(FakeRequest().withBody(day))) mustBe OK
+      status(controller.create.apply(fakeReq.withMethod("POST").withBody(day))) mustBe OK
     }
   }
 
@@ -117,12 +122,12 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val dayService = mock[DayService]
 
-      (dayService.update _).expects("day-id", day).returning(Future.successful(())).once()
+      (dayService.update(_: String, _: Day)(_: Tenant)).expects("day-id", day, *).returning(Future.successful(())).once()
 
-      val controller = new DayApiController(dayService, mock[ChildRepository])
+      val controller = new DayApiController(dayService, mock[ChildRepository], domainAction)
       controller.setControllerComponents(stubControllerComponents())
 
-      status(controller.update("day-id").apply(FakeRequest().withBody(day))) mustBe OK
+      status(controller.update("day-id").apply(fakeReq.withMethod("POST").withBody(day))) mustBe OK
     }
   }
 
@@ -132,14 +137,14 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val dayService = mock[DayService]
 
-      (dayService.findById _).expects("day-id").returning(Future.successful(
+      (dayService.findById(_: String)(_: Tenant)).expects("day-id", *).returning(Future.successful(
         Some(EntityWithId("day-id", day))
       )).once()
 
-      val controller = new DayApiController(dayService, mock[ChildRepository])
+      val controller = new DayApiController(dayService, mock[ChildRepository], domainAction)
       controller.setControllerComponents(stubControllerComponents())
 
-      val res: Future[Result] = controller.getById("day-id").apply(FakeRequest())
+      val res: Future[Result] = controller.getById("day-id").apply(fakeReq)
 
       status(res) mustBe OK
       contentAsJson(res) must be(Json.toJson(EntityWithId("day-id", day)))
@@ -150,12 +155,12 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val dayService = mock[DayService]
 
-      (dayService.findById _).expects(*).returning(Future.successful(None)).once()
+      (dayService.findById(_: String)(_: Tenant)).expects(*, *).returning(Future.successful(None)).once()
 
-      val controller = new DayApiController(dayService, mock[ChildRepository])
+      val controller = new DayApiController(dayService, mock[ChildRepository], domainAction)
       controller.setControllerComponents(stubControllerComponents())
 
-      status(controller.getById("day-id").apply(FakeRequest())) mustBe NOT_FOUND
+      status(controller.getById("day-id").apply(fakeReq)) mustBe NOT_FOUND
     }
   }
 }

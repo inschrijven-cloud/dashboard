@@ -12,6 +12,7 @@ import scala.concurrent.duration._
 
 class ExportServiceSpec extends WordSpec with Matchers with MockFactory {
   val headerStyle = CellStyle(fillPattern = CellFill.Solid, fillForegroundColor = Color.AquaMarine, font = Font(bold = true))
+  implicit val testTenant = Tenant("test")
 
   "ExportService#childSheet" should {
     "export a sheet with all children" in {
@@ -29,7 +30,7 @@ class ExportServiceSpec extends WordSpec with Matchers with MockFactory {
         ), Seq("aoeu@example.com", "secondary@example.com")), None, Seq.empty, None, MedicalInformation.empty, None))
       )
 
-      (childRepo.findAll _).expects().returns(Future.successful(children))
+      (childRepo.findAll(_: Tenant)).expects(*).returns(Future.successful(children))
 
       val service = new ExportService(childRepo, crewRepo, global)
 
@@ -74,7 +75,7 @@ class ExportServiceSpec extends WordSpec with Matchers with MockFactory {
         )
       )
 
-      (crewRepo.findAll _).expects().returning(Future.successful(crew))
+      (crewRepo.findAll(_: Tenant)).expects(*).returning(Future.successful(crew))
 
       val service = new ExportService(childRepo, crewRepo, global)
 

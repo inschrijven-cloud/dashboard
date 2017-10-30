@@ -5,7 +5,7 @@ import javax.inject.Inject
 import be.thomastoye.speelsysteem.EntityWithId
 import be.thomastoye.speelsysteem.data.{ ContactPersonRepository, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat }
 import be.thomastoye.speelsysteem.data.util.ScalazExtensions.PimpedScalazTask
-import be.thomastoye.speelsysteem.models.ContactPerson
+import be.thomastoye.speelsysteem.models.{ ContactPerson, Tenant }
 import upickle.default.{ Reader, Writer }
 import be.thomastoye.speelsysteem.models.JsonFormats._
 import be.thomastoye.speelsysteem.models.ContactPerson.Id
@@ -26,12 +26,12 @@ object CouchContactPersonRepository {
 class CouchContactPersonRepository @Inject() (couchDatabase: CouchDatabase) extends ContactPersonRepository with StrictLogging {
   import CouchContactPersonRepository._
 
-  private val db = couchDatabase.getDb(TypeMapping(classOf[ContactPerson] -> CouchContactPersonRepository.contactPersonKind))
+  private def db(tenant: Tenant) = couchDatabase.getDb(TypeMapping(classOf[ContactPerson] -> CouchContactPersonRepository.contactPersonKind), tenant)
 
-  override def findById(id: Id): Future[Option[EntityWithId[Id, ContactPerson]]] = {
+  override def findById(id: Id)(implicit tenant: Tenant): Future[Option[EntityWithId[Id, ContactPerson]]] = {
     val p: Promise[Option[EntityWithId[Id, ContactPerson]]] = Promise()
 
-    db.docs.get[ContactPerson](id).unsafePerformAsync {
+    db(tenant).docs.get[ContactPerson](id).unsafePerformAsync {
       case \/-(res) => p.success(Some(EntityWithId(res._id, res.doc)))
       case -\/(e) => e match {
         case _: CouchException[_] => p.success(None)
@@ -42,10 +42,10 @@ class CouchContactPersonRepository @Inject() (couchDatabase: CouchDatabase) exte
     p.future
   }
 
-  override def findAll: Future[Seq[EntityWithId[Id, ContactPerson]]] = {
+  override def findAll(implicit tenant: Tenant): Future[Seq[EntityWithId[Id, ContactPerson]]] = {
     val p: Promise[Seq[EntityWithId[Id, ContactPerson]]] = Promise()
 
-    db.docs.getMany.byType[String]("all-contactperson", "default", MappedDocType(contactPersonKind)).includeDocs.build.query.unsafePerformAsync {
+    db(tenant).docs.getMany.byType[String]("all-contactperson", "default", MappedDocType(contactPersonKind)).includeDocs.build.query.unsafePerformAsync {
       case \/-(res) => p.success(res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       case -\/(e) => p.failure(e)
     }
@@ -53,16 +53,16 @@ class CouchContactPersonRepository @Inject() (couchDatabase: CouchDatabase) exte
     p.future.map(_.sortBy(x => (x.entity.lastName, x.entity.firstName)))
   }
 
-  override def insert(id: Id, person: ContactPerson): Future[Id] = db.docs.create[ContactPerson](person, id).toFuture.map(_.id)
+  override def insert(id: Id, person: ContactPerson)(implicit tenant: Tenant): Future[Id] = db(tenant).docs.create[ContactPerson](person, id).toFuture.map(_.id)
 
-  override def count: Future[Int] = findAll.map(_.length)
+  override def count(implicit tenant: Tenant): Future[Int] = findAll.map(_.length)
 
-  override def update(id: Id, person: ContactPerson): Future[Unit] = {
+  override def update(id: Id, person: ContactPerson)(implicit tenant: Tenant): Future[Unit] = {
     for {
-      currentRev <- db.docs.get[ContactPerson](id).toFuture.map(_._rev)
-      res <- db.docs.update[ContactPerson](CouchDoc(person, contactPersonKind, _id = id, _rev = currentRev)).toFuture
+      currentRev <- db(tenant).docs.get[ContactPerson](id).toFuture.map(_._rev)
+      res <- db(tenant).docs.update[ContactPerson](CouchDoc(person, contactPersonKind, _id = id, _rev = currentRev)).toFuture
     } yield { () }
   }
 
-  override def delete(id: Id): Future[Unit] = ???
+  override def delete(id: Id)(implicit tenant: Tenant): Future[Unit] = ???
 }

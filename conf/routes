@@ -66,6 +66,10 @@ GET           /api/v1/files/export/children/medical                 be.thomastoy
 GET           /api/v1/files/export/crew                             be.thomastoye.speelsysteem.dashboard.controllers.api.ExportController.downloadCrew
 
 
+# Dashboard (frontend) config
+
+GET           /api/v1/config.json                                   be.thomastoye.speelsysteem.dashboard.controllers.api.FrontendConfigController.configJson
+
 ### Assets
 
 # Map static resources from the /public folder to the /assets URL path

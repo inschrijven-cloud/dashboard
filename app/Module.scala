@@ -13,5 +13,6 @@ class Module extends AbstractModule {
     bind(classOf[DayService]).to(classOf[CouchDayService])
     bind(classOf[ChildAttendancesService]).to(classOf[CouchChildAttendancesService])
     bind(classOf[ReportService]).to(classOf[ReportServiceImpl])
+    bind(classOf[ConfigService]).to(classOf[CouchConfigService])
   }
 }

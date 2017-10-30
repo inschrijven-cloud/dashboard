@@ -1,24 +1,24 @@
 package be.thomastoye.speelsysteem.data
 
 import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.models.Child
+import be.thomastoye.speelsysteem.models.{ Child, Tenant }
 import be.thomastoye.speelsysteem.models.Child.Id
 
 import scala.concurrent.Future
 
 trait ChildRepository {
 
-  def findById(id: Id): Future[Option[EntityWithId[Id, Child]]]
+  def findById(id: Id)(implicit tenant: Tenant): Future[Option[EntityWithId[Id, Child]]]
 
-  def findAll: Future[Seq[EntityWithId[Id, Child]]]
+  def findAll(implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Child]]]
 
-  def insert(id: Id, child: Child): Future[Id]
+  def insert(id: Id, child: Child)(implicit tenant: Tenant): Future[Id]
 
-  def count: Future[Int]
+  def count(implicit tenant: Tenant): Future[Int]
 
-  def update(id: Id, child: Child): Future[Unit]
+  def update(id: Id, child: Child)(implicit tenant: Tenant): Future[Unit]
 
-  def delete(id: Id): Future[Unit] // TODO Correct? What do we want when id does not exist?
+  def delete(id: Id)(implicit tenant: Tenant): Future[Unit] // TODO Correct? What do we want when id does not exist?
 
-  def setMerged(retiredId: Id, absorpedIntoId: Id): Future[Unit]
+  def setMerged(retiredId: Id, absorpedIntoId: Id)(implicit tenant: Tenant): Future[Unit]
 }

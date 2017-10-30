@@ -2,6 +2,7 @@ package be.thomastoye.speelsysteem.data.couchdb
 
 import javax.inject.{ Inject, Singleton }
 
+import be.thomastoye.speelsysteem.models.Tenant
 import com.ibm.couchdb._
 import play.Logger
 import play.api.Configuration
@@ -15,20 +16,20 @@ object CouchConfiguration {
       config.get[Int]("couchdb.server.port"),
       config.get[Boolean]("couchdb.server.https"),
       config.getOptional[String]("couchdb.server.user"),
-      config.getOptional[String]("couchdb.server.pass"),
-      config.get[String]("couchdb.server.db")
+      config.getOptional[String]("couchdb.server.pass")
     )
   }
 }
 
-case class CouchConfiguration(host: String, port: Int, https: Boolean, user: Option[String], pass: Option[String], db: String)
+case class CouchConfiguration(host: String, port: Int, https: Boolean, user: Option[String], pass: Option[String])
 
 object CouchDatabase {
   case class CouchPersistenceException(msg: String) extends Exception(msg) // TODO is this used?
 }
 
 trait CouchDatabase {
-  def getDb(typeMapping: TypeMapping): CouchDbApi
+  def getDb(typeMapping: TypeMapping, tenant: Tenant): CouchDbApi
+  def getDb(typeMapping: TypeMapping, dbName: String): CouchDbApi
 }
 
 @Singleton
@@ -42,6 +43,7 @@ class CouchDatabaseImpl @Inject() (config: Configuration) extends CouchDatabase 
     case \/-(res) => Logger.info(s"Successfully connected to CouchDB ${res.version} (vendor: ${res.vendor.name}): ${res.couchdb}")
   }
 
-  override def getDb(typeMapping: TypeMapping): CouchDbApi = couchdb.db(couchConfig.db, typeMapping)
+  override def getDb(typeMapping: TypeMapping, tenant: Tenant): CouchDbApi = couchdb.db(tenant.dbName, typeMapping)
 
+  override def getDb(typeMapping: TypeMapping, dbName: String) = couchdb.db(dbName, typeMapping)
 }

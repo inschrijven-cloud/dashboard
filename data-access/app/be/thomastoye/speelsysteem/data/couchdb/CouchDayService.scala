@@ -26,22 +26,22 @@ object CouchDayService extends StrictLogging {
 class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLogging with DayService {
   import CouchDayService._
 
-  private val db = couchDatabase.getDb(TypeMapping(classOf[Day] -> CouchDayService.dayKind))
+  private def db(tenant: Tenant) = couchDatabase.getDb(TypeMapping(classOf[Day] -> CouchDayService.dayKind), tenant)
 
-  override def findAll: Future[Seq[EntityWithId[Id, Day]]] = {
-    db.docs.getMany
+  override def findAll(implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Day]]] = {
+    db(tenant).docs.getMany
       .byType[String]("all-days", "default", MappedDocType(dayKind))
       .includeDocs[Day].build.query.toFuture
       .map(res => res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
       .map(_.sortBy(x => x.entity.date).reverse)
   }
 
-  override def insert(day: Day): Future[Unit] = db.docs.create[Day](day, day.date.getDayId).toFuture.map(_ => ())
+  override def insert(day: Day)(implicit tenant: Tenant): Future[Unit] = db(tenant).docs.create[Day](day, day.date.getDayId).toFuture.map(_ => ())
 
-  override def findById(id: Id): Future[Option[EntityWithId[Id, Day]]] = {
+  override def findById(id: Id)(implicit tenant: Tenant): Future[Option[EntityWithId[Id, Day]]] = {
     val p: Promise[Option[EntityWithId[Id, Day]]] = Promise()
 
-    db.docs.get[Day](id).unsafePerformAsync {
+    db(tenant).docs.get[Day](id).unsafePerformAsync {
       case \/-(res) => p.success(Some(EntityWithId(res._id, res.doc)))
       case -\/(e) => e match {
         case _: CouchException[_] => p.success(None)
@@ -52,5 +52,5 @@ class CouchDayService @Inject() (couchDatabase: CouchDatabase) extends StrictLog
     p.future
   }
 
-  override def update(id: Id, day: Day): Future[Unit] = ???
+  override def update(id: Id, day: Day)(implicit tenant: Tenant): Future[Unit] = ???
 }
