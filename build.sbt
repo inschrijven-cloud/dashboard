@@ -3,7 +3,7 @@ import GhPagesKeys._
 
 name := "speelsysteem-dashboard"
 
-lazy val playVersion = "2.6.2"
+lazy val playVersion = "2.6.7"
 
 javaOptions in Test += "-Dconfig.file=conf/application.testing.conf" // use different config file when testing
 
@@ -33,6 +33,9 @@ libraryDependencies ++= Seq(
   filters,
   guice,
   "com.typesafe.play" %% "play-json" % playVersion,
+
+  "com.pauldijou" %% "jwt-core" % "0.14.1",
+
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % "test",
   "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
 )

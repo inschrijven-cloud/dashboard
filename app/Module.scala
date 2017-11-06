@@ -1,3 +1,4 @@
+import be.thomastoye.speelsysteem.dashboard.services.{ JwtVerificationService, PdiJwtVerificationService }
 import be.thomastoye.speelsysteem.data.couchdb._
 import be.thomastoye.speelsysteem.data.util.{ UuidService, UuidServiceImpl }
 import be.thomastoye.speelsysteem.data._
@@ -14,5 +15,6 @@ class Module extends AbstractModule {
     bind(classOf[ChildAttendancesService]).to(classOf[CouchChildAttendancesService])
     bind(classOf[ReportService]).to(classOf[ReportServiceImpl])
     bind(classOf[ConfigService]).to(classOf[CouchConfigService])
+    bind(classOf[JwtVerificationService]).to(classOf[PdiJwtVerificationService])
   }
 }

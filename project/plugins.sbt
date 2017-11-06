@@ -14,15 +14,18 @@ resolvers += Resolver.typesafeRepo("releases")
 
 resolvers += Classpaths.sbtPluginReleases
 
+// scoverage repo on Bintray
+resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksamuel/sbt-plugins/"))(Resolver.ivyStylePatterns)
+
 // Plugins
 
 addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.6.0")
 
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.2")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.7")
 
 
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.3.5")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
 
 addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.1.0")
 
