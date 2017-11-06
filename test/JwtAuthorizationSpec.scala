@@ -1,4 +1,5 @@
 import be.thomastoye.speelsysteem.dashboard.controllers.actions._
+import be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission
 import be.thomastoye.speelsysteem.dashboard.services.PdiJwtVerificationService
 import be.thomastoye.speelsysteem.models.TenantMetadata
 import org.scalamock.scalatest.MockFactory
@@ -54,8 +55,10 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
         ), 2.seconds
       )
 
+      val permission = Permission("blah", "Permission used in test")
+
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticatePermission("blah").invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder.authenticate(permission).invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 
@@ -69,8 +72,10 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
         ), 2.seconds
       )
 
+      val permissions = Seq(Permission("blah", "Permission used in test"), Permission("example perm", "Permission used in test"))
+
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticate(Seq("blah", "example permission", "other permission"), Seq.empty)
+        jwtAuthorizationBuilder.authenticate(permissions)
           .invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
@@ -85,8 +90,10 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
         ), 2.seconds
       )
 
+      val permission = Permission("other permission", "Permission used in test")
+
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticatePermission("other permission").invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder.authenticate(permission).invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 
@@ -131,8 +138,10 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
         ), 2.seconds
       )
 
+      val permission = Permission("other permission", "Permission used in test")
+
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticate(Seq("other permission"), Seq("other role", "blah")).invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder.authenticate(Seq(permission), Seq("other role", "blah")).invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 

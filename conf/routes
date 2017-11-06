@@ -65,6 +65,10 @@ GET           /api/v1/files/export/children                         be.thomastoy
 GET           /api/v1/files/export/children/medical                 be.thomastoye.speelsysteem.dashboard.controllers.api.ExportController.downloadChildrenWitbExtraMedicalAttention
 GET           /api/v1/files/export/crew                             be.thomastoye.speelsysteem.dashboard.controllers.api.ExportController.downloadCrew
 
+# Authorization and authentication API
+
+GET           /api/v1/auth/permissions/all                          be.thomastoye.speelsysteem.dashboard.controllers.api.AuthController.allPermissions
+
 # Dashboard (frontend) config
 
 GET           /api/v1/config.json                                   be.thomastoye.speelsysteem.dashboard.controllers.api.FrontendConfigController.configJson

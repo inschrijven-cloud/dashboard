@@ -4,8 +4,8 @@ import java.io.File
 import java.time.LocalDate
 import javax.inject.Inject
 
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.{DomainAction, JwtAuthorizationBuilder}
-import be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permissions.Export
+import be.thomastoye.speelsysteem.dashboard.controllers.actions.{ DomainAction, JwtAuthorizationBuilder }
+import be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission._
 import be.thomastoye.speelsysteem.data.ExportService
 import be.thomastoye.speelsysteem.models.DayDate
 import play.api.mvc._
@@ -19,7 +19,7 @@ class ExportController @Inject() (
     domainAction: DomainAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder
 )(implicit ec: ExecutionContext) extends InjectedController {
-  def downloadChildren: Action[AnyContent] = (Action andThen domainAction andThen jwtAuthorizationBuilder.authenticatePermission(Export.children)).async { req =>
+  def downloadChildren: Action[AnyContent] = (Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(exportChildren)).async { req =>
     exportService.childSheet(req.tenant) map { sheet =>
       val file = File.createTempFile("kinderen.xlsx", System.nanoTime().toString)
       sheet.saveAsXlsx(file.getAbsolutePath)
@@ -28,7 +28,7 @@ class ExportController @Inject() (
     }
   }
 
-  def downloadCrew: Action[AnyContent] = (Action andThen domainAction andThen jwtAuthorizationBuilder.authenticatePermission(Export.crew)).async { req =>
+  def downloadCrew: Action[AnyContent] = (Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(exportCrew)).async { req =>
     exportService.crewSheet(req.tenant) map { sheet =>
       val file = File.createTempFile("animatoren.xlsx", System.nanoTime().toString)
       sheet.saveAsXlsx(file.getAbsolutePath)
