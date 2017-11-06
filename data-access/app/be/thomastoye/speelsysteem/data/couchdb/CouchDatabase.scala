@@ -43,7 +43,7 @@ class CouchDatabaseImpl @Inject() (config: Configuration) extends CouchDatabase 
     case \/-(res) => Logger.info(s"Successfully connected to CouchDB ${res.version} (vendor: ${res.vendor.name}): ${res.couchdb}")
   }
 
-  override def getDb(typeMapping: TypeMapping, tenant: Tenant): CouchDbApi = couchdb.db(tenant.dbName, typeMapping)
+  override def getDb(typeMapping: TypeMapping, tenant: Tenant): CouchDbApi = couchdb.db(tenant.databaseName, typeMapping)
 
   override def getDb(typeMapping: TypeMapping, dbName: String) = couchdb.db(dbName, typeMapping)
 }

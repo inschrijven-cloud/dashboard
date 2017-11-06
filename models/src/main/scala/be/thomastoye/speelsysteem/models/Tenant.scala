@@ -9,5 +9,5 @@ object Tenant {
 }
 
 case class Tenant(name: String) {
-  def dbName: String = "ic-" + name
+  def databaseName: String = "ic-" + name
 }

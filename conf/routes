@@ -69,6 +69,17 @@ GET           /api/v1/files/export/crew                             be.thomastoy
 
 GET           /api/v1/auth/permissions/all                          be.thomastoye.speelsysteem.dashboard.controllers.api.AuthController.allPermissions
 
+# Superadmin API
+
+GET           /api/v1/tenants                                       be.thomastoye.speelsysteem.dashboard.controllers.api.TenantsController.list
+POST          /api/v1/tenants/new                                   be.thomastoye.speelsysteem.dashboard.controllers.api.TenantsController.create
+GET           /api/v1/tenants/:name                                 be.thomastoye.speelsysteem.dashboard.controllers.api.TenantsController.details(name)
+POST          /api/v1/tenants/:name/generate-design-docs            be.thomastoye.speelsysteem.dashboard.controllers.api.TenantsController.generateDesignDocs(name)
+POST          /api/v1/tenants/:name/sync-to                         be.thomastoye.speelsysteem.dashboard.controllers.api.TenantsController.syncTo(name)
+POST          /api/v1/tenants/:name/sync-from                       be.thomastoye.speelsysteem.dashboard.controllers.api.TenantsController.syncFrom(name)
+
+GET           /api/v1/databases                                     be.thomastoye.speelsysteem.dashboard.controllers.api.DatabaseController.list
+
 # Dashboard (frontend) config
 
 GET           /api/v1/config.json                                   be.thomastoye.speelsysteem.dashboard.controllers.api.FrontendConfigController.configJson

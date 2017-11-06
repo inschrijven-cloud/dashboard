@@ -32,9 +32,11 @@ coverageEnabled in Test := true
 libraryDependencies ++= Seq(
   filters,
   guice,
+  ws,
   "com.typesafe.play" %% "play-json" % playVersion,
-
   "com.pauldijou" %% "jwt-core" % "0.14.1",
+  "io.lemonlabs" %% "scala-uri" % "0.5.0",
+  "io.verizon.delorean" %% "core" % "1.2.40-scalaz-7.2",
 
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % "test",
   "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"

@@ -26,6 +26,9 @@ object JsonFormats {
   implicit val priceFormat = Json.format[Price]
   implicit val startAndEndTimeFormat = Json.format[StartAndEndTime]
   implicit val configFormat = Json.format[ConfigWrapper]
+  implicit val dbNameWrites: Writes[DbName] = new Writes[DbName] {
+    override def writes(o: DbName): JsValue = JsString(o.value)
+  }
 
   implicit val appMetadataTenant = Json.format[TenantMetadata]
   implicit val auth0AppMetadata = Json.format[Auth0AppMetadata]

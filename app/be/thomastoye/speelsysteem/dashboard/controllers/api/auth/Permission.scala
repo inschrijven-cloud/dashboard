@@ -43,12 +43,15 @@ object Permission {
   val exportFiscalCert = Permission("export:fiscalcert", "Een lijst exporteren met data voor fiscale attesten")
   val exportChildrenPerDay = Permission("report:children-per-day", "Een lijst exporteren met hoeveel kinderen er per dag aanwezig waren")
 
+  val listDatabases = Permission("superuser:list-databases", "Toon een lijst met alle databases")
+
   val all: Map[String, Seq[Permission]] = Map(
     "Kinderen" -> Seq(childRetrieve, childUpdate, childCreate, childDelete, childMerge),
     "Aanwezigheden van kinderen" -> Seq(childAttendanceRetrieve, childAttendanceCreate, childAttendanceDelete),
     "Contactpersonen" -> Seq(contactPersonRetrieve, contactPersonUpdate, contactPersonCreate, contactPersonDelete, crewMerge),
     "Dagen" -> Seq(dayCreate, dayRetrieve, dayUpdate, dayDelete),
-    "Exporteren van lijsten" -> Seq(exportChildren, exportCrew, exportFiscalCert, exportChildrenPerDay)
+    "Exporteren van lijsten" -> Seq(exportChildren, exportCrew, exportFiscalCert, exportChildrenPerDay),
+    "Platformbeheer" -> Seq(listDatabases)
   )
 
   val allFlat: Seq[Permission] = all.flatMap { case (key, value) => value }.toSeq
