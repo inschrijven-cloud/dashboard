@@ -4,6 +4,7 @@ import be.thomastoye.speelsysteem.dashboard.controllers.api.ContactPersonApiCont
 import be.thomastoye.speelsysteem.data.ContactPersonRepository
 import be.thomastoye.speelsysteem.models.{ Address, ContactPerson, PhoneContact, Tenant }
 import be.thomastoye.speelsysteem.models.JsonFormats._
+import helpers.StubJwtAuthorizationBuilder
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
 import play.api.mvc.{ AnyContentAsJson, BodyParsers, Request, Results }
@@ -17,6 +18,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFactory {
   val domainAction = new DomainAction(new BodyParsers.Default(stubControllerComponents().parsers))
   val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+  val authBuilder = new StubJwtAuthorizationBuilder()
 
   "ContactPersonApiController#getById" should {
     val cp = ContactPerson("first", "last", Address.empty, Seq(PhoneContact("555 555 555")))
@@ -26,7 +28,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       (contactPersonRepository.findById(_: String)(_: Tenant)).expects("existing-id", *).returning(Future.successful(Some(EntityWithId("existing-id", cp)))).never()
       (contactPersonRepository.findById(_: String)(_: Tenant)).expects(*, *).returning(Future.successful(None)).once()
 
-      val controller = new ContactPersonApiController(contactPersonRepository, domainAction)
+      val controller = new ContactPersonApiController(contactPersonRepository, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       status(controller.getById("non-existant-id").apply(fakeReq)) mustBe NOT_FOUND
@@ -37,7 +39,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       (contactPersonRepository.findById(_: String)(_: Tenant)).expects("existing-id", *).returning(Future.successful(Some(EntityWithId("existing-id", cp)))).once()
       (contactPersonRepository.findById(_: String)(_: Tenant)).expects(*, *).returning(Future.successful(None)).never()
 
-      val controller = new ContactPersonApiController(contactPersonRepository, domainAction)
+      val controller = new ContactPersonApiController(contactPersonRepository, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val res = controller.getById("existing-id").apply(fakeReq)
@@ -54,7 +56,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       val contactPersonRepository = mock[ContactPersonRepository]
       (contactPersonRepository.findAll(_: Tenant)).expects(*).returning(Future.successful(Seq(EntityWithId("first-id", person1), EntityWithId("second-id", person2)))).once()
 
-      val controller = new ContactPersonApiController(contactPersonRepository, domainAction)
+      val controller = new ContactPersonApiController(contactPersonRepository, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr(Json.toJson(EntityWithId("first-id", person1)), Json.toJson(EntityWithId("second-id", person2)))
@@ -65,7 +67,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
 
       (contactPersonRepository.findAll(_: Tenant)).expects(*).returning(Future.successful(Seq.empty))
 
-      val controller = new ContactPersonApiController(contactPersonRepository, domainAction)
+      val controller = new ContactPersonApiController(contactPersonRepository, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr()
@@ -77,7 +79,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       val contactPersonRepository = mock[ContactPersonRepository]
       (contactPersonRepository.delete(_: String)(_: Tenant)).expects("the-id-to-delete", *).returning(Future.successful(())).once()
 
-      val controller = new ContactPersonApiController(contactPersonRepository, domainAction)
+      val controller = new ContactPersonApiController(contactPersonRepository, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       status(controller.delete("the-id-to-delete").apply(fakeReq)) mustBe OK
@@ -90,7 +92,7 @@ class ContactPersonApiControllerSpec extends PlaySpec with Results with MockFact
       val cp = ContactPerson("first", "last", Address.empty, Seq(PhoneContact("555 555 555")))
 
       (contactPersonRepository.update(_: String, _: ContactPerson)(_: Tenant)).expects("the-id-to-update", cp, *).returning(Future.successful(())).once()
-      val controller = new ContactPersonApiController(contactPersonRepository, domainAction)
+      val controller = new ContactPersonApiController(contactPersonRepository, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val body: FakeRequest[ContactPerson] = fakeReq.withMethod("POST").withBody[ContactPerson](cp)

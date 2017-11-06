@@ -4,6 +4,7 @@ import be.thomastoye.speelsysteem.models.TenantMetadata
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.EitherValues
 import org.scalatestplus.play.PlaySpec
+import play.api
 import play.api.{ Configuration, mvc }
 import play.api.libs.json.Json
 import play.api.mvc.Results
@@ -43,7 +44,7 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
   )))
 
   val jwtVerifyAction = new JwtVerifyAction(jwtVerificationService, new BodyParsers.Default(stubControllerComponents().parsers))
-  val jwtAuthorizationBuilder = new JwtAuthorizationBuilder(jwtVerificationService, new mvc.BodyParsers.Default(stubControllerComponents().parsers), jwtVerifyAction)
+  val jwtAuthorizationBuilder = new JwtAuthorizationBuilderImpl(jwtVerificationService, new api.mvc.BodyParsers.Default(stubControllerComponents().parsers), jwtVerifyAction)
 
   "JwtAuthorizationBuilder" should {
     "authorize when user has a required permission in their JWT" in {

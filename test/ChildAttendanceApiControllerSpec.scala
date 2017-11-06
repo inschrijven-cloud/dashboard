@@ -5,7 +5,7 @@ import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, ChildRepositor
 import be.thomastoye.speelsysteem.models.Day.Id
 import be.thomastoye.speelsysteem.models.Shift.ShiftKind
 import be.thomastoye.speelsysteem.models.{ Shift, _ }
-import helpers.UnimplementedDayService
+import helpers.{ StubJwtAuthorizationBuilder, UnimplementedDayService }
 import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future
@@ -19,6 +19,7 @@ import play.api.test.Helpers._
 class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFactory {
   val domainAction = new DomainAction(new BodyParsers.Default(stubControllerComponents().parsers))
   val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+  val authBuilder = new StubJwtAuthorizationBuilder()
 
   "ChildAttendanceApiController#numberOfChildAttendances" should {
     "return a list with days and the number of children attending each shift" in {
@@ -52,7 +53,7 @@ class ChildAttendanceApiControllerSpec extends PlaySpec with Results with MockFa
         )
       )).once()
 
-      val controller = new ChildAttendanceApiController(childRepo, dayServiceStub, childAttendanceService, domainAction)
+      val controller = new ChildAttendanceApiController(childRepo, dayServiceStub, childAttendanceService, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val body = contentAsJson(controller.numberOfChildAttendances.apply(fakeReq))

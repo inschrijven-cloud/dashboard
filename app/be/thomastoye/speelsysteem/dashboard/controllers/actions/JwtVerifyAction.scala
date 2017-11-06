@@ -37,11 +37,19 @@ class JwtVerifyAction @Inject() (
   }
 }
 
-class JwtAuthorizationBuilder @Inject() (
+trait JwtAuthorizationBuilder {
+  def authenticate(permissions: Seq[String] = Seq.empty, roles: Seq[String] = Seq.empty): ActionFunction[DomainRequest, JwtRequest]
+
+  def authenticatePermission(permission: String): ActionFunction[DomainRequest, JwtRequest] = authenticate(Seq(permission), Seq.empty)
+
+  def authenticateRole(role: String): ActionFunction[DomainRequest, JwtRequest] = authenticate(Seq.empty, Seq(role))
+}
+
+class JwtAuthorizationBuilderImpl @Inject() (
     jwtVerificationService: JwtVerificationService,
     parser: BodyParsers.Default,
     jwtVerifyAction: JwtVerifyAction
-)(implicit val ec: ExecutionContext) {
+)(implicit val ec: ExecutionContext) extends JwtAuthorizationBuilder {
 
   def authenticate(permissions: Seq[String] = Seq.empty, roles: Seq[String] = Seq.empty): ActionFunction[DomainRequest, JwtRequest] = {
     jwtVerifyAction andThen new ActionRefiner[JwtRequest, JwtRequest] {
@@ -58,8 +66,4 @@ class JwtAuthorizationBuilder @Inject() (
       }
     }
   }
-
-  def authenticatePermission(permission: String): ActionFunction[DomainRequest, JwtRequest] = authenticate(Seq(permission), Seq.empty)
-
-  def authenticateRole(role: String): ActionFunction[DomainRequest, JwtRequest] = authenticate(Seq.empty, Seq(role))
 }

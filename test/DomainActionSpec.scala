@@ -5,6 +5,7 @@ import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
 import be.thomastoye.speelsysteem.data.{ ChildRepository, DayService }
 import be.thomastoye.speelsysteem.models.Shift.Id
 import be.thomastoye.speelsysteem.models.{ Day, Tenant }
+import helpers.StubJwtAuthorizationBuilder
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ AsyncFlatSpec, EitherValues }
 import org.scalatestplus.play.PlaySpec
@@ -30,7 +31,7 @@ class DomainActionSpec extends PlaySpec with Results with MockFactory with Eithe
 
       val childRepo = mock[ChildRepository]
 
-      val controller = new DayApiController(dayService, childRepo, domainAction)
+      val controller = new DayApiController(dayService, childRepo, domainAction, new StubJwtAuthorizationBuilder())
       controller.setControllerComponents(stubControllerComponents())
 
       val eventualResult = controller.all.apply(FakeRequest())
