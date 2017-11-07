@@ -186,35 +186,35 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilderImpl#authenticate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="authenticate(permissions:Seq[String],roles:Seq[String]):play.api.mvc.ActionFunction[be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest,be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest]"></a>
-      <a id="authenticate(Seq[String],Seq[String]):ActionFunction[DomainRequest,JwtRequest]"></a>
+      <a id="authenticate(permissions:Seq[be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission],roles:Seq[String]):play.api.mvc.ActionFunction[be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest,be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest]"></a>
+      <a id="authenticate(Seq[Permission],Seq[String]):ActionFunction[DomainRequest,JwtRequest]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">authenticate</span><span class="params">(<span name="permissions">permissions: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Seq.empty</span></span>, <span name="roles">roles: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Seq.empty</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.ActionFunction">ActionFunction</span>[<a href="DomainRequest.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest">DomainRequest</a>, <a href="JwtRequest.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest">JwtRequest</a>]</span>
+        <span class="name">authenticate</span><span class="params">(<span name="permissions">permissions: <span class="extype" name="scala.Seq">Seq</span>[<a href="../api/auth/Permission.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission">Permission</a>] = <span class="symbol">Seq.empty</span></span>, <span name="roles">roles: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">Seq.empty</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.ActionFunction">ActionFunction</span>[<a href="DomainRequest.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest">DomainRequest</a>, <a href="JwtRequest.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest">JwtRequest</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilderImpl@authenticate(permissions:Seq[String],roles:Seq[String]):play.api.mvc.ActionFunction[be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest,be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest]" title="Permalink" target="_top">
+      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilderImpl@authenticate(permissions:Seq[be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission],roles:Seq[String]):play.api.mvc.ActionFunction[be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest,be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest]" title="Permalink" target="_top">
         <img src="../../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilderImpl">JwtAuthorizationBuilderImpl</a> → <a href="JwtAuthorizationBuilder.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilder">JwtAuthorizationBuilder</a></dd></dl></div>
-    </li><li name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilder#authenticatePermission" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="authenticatePermission(permission:String):play.api.mvc.ActionFunction[be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest,be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest]"></a>
-      <a id="authenticatePermission(String):ActionFunction[DomainRequest,JwtRequest]"></a>
+    </li><li name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilder#authenticate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="authenticate(permission:be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission):play.api.mvc.ActionFunction[be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest,be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest]"></a>
+      <a id="authenticate(Permission):ActionFunction[DomainRequest,JwtRequest]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">authenticatePermission</span><span class="params">(<span name="permission">permission: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.ActionFunction">ActionFunction</span>[<a href="DomainRequest.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest">DomainRequest</a>, <a href="JwtRequest.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest">JwtRequest</a>]</span>
+        <span class="name">authenticate</span><span class="params">(<span name="permission">permission: <a href="../api/auth/Permission.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission">Permission</a></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.ActionFunction">ActionFunction</span>[<a href="DomainRequest.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest">DomainRequest</a>, <a href="JwtRequest.html" class="extype" name="be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest">JwtRequest</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilderImpl@authenticatePermission(permission:String):play.api.mvc.ActionFunction[be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest,be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest]" title="Permalink" target="_top">
+      <a href="../../../../../../index.html#be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilderImpl@authenticate(permission:be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission):play.api.mvc.ActionFunction[be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainRequest,be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtRequest]" title="Permalink" target="_top">
         <img src="../../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
