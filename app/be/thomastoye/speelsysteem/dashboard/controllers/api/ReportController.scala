@@ -3,10 +3,11 @@ package be.thomastoye.speelsysteem.dashboard.controllers.api
 import java.io.File
 import javax.inject.Inject
 
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.{ DomainAction, JwtAuthorizationBuilder }
+import be.thomastoye.speelsysteem.dashboard.controllers.actions.{DomainAction, JwtAuthorizationBuilder}
+import be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission
 import be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission._
-import be.thomastoye.speelsysteem.data.{ FiscalCertificateService, ReportService }
-import play.api.mvc.{ Action, AnyContent, InjectedController }
+import be.thomastoye.speelsysteem.data.{FiscalCertificateService, ReportService}
+import play.api.mvc.{Action, AnyContent, InjectedController}
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
 import com.typesafe.scalalogging.StrictLogging
 
@@ -18,8 +19,9 @@ class ReportController @Inject() (
     domainAction: DomainAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder
 )(implicit ec: ExecutionContext) extends InjectedController with StrictLogging {
+  private def action(per: Permission) = Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(per)
 
-  def downloadFiscalCertificates(year: Int): Action[AnyContent] = (Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(exportFiscalCert)).async { req =>
+  def downloadFiscalCertificates(year: Int): Action[AnyContent] = action(exportFiscalCert).async { req =>
     fiscalCertificateService.getFiscalCertificateSheet(year)(req.tenant) map { sheet =>
       val file = File.createTempFile("fiscale-attesten.xlsx", System.nanoTime().toString)
       sheet.saveAsXlsx(file.getAbsolutePath)
@@ -34,7 +36,7 @@ class ReportController @Inject() (
 
   def downloadCompensationForCrew(year: Int, crewId: String): Action[AnyContent] = TODO
 
-  def downloadChildrenPerDay(year: Int): Action[AnyContent] = (Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(exportChildrenPerDay)).async { req =>
+  def downloadChildrenPerDay(year: Int): Action[AnyContent] = action(exportChildrenPerDay).async { req =>
     reportService.getChildrenPerDay(year)(req.tenant) map { sheet =>
       val file = File.createTempFile(s"kinderen per dag - $year.xlsx", System.nanoTime().toString)
       sheet.saveAsXlsx(file.getAbsolutePath)

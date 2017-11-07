@@ -1,31 +1,31 @@
 package be.thomastoye.speelsysteem.data.couchdb
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 import be.thomastoye.speelsysteem.data.TenantDatabaseService
-import be.thomastoye.speelsysteem.data.couchdb.CouchdbTenantDatabaseService.ReplicationDocument
+import be.thomastoye.speelsysteem.data.couchdb.CouchTenantDatabaseService.ReplicationDocument
 import be.thomastoye.speelsysteem.models.DbName
 import com.ibm.couchdb.Res.DocOk
-import com.ibm.couchdb.{ CouchDb, CouchDesign, CouchException, TypeMapping }
+import com.ibm.couchdb.{CouchDb, CouchDesign, CouchException, Res, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
 import delorean._
 import com.netaporter.uri.dsl._
-import play.api.libs.json.{ Format, JsValue, Json }
+import play.api.libs.json.{Format, JsValue, Json}
 import play.api.libs.ws.WSClient
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
-object CouchdbTenantDatabaseService {
+object CouchTenantDatabaseService {
   case class ReplicationDocument(source: String, target: String)
 }
 
 @Singleton
-class CouchdbTenantDatabaseService @Inject() (wsClient: WSClient, couchdbConfig: CouchDbConfig)(implicit ec: ExecutionContext)
+class CouchTenantDatabaseService @Inject()(wsClient: WSClient, couchdbConfig: CouchDbConfig)(implicit ec: ExecutionContext)
     extends TenantDatabaseService with StrictLogging {
 
   implicit val replicationDocumentForm: Format[ReplicationDocument] = Json.format[ReplicationDocument]
 
-  val client = (for {
+  private val client = (for {
     user <- couchdbConfig.user
     pass <- couchdbConfig.pass
   } yield {
@@ -42,13 +42,13 @@ class CouchdbTenantDatabaseService @Inject() (wsClient: WSClient, couchdbConfig:
     https = couchdbConfig.https
   )
 
-  override def all = client.dbs.getAll.unsafeToFuture().map(_.map(DbName.create(_).get))
+  override def all: Future[Seq[DbName]] = client.dbs.getAll.unsafeToFuture().map(_.map(DbName.create(_).get))
 
-  override def create(db: DbName) = client.dbs.create(db.value).unsafeToFuture()
+  override def create(db: DbName): Future[Res.Ok] = client.dbs.create(db.value).unsafeToFuture()
 
-  override def details(db: DbName) = client.dbs.get(db.value).unsafeToFuture()
+  override def details(db: DbName): Future[Res.DbInfo] = client.dbs.get(db.value).unsafeToFuture()
 
-  override def drop(db: DbName) = client.dbs.delete(db.value).unsafeToFuture()
+  override def drop(db: DbName): Future[Res.Ok] = client.dbs.delete(db.value).unsafeToFuture()
 
   override def designDocExists(dbName: DbName, designName: String): Future[Option[String]] = {
     client.db(dbName.value, TypeMapping.empty).design.get(designName).unsafeToFuture().map(t => Some(t._rev)).recover {

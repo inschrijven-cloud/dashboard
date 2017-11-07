@@ -8,7 +8,7 @@ import be.thomastoye.speelsysteem.data.util.ScalazExtensions._
 import upickle.default.{ Reader, Writer }
 import CouchConfigService._
 import be.thomastoye.speelsysteem.models.JsonFormats.configFormat
-import be.thomastoye.speelsysteem.models.{ ConfigWrapper, Tenant }
+import be.thomastoye.speelsysteem.models.ConfigWrapper
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -30,9 +30,9 @@ class CouchConfigService @Inject() (couchDatabase: CouchDatabase)(implicit execu
     case e: CouchException[_] => Future.successful(None)
   }
 
-  override def insert(id: String, config: ConfigWrapper) = db.docs.create[ConfigWrapper](config, id).toFuture.map(_ => ())
+  override def insert(id: String, config: ConfigWrapper): Future[Unit] = db.docs.create[ConfigWrapper](config, id).toFuture.map(_ => ())
 
-  override def update(id: String, config: ConfigWrapper) = for {
+  override def update(id: String, config: ConfigWrapper): Future[Unit] = for {
     currentRev <- db.docs.get[ConfigWrapper](id).toFuture.map(_._rev)
     res <- db.docs.update[ConfigWrapper](CouchDoc(config, kind, _id = id, _rev = currentRev)).toFuture
   } yield { () }

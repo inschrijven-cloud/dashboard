@@ -16,7 +16,8 @@ class FrontendConfigController @Inject() (
 )(implicit ec: ExecutionContext) extends ApiController {
   def configJson: Action[AnyContent] = (Action andThen domainAction).async { req =>
     configService.getConfig(req.userDomain).map { configOpt =>
-      configOpt.map(conf => Ok(Json.toJson(conf))) getOrElse NotFound(Json.obj("status" -> "not found", "domain" -> req.userDomain))
+      configOpt.map(conf => Ok(Json.toJson(conf)))getOrElse NotFound(Json.obj("status" -> "not found", "domain" -> req.userDomain)
+      )
     }
   }
 }

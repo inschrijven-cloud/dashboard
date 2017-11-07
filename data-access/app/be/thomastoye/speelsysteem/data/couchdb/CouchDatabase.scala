@@ -63,5 +63,5 @@ class CouchDatabaseImpl @Inject() (couchConfig: CouchDbConfig) extends CouchData
 
   override def getDb(typeMapping: TypeMapping, tenant: Tenant): CouchDbApi = couchdb.db(tenant.databaseName.value, typeMapping)
 
-  override def getDb(typeMapping: TypeMapping, dbName: String) = couchdb.db(dbName, typeMapping)
+  override def getDb(typeMapping: TypeMapping, dbName: String): CouchDbApi = couchdb.db(dbName, typeMapping)
 }

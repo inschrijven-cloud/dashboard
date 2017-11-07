@@ -11,5 +11,7 @@ import play.api.mvc._
 import scala.concurrent.ExecutionContext
 
 class AuthController @Inject() (domainAction: DomainAction)(implicit ec: ExecutionContext) extends ApiController {
-  def allPermissions = (Action andThen domainAction) { req => Ok(Json.toJson(Permission.all)) }
+  def allPermissions: Action[AnyContent] = (Action andThen domainAction) { req =>
+    Ok(Json.toJson(Permission.all))
+  }
 }
