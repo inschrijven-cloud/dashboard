@@ -29,6 +29,7 @@ object JsonFormats {
   implicit val dbNameWrites: Writes[DbName] = new Writes[DbName] {
     override def writes(o: DbName): JsValue = JsString(o.value)
   }
+  implicit val tenantFormat = Json.format[Tenant]
 
   implicit val appMetadataTenant = Json.format[TenantMetadata]
   implicit val auth0AppMetadata = Json.format[Auth0AppMetadata]

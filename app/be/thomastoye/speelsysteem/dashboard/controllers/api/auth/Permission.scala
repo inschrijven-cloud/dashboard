@@ -45,13 +45,19 @@ object Permission {
 
   val listDatabases = Permission("superuser:list-databases", "Toon een lijst met alle databases")
 
+  val listTenants = Permission("superuser:list-tenants", "Toon alle organisaties")
+  val initTenantDbs = Permission("superuser:init-dbs", "Initialiseer de databases van een organisatie")
+  val syncTenantDb = Permission("superuser:sync-db", "Synchroniseer databases met een externe server")
+  val createTenant = Permission("superuser:create-tenant", "Nieuwe organisaties aanmaken")
+
   val all: Map[String, Seq[Permission]] = Map(
     "Kinderen" -> Seq(childRetrieve, childUpdate, childCreate, childDelete, childMerge),
     "Aanwezigheden van kinderen" -> Seq(childAttendanceRetrieve, childAttendanceCreate, childAttendanceDelete),
-    "Contactpersonen" -> Seq(contactPersonRetrieve, contactPersonUpdate, contactPersonCreate, contactPersonDelete, crewMerge),
+    "Contactpersonen" -> Seq(contactPersonRetrieve, contactPersonUpdate, contactPersonCreate, contactPersonDelete),
+    "Animatoren" -> Seq(crewRetrieve, crewUpdate, crewCreate, crewDelete, crewMerge),
     "Dagen" -> Seq(dayCreate, dayRetrieve, dayUpdate, dayDelete),
     "Exporteren van lijsten" -> Seq(exportChildren, exportCrew, exportFiscalCert, exportChildrenPerDay),
-    "Platformbeheer" -> Seq(listDatabases)
+    "Platformbeheer" -> Seq(listDatabases, listTenants, initTenantDbs, syncTenantDb, createTenant)
   )
 
   val allFlat: Seq[Permission] = all.flatMap { case (key, value) => value }.toSeq

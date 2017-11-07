@@ -45,7 +45,7 @@ class DomainActionSpec extends PlaySpec with Results with MockFactory with Eithe
       res.isRight mustBe true
       res.right.value.userDomain mustBe "example.speelplein.cloud"
       res.right.value.tenant mustBe Tenant("example")
-      res.right.value.tenant.databaseName mustBe "ic-example"
+      res.right.value.tenant.databaseName.value mustBe "ic-example"
     }
   }
 }

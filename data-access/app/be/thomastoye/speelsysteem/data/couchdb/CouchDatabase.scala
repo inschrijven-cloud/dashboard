@@ -4,27 +4,46 @@ import javax.inject.{ Inject, Singleton }
 
 import be.thomastoye.speelsysteem.models.Tenant
 import com.ibm.couchdb._
+import com.netaporter.uri.Uri
 import play.Logger
 import play.api.Configuration
 
 import scalaz.{ -\/, \/- }
 
-object CouchConfiguration {
-  def fromConfig(config: Configuration): CouchConfiguration = {
-    CouchConfiguration(
-      config.get[String]("couchdb.server.host"),
-      config.get[Int]("couchdb.server.port"),
-      config.get[Boolean]("couchdb.server.https"),
-      config.getOptional[String]("couchdb.server.user"),
-      config.getOptional[String]("couchdb.server.pass")
-    )
+trait CouchDbConfig {
+  val host: String
+  val port: Int
+  val https: Boolean
+  val user: Option[String]
+  val pass: Option[String]
+
+  def uri: Uri = {
+    val uri = Uri.empty
+      .withScheme(if (https) "https" else "http")
+      .withHost(host)
+      .withPort(port)
+
+    (for {
+      u <- user
+      p <- pass
+    } yield uri.withUser(u).withPassword(p)).getOrElse(uri)
   }
 }
 
-case class CouchConfiguration(host: String, port: Int, https: Boolean, user: Option[String], pass: Option[String])
+class CouchDbConfigImpl @Inject() (config: Configuration) extends CouchDbConfig {
+  val host: String = config.get[String]("couchdb.server.host")
+  val port: Int = config.get[Int]("couchdb.server.port")
+  val https: Boolean = config.getOptional[Boolean]("couchdb.server.https").getOrElse(true)
+  val user: Option[String] = config.getOptional[String]("couchdb.server.user")
+  val pass: Option[String] = config.getOptional[String]("couchdb.server.pass")
+}
 
-object CouchDatabase {
-  case class CouchPersistenceException(msg: String) extends Exception(msg) // TODO is this used?
+class RemoteDbConfigImp @Inject() (config: Configuration) extends CouchDbConfig {
+  val host: String = config.get[String]("couchdb.remote.host")
+  val port: Int = config.get[Int]("couchdb.remote.port")
+  val https: Boolean = config.getOptional[Boolean]("couchdb.remote.https").getOrElse(true)
+  val user: Option[String] = config.getOptional[String]("couchdb.remote.user")
+  val pass: Option[String] = config.getOptional[String]("couchdb.remote.pass")
 }
 
 trait CouchDatabase {
@@ -33,9 +52,8 @@ trait CouchDatabase {
 }
 
 @Singleton
-class CouchDatabaseImpl @Inject() (config: Configuration) extends CouchDatabase {
-  private val couchConfig = CouchConfiguration.fromConfig(config)
-  val couchdb = (for (user <- couchConfig.user; pass <- couchConfig.pass)
+class CouchDatabaseImpl @Inject() (couchConfig: CouchDbConfig) extends CouchDatabase {
+  val couchdb: CouchDb = (for (user <- couchConfig.user; pass <- couchConfig.pass)
     yield CouchDb(couchConfig.host, couchConfig.port, couchConfig.https, user, pass)) getOrElse CouchDb(couchConfig.host, couchConfig.port, couchConfig.https)
 
   couchdb.server.info.unsafePerformAsync {
@@ -43,7 +61,7 @@ class CouchDatabaseImpl @Inject() (config: Configuration) extends CouchDatabase 
     case \/-(res) => Logger.info(s"Successfully connected to CouchDB ${res.version} (vendor: ${res.vendor.name}): ${res.couchdb}")
   }
 
-  override def getDb(typeMapping: TypeMapping, tenant: Tenant): CouchDbApi = couchdb.db(tenant.databaseName, typeMapping)
+  override def getDb(typeMapping: TypeMapping, tenant: Tenant): CouchDbApi = couchdb.db(tenant.databaseName.value, typeMapping)
 
   override def getDb(typeMapping: TypeMapping, dbName: String) = couchdb.db(dbName, typeMapping)
 }

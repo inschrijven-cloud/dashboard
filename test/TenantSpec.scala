@@ -7,12 +7,12 @@ class TenantSpec extends PlaySpec with Results with MockFactory {
   "Tenant#fromDomain" should {
     "correctly parse localhost" in {
       Tenant.fromDomain("localhost") mustBe Some(Tenant("localhost"))
-      Tenant.fromDomain("localhost").get.databaseName mustBe "ic-localhost"
+      Tenant.fromDomain("localhost").get.databaseName.value mustBe "ic-localhost"
     }
 
     "correctly parse blah.speelplein.cloud" in {
       Tenant.fromDomain("blah.speelplein.cloud") mustBe Some(Tenant("blah"))
-      Tenant.fromDomain("blah.speelplein.cloud").get.databaseName mustBe "ic-blah"
+      Tenant.fromDomain("blah.speelplein.cloud").get.databaseName.value mustBe "ic-blah"
     }
 
     "not parse snth.aoeu.com" in {

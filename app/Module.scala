@@ -19,6 +19,8 @@ class Module extends AbstractModule {
     bind(classOf[JwtVerificationService]).to(classOf[PdiJwtVerificationService])
     bind(classOf[JwtAuthorizationBuilder]).to(classOf[JwtAuthorizationBuilderImpl])
     bind(classOf[TenantDatabaseService]).to(classOf[CouchdbTenantDatabaseService])
-    bind(classOf[CouchDBConfig]).to(classOf[AutoCouchDBConfig])
+    bind(classOf[CouchDbConfig]).to(classOf[CouchDbConfigImpl])
+    bind(classOf[TenantsService]).to(classOf[CouchTenantsService])
+    bind(classOf[CouchDbConfig]).to(classOf[CouchDbConfigImpl])
   }
 }
