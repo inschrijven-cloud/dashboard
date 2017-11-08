@@ -74,6 +74,7 @@ class JwtVerifyActionSpec
         Await.result(jwtVerifyAction.refine(domainRes.right.value), 2.seconds)
 
       jwtRes.isRight mustBe true
+      jwtRes.right.value.isGlobalSuperUser mustBe false
       jwtRes.right.value.tenantData mustBe TenantMetadata("example",
                                                           Seq("blah"),
                                                           Seq("admin"))
@@ -94,6 +95,27 @@ class JwtVerifyActionSpec
 
       jwtRes.isLeft mustBe true
       jwtRes.left.value.header.status mustBe 400
+    }
+
+    "set isGlobalSuperUser when user has the superuser role in the global domain" in {
+      val domainRes = Await.result(
+        domainAction.refine(
+          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+            .withHeaders(Headers(
+              "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImNoaWxkOnJldHJpZXZlIiwic3VwZXJ1c2VyOmxpc3QtZGF0YWJhc2VzIl0sInJvbGVzIjpbImFkbWluIl19LHsibmFtZSI6Imdsb2JhbCIsInBlcm1pc3Npb25zIjpbImNoaWxkOnJldHJpZXZlIiwic3VwZXJ1c2VyOmxpc3QtZGF0YWJhc2VzIiwic3VwZXJ1c2VyOmxpc3QtdGVuYW50cyJdLCJyb2xlcyI6WyJhZG1pbiIsInN1cGVydXNlciJdfV19LCJpc3MiOiJodHRwczovL2luc2NocmlqdmVuLWNsb3VkLmV1LmF1dGgwLmNvbS8iLCJzdWIiOiJmYWNlYm9va3wxMDIxNDA2Nzg4OTkyMjA5OSIsImF1ZCI6IjNpTDhtZnNCQ3VobzFmcEN5RFE0eWE1b2lSUG5Ib3lpIiwiaWF0IjoxNTEwMTcxNzA0LCJleHAiOjE1MTAyMDc3MDQsImF0X2hhc2giOiJ1bk1UR0Z5MkQ5SmxhVkx1U3dwSWFRIiwibm9uY2UiOiIyOU84aFVmVkg3c2FFYVgwa1I2VU83TUFvSzdlZXFWNCJ9.dlFms9TDw9vzR-Y56UsEoCxZHOXSnWnBN4I3FuXZ_WzG_G5kuTr2vI29nrEngt0aUB7wqZJjICiAOxufWy7mvnMqey7tYFDCSybPlEhLi8lkNeXRgKAP_CFDguVhrP3lpHVlYavuOuz-xJJz-Sz9F5kgr7Pou5OwZL1n0mEtwbkSSDRJIUuRYvWOjTRfJF6za_Nn0gE1h59koByQZMKDewDhFvq0r-6qwRV8WsuSyzq2vPcgaa2HsmSTDEPMzegKKpvCOPpRpvtvA2PLkyu2s8_4xCoCNjxYlgbRmPPlB5dK9u11Y2A8iVJPerN1-29p5g-SWe7c9gs6ak3-jA3aQQ"))
+        ),
+        2.seconds
+      )
+
+      val jwtRes =
+        Await.result(jwtVerifyAction.refine(domainRes.right.value), 2.seconds)
+
+      jwtRes.isRight mustBe true
+      jwtRes.right.value.isGlobalSuperUser mustBe true
+      jwtRes.right.value.tenantData mustBe TenantMetadata(
+        "example",
+        Seq("child:retrieve", "superuser:list-databases"),
+        Seq("admin"))
     }
   }
 }

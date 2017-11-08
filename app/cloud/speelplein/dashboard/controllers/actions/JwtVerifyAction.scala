@@ -16,6 +16,7 @@ import scala.util.{Failure, Success, Try}
 class JwtRequest[A](val tenantData: TenantMetadata,
                     val userDomain: String,
                     val tenant: Tenant,
+                    val isGlobalSuperUser: Boolean,
                     request: Request[A])
     extends WrappedRequest[A](request)
 
@@ -38,14 +39,30 @@ class JwtVerifyAction @Inject()(
         .map(json =>
           (Json.parse(json) \ "https://inschrijven.cloud/app_metadata")
             .as[Auth0AppMetadata])
-        .map(metadata => metadata.tenants.find(_.name == input.tenant.name))
-        .flatMap(opt =>
-          opt
-            .map[Try[TenantMetadata]](Success(_))
-            .getOrElse(Failure(new Exception(
-              s"Tenant '${input.tenant.name}' not found in JWT token"))))
-        .map(obj =>
-          new JwtRequest[A](obj, input.userDomain, input.tenant, input))
+        .map(metadata => {
+          val isGlobalSuperUser = metadata.tenants
+            .filter(_.name == "global")
+            .exists((metadata: TenantMetadata) =>
+              metadata.roles.contains("superuser"))
+
+          val maybeTenantMetadata =
+            metadata.tenants.find(_.name == input.tenant.name)
+
+          (isGlobalSuperUser, maybeTenantMetadata)
+        })
+        .flatMap {
+          case (isGlobalSuperUser, Some(metadata)) =>
+            Success(
+              new JwtRequest[A](metadata,
+                                input.userDomain,
+                                input.tenant,
+                                isGlobalSuperUser,
+                                input))
+          case _ =>
+            Failure(
+              new Exception(
+                s"Tenant '${input.tenant.name}' not found in JWT token"))
+        }
 
       t match {
         case Success(x) => Right(x)

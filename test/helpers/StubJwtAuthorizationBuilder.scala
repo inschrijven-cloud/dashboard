@@ -27,6 +27,7 @@ class StubJwtAuthorizationBuilder extends JwtAuthorizationBuilder {
             TenantMetadata(request.tenant.name, Seq.empty, Seq.empty),
             request.userDomain,
             request.tenant,
+            false,
             request))
       }
 
