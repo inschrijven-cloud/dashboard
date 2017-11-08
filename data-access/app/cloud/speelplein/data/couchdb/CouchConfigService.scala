@@ -2,11 +2,6 @@ package cloud.speelplein.data.couchdb
 
 import javax.inject.Inject
 
-import cloud.speelplein.data.{
-  ConfigService,
-  PlayJsonReaderUpickleCompat,
-  PlayJsonWriterUpickleCompat
-}
 import com.ibm.couchdb.{CouchDoc, CouchException, TypeMapping}
 import cloud.speelplein.data.util.ScalazExtensions._
 import upickle.default.{Reader, Writer}

@@ -3,20 +3,23 @@ package cloud.speelplein.data.couchdb
 import javax.inject.Inject
 
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.data.{DayService, PlayJsonWriterUpickleCompat}
-import upickle.default.{Reader, Writer}
-import cloud.speelplein.models._
-import cloud.speelplein.models.JsonFormats._
+import cloud.speelplein.data.couchdb.CouchDayService.{
+  dayKind,
+  dayReader,
+  dayWriter
+}
 import cloud.speelplein.data.util.ScalazExtensions.PimpedScalazTask
-import cloud.speelplein.models.Day.Id
 import cloud.speelplein.data.{
   DayService,
   PlayJsonReaderUpickleCompat,
   PlayJsonWriterUpickleCompat
 }
+import cloud.speelplein.models.Day.Id
+import cloud.speelplein.models.JsonFormats.dayFormat
 import cloud.speelplein.models.{Day, Tenant}
 import com.ibm.couchdb.{CouchException, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
+import upickle.default.{Reader, Writer}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Future, Promise}
@@ -32,7 +35,6 @@ object CouchDayService extends StrictLogging {
 class CouchDayService @Inject()(couchDatabase: CouchDatabase)
     extends StrictLogging
     with DayService {
-  import CouchDayService._
 
   private def db(tenant: Tenant) =
     couchDatabase.getDb(TypeMapping(classOf[Day] -> CouchDayService.dayKind),

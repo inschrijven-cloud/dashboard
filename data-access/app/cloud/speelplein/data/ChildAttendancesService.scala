@@ -2,7 +2,6 @@ package cloud.speelplein.data
 
 import ChildAttendancesService.AttendancesOnDay
 import cloud.speelplein.models._
-import cloud.speelplein.models.{Day, Shift, Tenant}
 import com.ibm.couchdb.Res
 
 import scala.concurrent.Future

@@ -1,7 +1,6 @@
 package cloud.speelplein.data
 
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.models.Tenant
 import cloud.speelplein.models.{Crew, Tenant}
 
 import scala.concurrent.Future

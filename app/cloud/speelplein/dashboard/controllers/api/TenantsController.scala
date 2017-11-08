@@ -11,14 +11,8 @@ import cloud.speelplein.dashboard.controllers.api.TenantsController.TenantBinder
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.TenantsService
-import cloud.speelplein.models.JsonFormats.tenantFormat
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  GlobalDomainOnlyAction,
-  JwtAuthorizationBuilder
-}
-import cloud.speelplein.data.TenantsService
 import cloud.speelplein.data.couchdb.RemoteDbConfigImp
+import cloud.speelplein.models.JsonFormats.tenantFormat
 import cloud.speelplein.models.Tenant
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent}

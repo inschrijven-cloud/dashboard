@@ -3,18 +3,16 @@ package cloud.speelplein.dashboard.controllers.api
 import java.io.File
 import javax.inject.Inject
 
-import cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder
-import cloud.speelplein.dashboard.controllers.api.auth.Permission
-import cloud.speelplein.dashboard.controllers.api.auth.Permission._
-import cloud.speelplein.data.FiscalCertificateService
 import cloud.speelplein.dashboard.controllers.actions.{
   DomainAction,
   JwtAuthorizationBuilder
 }
+import cloud.speelplein.dashboard.controllers.api.auth.Permission
+import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.{FiscalCertificateService, ReportService}
-import play.api.mvc.{Action, AnyContent, InjectedController}
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
 import com.typesafe.scalalogging.StrictLogging
+import play.api.mvc.{Action, AnyContent, InjectedController}
 
 import scala.concurrent.ExecutionContext
 

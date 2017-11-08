@@ -6,26 +6,20 @@ import cloud.speelplein.dashboard.controllers.actions.{
   DomainAction,
   JwtAuthorizationBuilder
 }
+import cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController._
+import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.ChildAttendancesService.{
   AttendancesOnDay,
   ShiftWithAttendances
-}
-import cloud.speelplein.data.{ChildAttendancesService, ChildRepository}
-import cloud.speelplein.models.{Child, DayDate}
-import cloud.speelplein.models.JsonFormats._
-import ChildAttendanceApiController._
-import cloud.speelplein.dashboard.controllers.api.auth.Permission
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  JwtAuthorizationBuilder
 }
 import cloud.speelplein.data.{
   ChildAttendancesService,
   ChildRepository,
   DayService
 }
-import cloud.speelplein.models.{Day, Shift}
+import cloud.speelplein.models.JsonFormats._
+import cloud.speelplein.models.{Child, Day, DayDate, Shift}
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc.{Action, AnyContent}
 

@@ -7,21 +7,15 @@ import cloud.speelplein.data.ChildAttendancesService.{
   AttendancesOnDay,
   ShiftWithAttendances
 }
-import cloud.speelplein.data.{
-  ChildAttendancesService,
-  PlayJsonReaderUpickleCompat,
-  PlayJsonWriterUpickleCompat
-}
-import cloud.speelplein.models._
+import cloud.speelplein.data.couchdb.CouchChildAttendancesService._
 import cloud.speelplein.data.util.ScalazExtensions._
-import cloud.speelplein.models.Day.Id
 import cloud.speelplein.data.{
   ChildAttendancesService,
   PlayJsonReaderUpickleCompat,
   PlayJsonWriterUpickleCompat
 }
-import cloud.speelplein.data.ChildAttendancesService.AttendancesOnDay
-import cloud.speelplein.models.{Day, Shift, Tenant}
+import cloud.speelplein.models.Day.Id
+import cloud.speelplein.models._
 import com.ibm.couchdb.{
   CouchDoc,
   CouchException,
@@ -30,11 +24,10 @@ import com.ibm.couchdb.{
   TypeMapping
 }
 import com.typesafe.scalalogging.StrictLogging
+import play.api.libs.json.Json
 import upickle.default.{Reader, Writer}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import play.api.libs.json.Json
-
 import scala.concurrent.Future
 
 object CouchChildAttendancesService {
@@ -70,7 +63,6 @@ object CouchChildAttendancesService {
 class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
     extends ChildAttendancesService
     with StrictLogging {
-  import CouchChildAttendancesService._
 
   private def db(implicit tenant: Tenant) =
     couchDatabase.getDb(

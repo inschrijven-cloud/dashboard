@@ -3,7 +3,6 @@ package cloud.speelplein.dashboard.services
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.util.CertParser
-import cloud.speelplein.dashboard.util.CertParser
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtOptions}
 import play.api.Configuration
 

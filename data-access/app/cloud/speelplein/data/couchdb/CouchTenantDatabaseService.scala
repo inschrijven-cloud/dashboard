@@ -2,14 +2,14 @@ package cloud.speelplein.data.couchdb
 
 import javax.inject.{Inject, Singleton}
 
-import cloud.speelplein.data.couchdb.CouchTenantDatabaseService.ReplicationDocument
 import cloud.speelplein.data.TenantDatabaseService
+import cloud.speelplein.data.couchdb.CouchTenantDatabaseService.ReplicationDocument
 import cloud.speelplein.models.DbName
 import com.ibm.couchdb.Res.DocOk
 import com.ibm.couchdb.{CouchDb, CouchDesign, CouchException, Res, TypeMapping}
+import com.netaporter.uri.dsl._
 import com.typesafe.scalalogging.StrictLogging
 import delorean._
-import com.netaporter.uri.dsl._
 import play.api.libs.json.{Format, JsValue, Json}
 import play.api.libs.ws.WSClient
 

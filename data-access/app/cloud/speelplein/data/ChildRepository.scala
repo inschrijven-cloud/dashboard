@@ -1,9 +1,8 @@
 package cloud.speelplein.data
 
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.models.Child
 import cloud.speelplein.models.Child.Id
-import cloud.speelplein.models.Tenant
+import cloud.speelplein.models.{Child, Tenant}
 
 import scala.concurrent.Future
 

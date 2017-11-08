@@ -3,24 +3,22 @@ package cloud.speelplein.data.couchdb
 import javax.inject.Inject
 
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.data.{CrewRepository, PlayJsonWriterUpickleCompat}
+import cloud.speelplein.data.couchdb.CouchCrewRepository._
 import cloud.speelplein.data.util.ScalazExtensions.PimpedScalazTask
-import upickle.default.{Reader, Writer}
-import cloud.speelplein.models._
-import cloud.speelplein.models.Crew.Id
-import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.data.{
   CrewRepository,
   PlayJsonReaderUpickleCompat,
   PlayJsonWriterUpickleCompat
 }
+import cloud.speelplein.models.Crew.Id
+import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.models.{Crew, Tenant}
 import com.ibm.couchdb.{CouchDoc, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
+import upickle.default.{Reader, Writer}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Future, Promise}
-import scalaz.{-\/, \/-}
+import scala.concurrent.Future
 
 object CouchCrewRepository {
   val crewKind = "type/crew/v1"
@@ -32,7 +30,6 @@ object CouchCrewRepository {
 class CouchCrewRepository @Inject()(couchDatabase: CouchDatabase)
     extends CrewRepository
     with StrictLogging {
-  import CouchCrewRepository._
 
   private def db(tenant: Tenant) =
     couchDatabase.getDb(

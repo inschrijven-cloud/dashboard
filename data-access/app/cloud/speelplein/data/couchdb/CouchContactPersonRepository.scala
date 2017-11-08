@@ -3,24 +3,19 @@ package cloud.speelplein.data.couchdb
 import javax.inject.Inject
 
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.data.{
-  ContactPersonRepository,
-  PlayJsonReaderUpickleCompat,
-  PlayJsonWriterUpickleCompat
-}
+import cloud.speelplein.data.couchdb.CouchContactPersonRepository._
 import cloud.speelplein.data.util.ScalazExtensions.PimpedScalazTask
-import cloud.speelplein.models.Tenant
-import upickle.default.{Reader, Writer}
-import cloud.speelplein.models.JsonFormats._
-import cloud.speelplein.models.ContactPerson.Id
 import cloud.speelplein.data.{
   ContactPersonRepository,
   PlayJsonReaderUpickleCompat,
   PlayJsonWriterUpickleCompat
 }
+import cloud.speelplein.models.ContactPerson.Id
+import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.models.{ContactPerson, Tenant}
 import com.ibm.couchdb.{CouchDoc, CouchException, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
+import upickle.default.{Reader, Writer}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Future, Promise}
@@ -38,7 +33,6 @@ object CouchContactPersonRepository {
 class CouchContactPersonRepository @Inject()(couchDatabase: CouchDatabase)
     extends ContactPersonRepository
     with StrictLogging {
-  import CouchContactPersonRepository._
 
   private def db(tenant: Tenant) =
     couchDatabase.getDb(

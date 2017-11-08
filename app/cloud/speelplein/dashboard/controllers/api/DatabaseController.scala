@@ -8,17 +8,12 @@ import cloud.speelplein.dashboard.controllers.actions.{
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission.listDatabases
-import cloud.speelplein.models.JsonFormats.dbNameWrites
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  GlobalDomainOnlyAction,
-  JwtAuthorizationBuilder
-}
 import cloud.speelplein.data.TenantDatabaseService
+import cloud.speelplein.models.JsonFormats.dbNameWrites
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class DatabaseController @Inject()(
     domainAction: DomainAction,

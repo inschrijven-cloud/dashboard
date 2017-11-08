@@ -3,25 +3,20 @@ package cloud.speelplein.data.couchdb
 import javax.inject.Inject
 
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.data.{
-  ChildRepository,
-  PlayJsonReaderUpickleCompat,
-  PlayJsonWriterUpickleCompat
-}
+import cloud.speelplein.data.couchdb.CouchChildRepository._
 import cloud.speelplein.data.util.ScalazExtensions.PimpedScalazTask
-import upickle.default.{Reader, Writer}
-import cloud.speelplein.models._
-import cloud.speelplein.models.JsonFormats._
-import cloud.speelplein.models.Child.Id
 import cloud.speelplein.data.{
   ChildRepository,
   PlayJsonReaderUpickleCompat,
   PlayJsonWriterUpickleCompat
 }
-import cloud.speelplein.models.{Address, ContactInfo, Tenant}
+import cloud.speelplein.models.Child.Id
+import cloud.speelplein.models.JsonFormats._
+import cloud.speelplein.models._
 import com.ibm.couchdb.{CouchDoc, CouchException, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
 import play.api.libs.json.{Json, OWrites}
+import upickle.default.{Reader, Writer}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Future, Promise}
@@ -57,7 +52,6 @@ object CouchChildRepository {
 class CouchChildRepository @Inject()(couchDatabase: CouchDatabase)
     extends ChildRepository
     with StrictLogging {
-  import CouchChildRepository._
 
   private def db(implicit tenant: Tenant) =
     couchDatabase.getDb(

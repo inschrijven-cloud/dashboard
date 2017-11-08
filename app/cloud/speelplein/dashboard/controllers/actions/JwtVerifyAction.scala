@@ -4,11 +4,9 @@ import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.models.JsonFormats.auth0AppMetadata
-import cloud.speelplein.models.{Tenant, TenantMetadata}
 import cloud.speelplein.dashboard.services.JwtVerificationService
 import cloud.speelplein.models.{Auth0AppMetadata, Tenant, TenantMetadata}
 import play.api.libs.json.Json
-import play.api.libs.json._
 import play.api.mvc._
 import play.api.mvc.Results._
 

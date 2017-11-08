@@ -2,7 +2,6 @@ package cloud.speelplein.data
 
 import cloud.speelplein.EntityWithId
 import cloud.speelplein.models.Day.Id
-import cloud.speelplein.models.Tenant
 import cloud.speelplein.models.{Day, Tenant}
 
 import scala.concurrent.Future

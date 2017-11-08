@@ -2,10 +2,6 @@ package cloud.speelplein.dashboard.controllers.api
 
 import javax.inject.Inject
 
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  JwtAuthorizationBuilder
-}
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission.permissionFormat
 import cloud.speelplein.dashboard.controllers.actions.DomainAction

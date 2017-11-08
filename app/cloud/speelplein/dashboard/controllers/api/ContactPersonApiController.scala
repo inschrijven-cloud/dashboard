@@ -9,17 +9,12 @@ import cloud.speelplein.dashboard.controllers.actions.{
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
-import cloud.speelplein.models.JsonFormats
+import cloud.speelplein.data.ContactPersonRepository
 import cloud.speelplein.models.JsonFormats.{
   contactPersonFormat,
   contactPersonWithIdWrites,
   entityWithIdReads
 }
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  JwtAuthorizationBuilder
-}
-import cloud.speelplein.data.ContactPersonRepository
 import cloud.speelplein.models.{ContactPerson, JsonFormats}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}

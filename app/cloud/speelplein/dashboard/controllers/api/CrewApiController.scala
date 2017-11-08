@@ -9,17 +9,13 @@ import cloud.speelplein.dashboard.controllers.actions.{
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
+import cloud.speelplein.data.CrewRepository
+import cloud.speelplein.models.Crew
 import cloud.speelplein.models.JsonFormats.{
   crewFormat,
   crewWithIdWrites,
   entityWithIdReads
 }
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  JwtAuthorizationBuilder
-}
-import cloud.speelplein.data.CrewRepository
-import cloud.speelplein.models.Crew
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 

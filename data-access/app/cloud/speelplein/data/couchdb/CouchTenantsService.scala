@@ -2,11 +2,10 @@ package cloud.speelplein.data.couchdb
 
 import javax.inject.{Inject, Singleton}
 
-import cloud.speelplein.data.TenantsService
 import cloud.speelplein.data.{TenantDatabaseService, TenantsService}
 import cloud.speelplein.models.Tenant
-import com.ibm.couchdb.{CouchDesign, CouchView}
 import com.ibm.couchdb.Res.Ok
+import com.ibm.couchdb.{CouchDesign, CouchView}
 import play.api.Logger
 import play.api.libs.json.{JsObject, JsValue, Json}
 

@@ -9,19 +9,15 @@ import cloud.speelplein.dashboard.controllers.actions.{
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
+import cloud.speelplein.data.ChildRepository
 import cloud.speelplein.models.Child
 import cloud.speelplein.models.JsonFormats.{
   childFormat,
   childWithIdWrites,
   entityWithIdReads
 }
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  JwtAuthorizationBuilder
-}
-import cloud.speelplein.data.ChildRepository
 import play.api.libs.json.Json
-import play.api.mvc.{Action, _}
+import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
 

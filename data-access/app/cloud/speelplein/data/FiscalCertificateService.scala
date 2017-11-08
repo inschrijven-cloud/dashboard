@@ -5,7 +5,6 @@ import javax.inject.Inject
 
 import cloud.speelplein.EntityWithId
 import cloud.speelplein.models._
-import cloud.speelplein.models.{Day, Shift, Tenant}
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
 

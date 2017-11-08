@@ -1,7 +1,6 @@
 package cloud.speelplein.data
 
 import cloud.speelplein.data.couchdb.CouchDbConfig
-import cloud.speelplein.data.couchdb.CouchDbConfig
 import cloud.speelplein.models.DbName
 import com.ibm.couchdb.{CouchDesign, Res}
 import com.ibm.couchdb.Res.DocOk

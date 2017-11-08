@@ -3,9 +3,8 @@ package cloud.speelplein.dashboard.controllers.api
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.actions.DomainAction
-import cloud.speelplein.models.JsonFormats.configFormat
-import cloud.speelplein.dashboard.controllers.actions.DomainAction
 import cloud.speelplein.data.ConfigService
+import cloud.speelplein.models.JsonFormats.configFormat
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 

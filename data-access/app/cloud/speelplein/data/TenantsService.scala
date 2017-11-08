@@ -1,7 +1,6 @@
 package cloud.speelplein.data
 
 import cloud.speelplein.data.couchdb.CouchDbConfig
-import cloud.speelplein.data.couchdb.CouchDbConfig
 import cloud.speelplein.models.Tenant
 import com.ibm.couchdb.Res
 import play.api.libs.json.{JsObject, JsValue}
