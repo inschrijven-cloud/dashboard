@@ -16,7 +16,9 @@ class PriceSpec extends PlaySpec {
     }
 
     "correctly add 0.01, 0.87, 5.66, 8.99 and 4.55 together" in {
-      val res = Price(0, 1) + Price(0, 87) + Price(5, 66) + Price(8, 99) + Price(4, 55)
+      val res = Price(0, 1) + Price(0, 87) + Price(5, 66) + Price(8, 99) + Price(
+        4,
+        55)
       res must be(Price(20, 8))
     }
   }

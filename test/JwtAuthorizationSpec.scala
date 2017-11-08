@@ -1,13 +1,18 @@
 import cloud.speelplein.dashboard.controllers.actions._
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
-import cloud.speelplein.dashboard.controllers.actions.{ DomainAction, JwtAuthorizationBuilderImpl, JwtRequest, JwtVerifyAction }
+import cloud.speelplein.dashboard.controllers.actions.{
+  DomainAction,
+  JwtAuthorizationBuilderImpl,
+  JwtRequest,
+  JwtVerifyAction
+}
 import cloud.speelplein.dashboard.services.PdiJwtVerificationService
 import cloud.speelplein.models.TenantMetadata
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.EitherValues
 import org.scalatestplus.play.PlaySpec
 import play.api
-import play.api.{ Configuration, mvc }
+import play.api.{Configuration, mvc}
 import play.api.libs.json.Json
 import play.api.mvc.Results
 import play.api.test.FakeRequest
@@ -15,15 +20,21 @@ import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
 
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with EitherValues {
-  val domainAction = new DomainAction(new BodyParsers.Default(stubControllerComponents().parsers))
-  val jwtVerificationService = new PdiJwtVerificationService(Configuration.from(Map(
-    "jwt.key.pem" ->
-      """-----BEGIN CERTIFICATE-----
+class JwtAuthorizationSpec
+    extends PlaySpec
+    with Results
+    with MockFactory
+    with EitherValues {
+  val domainAction = new DomainAction(
+    new BodyParsers.Default(stubControllerComponents().parsers))
+  val jwtVerificationService = new PdiJwtVerificationService(
+    Configuration.from(Map(
+      "jwt.key.pem" ->
+        """-----BEGIN CERTIFICATE-----
           |MIIDFzCCAf+gAwIBAgIJZ2zaPGdshtNTMA0GCSqGSIb3DQEBCwUAMCkxJzAlBgNV
           |BAMTHmluc2NocmlqdmVuLWNsb3VkLmV1LmF1dGgwLmNvbTAeFw0xNzEwMjMwOTMy
           |MjJaFw0zMTA3MDIwOTMyMjJaMCkxJzAlBgNVBAMTHmluc2NocmlqdmVuLWNsb3Vk
@@ -42,24 +53,35 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
           |Eq6RNijWhwuGNEL2u9yQ3NAQZC12nIAPwBuV8vgTNDyVTJXS3mVMxMnaG4f1MOvA
           |veJkq1/PdrnmGL+WQiJqYGGQ0hnQd1ypeRyp
           |-----END CERTIFICATE-----""".stripMargin,
-    "jwt.enableExpiration" -> false
-  )))
+      "jwt.enableExpiration" -> false
+    )))
 
-  val jwtVerifyAction = new JwtVerifyAction(jwtVerificationService, new BodyParsers.Default(stubControllerComponents().parsers))
-  val jwtAuthorizationBuilder = new JwtAuthorizationBuilderImpl(jwtVerificationService, new api.mvc.BodyParsers.Default(stubControllerComponents().parsers), jwtVerifyAction)
+  val jwtVerifyAction = new JwtVerifyAction(
+    jwtVerificationService,
+    new BodyParsers.Default(stubControllerComponents().parsers))
+  val jwtAuthorizationBuilder = new JwtAuthorizationBuilderImpl(
+    jwtVerificationService,
+    new api.mvc.BodyParsers.Default(stubControllerComponents().parsers),
+    jwtVerifyAction)
 
   "JwtAuthorizationBuilder" should {
     "authorize when user has a required permission in their JWT" in {
       val domainRes = Await.result(
         domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud").withHeaders(Headers("Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
-        ), 2.seconds
+          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+            .withHeaders(Headers(
+              "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
+        ),
+        2.seconds
       )
 
       val permission = Permission("blah", "Permission used in test")
 
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticate(permission).invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder
+          .authenticate(permission)
+          .invokeBlock(domainRes.right.value,
+                       (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 
@@ -69,15 +91,22 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
     "authorize when user has one of the required permissions in their JWT" in {
       val domainRes = Await.result(
         domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud").withHeaders(Headers("Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
-        ), 2.seconds
+          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+            .withHeaders(Headers(
+              "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
+        ),
+        2.seconds
       )
 
-      val permissions = Seq(Permission("blah", "Permission used in test"), Permission("example perm", "Permission used in test"))
+      val permissions =
+        Seq(Permission("blah", "Permission used in test"),
+            Permission("example perm", "Permission used in test"))
 
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticate(permissions)
-          .invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder
+          .authenticate(permissions)
+          .invokeBlock(domainRes.right.value,
+                       (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 
@@ -87,14 +116,20 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
     "return unauthorized when user does not have a required permission in their JWT" in {
       val domainRes = Await.result(
         domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud").withHeaders(Headers("Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
-        ), 2.seconds
+          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+            .withHeaders(Headers(
+              "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
+        ),
+        2.seconds
       )
 
       val permission = Permission("other permission", "Permission used in test")
 
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticate(permission).invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder
+          .authenticate(permission)
+          .invokeBlock(domainRes.right.value,
+                       (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 
@@ -104,12 +139,18 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
     "authorize when user has a required role in their JWT" in {
       val domainRes = Await.result(
         domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud").withHeaders(Headers("Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
-        ), 2.seconds
+          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+            .withHeaders(Headers(
+              "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
+        ),
+        2.seconds
       )
 
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticateRole("admin").invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder
+          .authenticate("admin")
+          .invokeBlock(domainRes.right.value,
+                       (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 
@@ -119,13 +160,18 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
     "authorize when user has one of the required roles in their JWT" in {
       val domainRes = Await.result(
         domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud").withHeaders(Headers("Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
-        ), 2.seconds
+          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+            .withHeaders(Headers(
+              "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
+        ),
+        2.seconds
       )
 
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticate(Seq.empty, Seq("blah", "admin", "other role"))
-          .invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder
+          .authenticate(Seq.empty, Seq("blah", "admin", "other role"))
+          .invokeBlock(domainRes.right.value,
+                       (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 
@@ -135,14 +181,20 @@ class JwtAuthorizationSpec extends PlaySpec with Results with MockFactory with E
     "return unauthorized when user does not have a required lore in their JWT" in {
       val domainRes = Await.result(
         domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud").withHeaders(Headers("Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
-        ), 2.seconds
+          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+            .withHeaders(Headers(
+              "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
+        ),
+        2.seconds
       )
 
       val permission = Permission("other permission", "Permission used in test")
 
       val jwtRes = Await.result(
-        jwtAuthorizationBuilder.authenticate(Seq(permission), Seq("other role", "blah")).invokeBlock(domainRes.right.value, (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
+        jwtAuthorizationBuilder
+          .authenticate(Seq(permission), Seq("other role", "blah"))
+          .invokeBlock(domainRes.right.value,
+                       (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
 

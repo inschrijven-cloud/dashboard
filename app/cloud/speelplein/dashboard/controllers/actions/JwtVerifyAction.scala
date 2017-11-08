@@ -13,7 +13,7 @@ import play.api.mvc._
 import play.api.mvc.Results._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 class JwtRequest[A](val tenantData: TenantMetadata,
                     val userDomain: String,
@@ -32,7 +32,7 @@ class JwtVerifyAction @Inject()(
     Future.successful {
       val t = input.headers
         .get("Authorization")
-        .map(Success(_))
+        .map[Try[String]](Success(_))
         .getOrElse(Failure(
           new Exception("Authorization header not found or Bearer not set")))
         .map(header => header.drop("Bearer ".length))
@@ -43,7 +43,7 @@ class JwtVerifyAction @Inject()(
         .map(metadata => metadata.tenants.find(_.name == input.tenant.name))
         .flatMap(opt =>
           opt
-            .map(Success(_))
+            .map[Try[TenantMetadata]](Success(_))
             .getOrElse(Failure(new Exception(
               s"Tenant '${input.tenant.name}' not found in JWT token"))))
         .map(obj =>
@@ -63,15 +63,18 @@ class JwtVerifyAction @Inject()(
 
 trait JwtAuthorizationBuilder {
   def authenticate(
-      permissions: Seq[Permission] = Seq.empty,
-      roles: Seq[String] = Seq.empty): ActionFunction[DomainRequest, JwtRequest]
+      permissions: Seq[Permission],
+      roles: Seq[String]): ActionFunction[DomainRequest, JwtRequest]
+
+  def authenticate(
+      permissions: Seq[Permission]): ActionFunction[DomainRequest, JwtRequest] =
+    authenticate(permissions, Seq.empty)
 
   def authenticate(
       permission: Permission): ActionFunction[DomainRequest, JwtRequest] =
     authenticate(Seq(permission), Seq.empty)
 
-  def authenticateRole(
-      role: String): ActionFunction[DomainRequest, JwtRequest] =
+  def authenticate(role: String): ActionFunction[DomainRequest, JwtRequest] =
     authenticate(Seq.empty, Seq(role))
 }
 
@@ -82,9 +85,9 @@ class JwtAuthorizationBuilderImpl @Inject()(
 )(implicit val ec: ExecutionContext)
     extends JwtAuthorizationBuilder {
 
-  def authenticate(permissions: Seq[Permission] = Seq.empty,
-                   roles: Seq[String] = Seq.empty)
-    : ActionFunction[DomainRequest, JwtRequest] = {
+  def authenticate(
+      permissions: Seq[Permission],
+      roles: Seq[String]): ActionFunction[DomainRequest, JwtRequest] = {
     jwtVerifyAction andThen new ActionRefiner[JwtRequest, JwtRequest] {
       def executionContext: ExecutionContext = ec
 

@@ -9,10 +9,16 @@ import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
 
-class FullApplicationSpec extends PlaySpec with GuiceOneServerPerSuite with Results {
-  implicit override lazy val app = GuiceApplicationBuilder(overrides = Seq(new StubCouchDatabaseModule()), configuration = Configuration("play.http.secret.key" -> "test"))
-    .configure("play.http.secret.key" -> "sekret")
-    .build()
+class FullApplicationSpec
+    extends PlaySpec
+    with GuiceOneServerPerSuite
+    with Results {
+  implicit override lazy val app =
+    GuiceApplicationBuilder(overrides = Seq(new StubCouchDatabaseModule()),
+                            configuration =
+                              Configuration("play.http.secret.key" -> "test"))
+      .configure("play.http.secret.key" -> "sekret")
+      .build()
 
   "Starting the app" must {
     "work and be able to get heartbeat" in {
@@ -22,7 +28,9 @@ class FullApplicationSpec extends PlaySpec with GuiceOneServerPerSuite with Resu
       // await is from play.api.test.FutureAwaits
       val response = await(wsClient.url(url).get())
 
-      response.json mustBe Json.obj("status" -> "ok", "statusCode" -> 200, "message" -> "online")
+      response.json mustBe Json.obj("status" -> "ok",
+                                    "statusCode" -> 200,
+                                    "message" -> "online")
     }
   }
 }

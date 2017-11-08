@@ -5,11 +5,11 @@ import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.dashboard.controllers.actions.DomainAction
 import cloud.speelplein.dashboard.controllers.api.CrewApiController
 import cloud.speelplein.data.CrewRepository
-import cloud.speelplein.models.{ Crew, Tenant }
+import cloud.speelplein.models.{Crew, Tenant}
 import helpers.StubJwtAuthorizationBuilder
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.{ BodyParsers, Results }
+import play.api.mvc.{BodyParsers, Results}
 import play.api.libs.json.Json
 import play.api.test._
 import play.api.test.Helpers._
@@ -18,19 +18,36 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
-  val domainAction = new DomainAction(new BodyParsers.Default(stubControllerComponents().parsers))
+  val domainAction = new DomainAction(
+    new BodyParsers.Default(stubControllerComponents().parsers))
   val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
   val authBuilder = new StubJwtAuthorizationBuilder()
 
   "CrewApiController#getById" should {
-    val crew = Crew("first", "last", Address.empty, true, None, ContactInfo.empty, None, None)
+    val crew = Crew("first",
+                    "last",
+                    Address.empty,
+                    true,
+                    None,
+                    ContactInfo.empty,
+                    None,
+                    None)
 
     "return NotFound if the crew member is not in the database" in {
       val crewRepo = mock[CrewRepository]
-      (crewRepo.findById(_: String)(_: Tenant)).expects("existing-id", *).returning(Future.successful(Some(EntityWithId("existing-id", crew)))).never()
-      (crewRepo.findById(_: String)(_: Tenant)).expects(*, *).returning(Future.successful(None)).once()
+      (crewRepo
+        .findById(_: String)(_: Tenant))
+        .expects("existing-id", *)
+        .returning(Future.successful(Some(EntityWithId("existing-id", crew))))
+        .never()
+      (crewRepo
+        .findById(_: String)(_: Tenant))
+        .expects(*, *)
+        .returning(Future.successful(None))
+        .once()
 
-      val controller = new CrewApiController(crewRepo, domainAction, authBuilder)
+      val controller =
+        new CrewApiController(crewRepo, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       status(controller.getById("non-existant-id").apply(fakeReq)) mustBe NOT_FOUND
@@ -38,10 +55,19 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
 
     "return crew member as JSON if the crew member is in the database" in {
       val crewRepo = mock[CrewRepository]
-      (crewRepo.findById(_: String)(_: Tenant)).expects("existing-id", *).returning(Future.successful(Some(EntityWithId("existing-id", crew)))).once()
-      (crewRepo.findById(_: String)(_: Tenant)).expects(*, *).returning(Future.successful(None)).never()
+      (crewRepo
+        .findById(_: String)(_: Tenant))
+        .expects("existing-id", *)
+        .returning(Future.successful(Some(EntityWithId("existing-id", crew))))
+        .once()
+      (crewRepo
+        .findById(_: String)(_: Tenant))
+        .expects(*, *)
+        .returning(Future.successful(None))
+        .never()
 
-      val controller = new CrewApiController(crewRepo, domainAction, authBuilder)
+      val controller =
+        new CrewApiController(crewRepo, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val res = controller.getById("existing-id").apply(fakeReq)
@@ -51,25 +77,51 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
   }
 
   "CrewApiController#all" should {
-    val crew1 = Crew("first", "last", Address.empty, true, None, ContactInfo.empty, None, None)
-    val crew2 = Crew("first2", "last2", Address.empty, true, None, ContactInfo.empty, None, None)
+    val crew1 = Crew("first",
+                     "last",
+                     Address.empty,
+                     true,
+                     None,
+                     ContactInfo.empty,
+                     None,
+                     None)
+    val crew2 = Crew("first2",
+                     "last2",
+                     Address.empty,
+                     true,
+                     None,
+                     ContactInfo.empty,
+                     None,
+                     None)
 
     "return list of crew members in the database" in {
       val crewRepo = mock[CrewRepository]
-      (crewRepo.findAll(_: Tenant)).expects(*).returning(Future.successful(Seq(EntityWithId("first-id", crew1), EntityWithId("second-id", crew2)))).once()
+      (crewRepo
+        .findAll(_: Tenant))
+        .expects(*)
+        .returning(Future.successful(Seq(EntityWithId("first-id", crew1),
+                                         EntityWithId("second-id", crew2))))
+        .once()
 
-      val controller = new CrewApiController(crewRepo, domainAction, authBuilder)
+      val controller =
+        new CrewApiController(crewRepo, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
-      contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr(Json.toJson(EntityWithId("first-id", crew1)), Json.toJson(EntityWithId("second-id", crew2)))
+      contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr(
+        Json.toJson(EntityWithId("first-id", crew1)),
+        Json.toJson(EntityWithId("second-id", crew2)))
     }
 
     "return empty JSON list if there are no crew members in the database" in {
       val crewRepo = mock[CrewRepository]
 
-      (crewRepo.findAll(_: Tenant)).expects(*).returning(Future.successful(Seq.empty))
+      (crewRepo
+        .findAll(_: Tenant))
+        .expects(*)
+        .returning(Future.successful(Seq.empty))
 
-      val controller = new CrewApiController(crewRepo, domainAction, authBuilder)
+      val controller =
+        new CrewApiController(crewRepo, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr()
@@ -79,9 +131,14 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
   "CrewApiController#delete" should {
     "delete a crew member by id" in {
       val crewRepo = mock[CrewRepository]
-      (crewRepo.delete(_: String)(_: Tenant)).expects("the-id-to-delete", *).returning(Future.successful(())).once()
+      (crewRepo
+        .delete(_: String)(_: Tenant))
+        .expects("the-id-to-delete", *)
+        .returning(Future.successful(()))
+        .once()
 
-      val controller = new CrewApiController(crewRepo, domainAction, authBuilder)
+      val controller =
+        new CrewApiController(crewRepo, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       status(controller.delete("the-id-to-delete").apply(fakeReq)) mustBe OK
@@ -91,13 +148,26 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
   "CrewApiController#update" should {
     "update a crew member" in {
       val crewRepo = mock[CrewRepository]
-      val crew = Crew("first", "last", Address.empty, true, None, ContactInfo.empty, None, None)
+      val crew = Crew("first",
+                      "last",
+                      Address.empty,
+                      true,
+                      None,
+                      ContactInfo.empty,
+                      None,
+                      None)
 
-      (crewRepo.update(_: String, _: Crew)(_: Tenant)).expects("the-id-to-update", crew, *).returning(Future.successful(())).once()
-      val controller = new CrewApiController(crewRepo, domainAction, authBuilder)
+      (crewRepo
+        .update(_: String, _: Crew)(_: Tenant))
+        .expects("the-id-to-update", crew, *)
+        .returning(Future.successful(()))
+        .once()
+      val controller =
+        new CrewApiController(crewRepo, domainAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
-      val body: FakeRequest[Crew] = fakeReq.withMethod("POST").withBody[Crew](crew)
+      val body: FakeRequest[Crew] =
+        fakeReq.withMethod("POST").withBody[Crew](crew)
       status(controller.update("the-id-to-update").apply(body)) mustBe OK
     }
   }

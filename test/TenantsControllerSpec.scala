@@ -7,7 +7,7 @@ import cloud.speelplein.data.TenantsService
 import cloud.speelplein.data.couchdb.CouchDatabase
 import cloud.speelplein.models.Tenant
 import com.ibm.couchdb.Res
-import helpers.{ StubCouchDatabase, StubJwtAuthorizationBuilder }
+import helpers.{StubCouchDatabase, StubJwtAuthorizationBuilder}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.OneInstancePerTest
 
@@ -23,7 +23,13 @@ import play.api.test.Helpers._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.json.Json
 
-class TenantsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Results with MockFactory with ScalaFutures with OneInstancePerTest {
+class TenantsControllerSpec
+    extends PlaySpec
+    with GuiceOneServerPerSuite
+    with Results
+    with MockFactory
+    with ScalaFutures
+    with OneInstancePerTest {
   val conf = Seq(
     "couchdb.host" -> "localhost",
     "couchdb.port" -> 80,
@@ -36,11 +42,18 @@ class TenantsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Re
 
   val tenantsService: TenantsService = mock[TenantsService]
 
-  (tenantsService.all _).expects().returning(Future.successful(
-    Seq(Tenant("some-tenant"), Tenant("another-tenant"))
-  )).anyNumberOfTimes()
+  (tenantsService.all _)
+    .expects()
+    .returning(
+      Future.successful(
+        Seq(Tenant("some-tenant"), Tenant("another-tenant"))
+      ))
+    .anyNumberOfTimes()
 
-  (tenantsService.create _).expects(*).returning(Future.successful(new Res.Ok)).anyNumberOfTimes()
+  (tenantsService.create _)
+    .expects(*)
+    .returning(Future.successful(new Res.Ok))
+    .anyNumberOfTimes()
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .overrides(bind[TenantsService].toInstance(tenantsService))
@@ -52,17 +65,25 @@ class TenantsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Re
   "The tenants controller" should {
     "display all databases on the listing page" in {
       val controller = app.injector.instanceOf[TenantsController]
-      val result: Future[Result] = controller.list().apply(FakeRequest("GET", "/blah?domain=global.speelplein.cloud"))
-      contentAsJson(result) must be(Json.arr(Json.obj("name" -> "some-tenant"), Json.obj("name" -> "another-tenant")))
+      val result: Future[Result] = controller
+        .list()
+        .apply(FakeRequest("GET", "/blah?domain=global.speelplein.cloud"))
+      contentAsJson(result) must be(
+        Json.arr(Json.obj("name" -> "some-tenant"),
+                 Json.obj("name" -> "another-tenant")))
     }
 
     "create a tenant when given a valid normalized tenant name" in {
       val controller = app.injector.instanceOf[TenantsController]
-      implicit val materializer = app.injector.instanceOf[akka.stream.Materializer]
+      implicit val materializer =
+        app.injector.instanceOf[akka.stream.Materializer]
 
-      val resultFut: Future[Result] = controller.create().apply(
-        FakeRequest("POST", "/blah?domain=global.speelplein.cloud").withBody[TenantBinder](TenantBinder("test-tenant-name"))
-      )
+      val resultFut: Future[Result] = controller
+        .create()
+        .apply(
+          FakeRequest("POST", "/blah?domain=global.speelplein.cloud")
+            .withBody[TenantBinder](TenantBinder("test-tenant-name"))
+        )
 
       whenReady(resultFut) { res =>
         res.header.status mustBe 201
@@ -72,10 +93,12 @@ class TenantsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Re
 
     "fail to create a tenant when given a valid normalized tenant name" in {
       val controller = app.injector.instanceOf[TenantsController]
-      implicit val materializer = app.injector.instanceOf[akka.stream.Materializer]
+      implicit val materializer =
+        app.injector.instanceOf[akka.stream.Materializer]
 
-      val resultFut = controller.create.apply(FakeRequest("POST", "/blah?domain=global.speelplein.cloud")
-        .withBody[TenantBinder](TenantBinder("some-tenant-}{)(*&^%$#@!")))
+      val resultFut = controller.create.apply(
+        FakeRequest("POST", "/blah?domain=global.speelplein.cloud")
+          .withBody[TenantBinder](TenantBinder("some-tenant-}{)(*&^%$#@!")))
 
       whenReady(resultFut) { res =>
         res.header.status mustBe 400

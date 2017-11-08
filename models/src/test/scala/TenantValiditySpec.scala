@@ -30,4 +30,3 @@ class TenantValiditySpec extends WordSpec with MustMatchers {
     }
   }
 }
-

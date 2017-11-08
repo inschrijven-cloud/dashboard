@@ -3,7 +3,7 @@ import java.time.LocalDate
 import cloud.speelplein.models.DayDate
 import org.scalatest._
 
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 class DayDateSpec extends WordSpec with Matchers {
 
@@ -63,21 +63,25 @@ class DayDateSpec extends WordSpec with Matchers {
 
   "DayDate.createFromLocalDate" should {
     "parse for 31/1/2012" in {
-      DayDate.createFromLocalDate(LocalDate.of(2012, 1, 31)) should be(DayDate(31, 1, 2012))
+      DayDate.createFromLocalDate(LocalDate.of(2012, 1, 31)) should be(
+        DayDate(31, 1, 2012))
     }
 
     "parse 30/11/2015" in {
-      DayDate.createFromLocalDate(LocalDate.of(2015, 11, 30)) should be(DayDate(30, 11, 2015))
+      DayDate.createFromLocalDate(LocalDate.of(2015, 11, 30)) should be(
+        DayDate(30, 11, 2015))
     }
   }
 
   "DayDate.createFromDayId" should {
     "parse 2009-03-31" in {
-      DayDate.createFromDayId("2009-03-31") should be(Success(DayDate(31, 3, 2009)))
+      DayDate.createFromDayId("2009-03-31") should be(
+        Success(DayDate(31, 3, 2009)))
     }
 
     "parse 2000-02-27" in {
-      DayDate.createFromDayId("2000-02-27") should be(Success(DayDate(27, 2, 2000)))
+      DayDate.createFromDayId("2000-02-27") should be(
+        Success(DayDate(27, 2, 2000)))
     }
 
     "not parse 2000-02-34" in {
@@ -85,4 +89,3 @@ class DayDateSpec extends WordSpec with Matchers {
     }
   }
 }
-

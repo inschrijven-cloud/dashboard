@@ -36,3 +36,5 @@ addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.6")
 addSbtPlugin("com.typesafe.sbt" % "sbt-site" % "1.3.1")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-ghpages" % "0.6.2")
+
+addSbtPlugin("org.wartremover" % "sbt-wartremover" % "2.2.1")

@@ -10,7 +10,7 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.11.11",
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
   scalacOptions in Compile ++= Seq("-Xmax-classfile-name", "128"),
-  coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;""",
+  coverageExcludedPackages := """controllers\..*Reverse.*;router.Routes.*;controllers.javascript*;controllers.ref*;router*""",
   dockerRepository := Some("thomastoye"),
   dockerUpdateLatest := true
 )
@@ -29,6 +29,10 @@ scalaVersion := "2.11.11"
 coverageEnabled in Test := true
 
 scalafmtOnCompile in ThisBuild := true
+
+wartremoverErrors in (Compile, compile) ++= Warts.unsafe
+
+wartremoverExcluded ++= routes.in(Compile).value
 
 libraryDependencies ++= Seq(
   filters,

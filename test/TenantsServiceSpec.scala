@@ -1,6 +1,6 @@
 import cloud.speelplein.data.TenantDatabaseService
 import cloud.speelplein.data.couchdb.CouchTenantsService
-import cloud.speelplein.models.{ DbName, Tenant }
+import cloud.speelplein.models.{DbName, Tenant}
 import cloud.speelplein.models.Tenant
 import org.scalamock.scalatest.MockFactory
 
@@ -13,19 +13,26 @@ import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class TenantsServiceSpec extends PlaySpec with Results with MockFactory with ScalaFutures {
+class TenantsServiceSpec
+    extends PlaySpec
+    with Results
+    with MockFactory
+    with ScalaFutures {
   "The tenants service" should {
     "correcly get all tenants from the database service" in {
       val databaseService: TenantDatabaseService = mock[TenantDatabaseService]
-      (databaseService.all _).expects().returning(Future.successful(
-        Seq(
-          DbName.create("test").get,
-          DbName.create("sometestdb").get,
-          DbName.create("ic-aoeu").get,
-          DbName.create("icsth-test").get,
-          DbName.create("ic-snth").get
-        )
-      ))
+      (databaseService.all _)
+        .expects()
+        .returning(
+          Future.successful(
+            Seq(
+              DbName.create("test").get,
+              DbName.create("sometestdb").get,
+              DbName.create("ic-aoeu").get,
+              DbName.create("icsth-test").get,
+              DbName.create("ic-snth").get
+            )
+          ))
 
       val tenantsService = new CouchTenantsService(databaseService)
       whenReady(tenantsService.all) { tenants =>

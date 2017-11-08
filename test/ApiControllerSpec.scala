@@ -1,4 +1,3 @@
-
 import cloud.speelplein.dashboard.controllers.api.ApiController
 
 import scala.concurrent.Future
@@ -12,7 +11,8 @@ class ApiControllerSpec extends PlaySpec with Results {
   "Generic API controller" should {
     "return created" in {
       val controller = new ApiController()
-      controller.created("aoeu-snth") mustBe Created(Json.obj("status" -> "created", "id" -> "aoeu-snth"))
+      controller.created("aoeu-snth") mustBe Created(
+        Json.obj("status" -> "created", "id" -> "aoeu-snth"))
     }
   }
 }

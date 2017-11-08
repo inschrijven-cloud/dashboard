@@ -1,5 +1,5 @@
 import cloud.speelplein.models._
-import cloud.speelplein.models.{ Address, ContactInfo, PhoneContact }
+import cloud.speelplein.models.{Address, ContactInfo, PhoneContact}
 import cloud.speelplein.models.JsonFormats.childFormat
 import org.scalatestplus.play._
 import play.api.libs.json.Json
@@ -64,23 +64,35 @@ class JsonReadChildSpec extends PlaySpec {
       val res = json.validate[Child]
 
       res.isSuccess mustBe true
-      res.get mustBe Child("John", "Doe",
+      res.get mustBe Child(
+        "John",
+        "Doe",
         Address(Some("Street"), Some("55X"), Some(6666), Some("Some-City")),
         ContactInfo(
           Seq(
             PhoneContact(kind = Some("mobile"), phoneNumber = "0478 78 78 78"),
-            PhoneContact(kind = Some("landline"), comment = Some("work phone, call this during business hours"), phoneNumber = "055 55 55 55")
+            PhoneContact(kind = Some("landline"),
+                         comment =
+                           Some("work phone, call this during business hours"),
+                         phoneNumber = "055 55 55 55")
           ),
           Seq("john.smith@example.com", "test@example.com")
         ),
         Some("male"),
-        Seq(ContactPersonRelationship("contact-person-a", "mother"), ContactPersonRelationship("contact-person-b", "father")),
-        Some(DayDate(22, 2, 2002)), MedicalInformation(
-          Some("Dr. XYZZ"), Some(Allergies(Seq("dust", "paint"), Some("Sometimes water too"))),
-          Some(Conditions(Seq("ADHD"), Some("Extra information on conditions"))),
+        Seq(ContactPersonRelationship("contact-person-a", "mother"),
+            ContactPersonRelationship("contact-person-b", "father")),
+        Some(DayDate(22, 2, 2002)),
+        MedicalInformation(
+          Some("Dr. XYZZ"),
+          Some(Allergies(Seq("dust", "paint"), Some("Sometimes water too"))),
+          Some(
+            Conditions(Seq("ADHD"), Some("Extra information on conditions"))),
           Some("Stuff you should be aware of"),
-          Some(2015), Some("Other remarks")
-        ), Some("aoeu"))
+          Some(2015),
+          Some("Other remarks")
+        ),
+        Some("aoeu")
+      )
     }
 
     "work for a serialized child with incomplete address" in {
@@ -107,12 +119,16 @@ class JsonReadChildSpec extends PlaySpec {
       val res = json.validate[Child]
 
       res.isSuccess mustBe true
-      res.get mustBe Child("John", "Doe",
+      res.get mustBe Child(
+        "John",
+        "Doe",
         Address(Some("Street"), Some("55X"), Some(6666), None),
         ContactInfo(Seq.empty, Seq.empty),
         None,
         Seq.empty,
-        None, MedicalInformation.empty, None)
+        None,
+        MedicalInformation.empty,
+        None)
     }
   }
 }

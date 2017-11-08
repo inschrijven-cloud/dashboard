@@ -1,6 +1,6 @@
 import cloud.speelplein.EntityWithId
 import org.scalatest._
-import play.api.libs.json.{ JsError, JsSuccess, Json }
+import play.api.libs.json.{JsError, JsSuccess, Json}
 import cloud.speelplein.models.JsonFormats.entityWithIdReads
 import cloud.speelplein.models.JsonFormats.entityWithIdWrites
 
@@ -10,30 +10,37 @@ class EntityWithIdJsonSpec extends WordSpec with Matchers {
   "EntityWithId JSON reads" should {
     "work for a correct JSON model with a string id" in {
       implicit val jsonFormat = Json.format[Example]
-      val expected = JsSuccess(EntityWithId[String, Example]("theId", Example(55, "value")))
+      val expected =
+        JsSuccess(EntityWithId[String, Example]("theId", Example(55, "value")))
 
-      Json.parse(
-        """
+      Json
+        .parse(
+          """
           |{
           |  "field1": 55,
           |  "field2": "value",
           |  "id": "theId"
           |}
         """.stripMargin
-      ).validate[EntityWithId[String, Example]](entityWithIdReads) should be(expected)
+        )
+        .validate[EntityWithId[String, Example]](entityWithIdReads) should be(
+        expected)
     }
 
     "fail for a JSON model without an id" in {
       implicit val jsonFormat = Json.format[Example]
 
-      Json.parse(
-        """
+      Json
+        .parse(
+          """
           |{
           |  "field1": 55,
           |  "field2": "value"
           |}
         """.stripMargin
-      ).validate[EntityWithId[String, Example]](entityWithIdReads) shouldBe a[JsError]
+        )
+        .validate[EntityWithId[String, Example]](entityWithIdReads) shouldBe a[
+        JsError]
     }
   }
 
@@ -42,15 +49,16 @@ class EntityWithIdJsonSpec extends WordSpec with Matchers {
       implicit val jsonFormat = Json.format[Example]
       val input = EntityWithId[String, Example]("theId", Example(55, "value"))
 
-      Json.toJson(input) should be(Json.parse(
-        """
+      Json.toJson(input) should be(
+        Json.parse(
+          """
           |{
           |  "field1": 55,
           |  "field2": "value",
           |  "id": "theId"
           |}
         """.stripMargin
-      ))
+        ))
     }
   }
 }

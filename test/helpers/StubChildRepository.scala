@@ -19,7 +19,8 @@ class StubChildRepository extends ChildRepository {
 
   override def delete(id: Id)(implicit tenant: Tenant) = ???
 
-  override def setMerged(retiredId: Id, absorpedIntoId: Id)(implicit tenant: Tenant) = ???
+  override def setMerged(retiredId: Id, absorpedIntoId: Id)(
+      implicit tenant: Tenant) = ???
 }
 
 class StubChildRepositoryModule extends AbstractModule {

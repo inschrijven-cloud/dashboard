@@ -10,19 +10,22 @@ class ErrorHandlerSpec extends PlaySpec with Results {
     "return JSON on server error" in {
       val handler = new ErrorHandler()
       val header = FakeRequest()
-      await(handler.onServerError(header, new Exception())).body.contentType must be(Some("application/json"))
+      await(handler.onServerError(header, new Exception())).body.contentType must be(
+        Some("application/json"))
     }
 
     "return JSON on client error" in {
       val handler = new ErrorHandler()
       val header = FakeRequest()
-      await(handler.onClientError(header, 403)).body.contentType must be(Some("application/json"))
+      await(handler.onClientError(header, 403)).body.contentType must be(
+        Some("application/json"))
     }
 
     "return status code on client error" in {
       val handler = new ErrorHandler()
       val header = FakeRequest()
-      (contentAsJson(handler.onClientError(header, 403)) \ "statusCode").as[Int] must be(403)
+      (contentAsJson(handler.onClientError(header, 403)) \ "statusCode")
+        .as[Int] must be(403)
     }
   }
 

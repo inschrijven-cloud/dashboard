@@ -1,11 +1,12 @@
 import cloud.speelplein.dashboard.util.CertParser
-import pdi.jwt.{ Jwt, JwtAlgorithm, JwtOptions }
+import pdi.jwt.{Jwt, JwtAlgorithm, JwtOptions}
 import org.scalatestplus.play._
 
 class JwtSpec extends PlaySpec {
   "Verifying a JWT" should {
     "verify a correct JWT signature" in {
-      val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJleGFtcGxlIjp7InBlcm1pc3Npb25zIjpbImJsYWgiXX19XX0sImlzcyI6Imh0dHBzOi8vaW5zY2hyaWp2ZW4tY2xvdWQuZXUuYXV0aDAuY29tLyIsInN1YiI6ImZhY2Vib29rfDEwMjE0MDY3ODg5OTIyMDk5IiwiYXVkIjoiM2lMOG1mc0JDdWhvMWZwQ3lEUTR5YTVvaVJQbkhveWkiLCJpYXQiOjE1MDk5MjI3MjksImV4cCI6MTUwOTk1ODcyOSwiYXRfaGFzaCI6Ik5xMzV0eThRTlVkaDF3V0FaNmI5RkEiLCJub25jZSI6IjlKMVUzOXQyWkh0eDM1Mkx5XzA5ekVNTlN5a35SVVhqIn0.YN73hNt4m3lb6YKcVoEnK0q1vRPuld0CwoYakIV93GEG7elsDquJVXwIZox1eK1QS9-hW3TSdaK0_BZg3aOf_dcurOH5dsyOQKQaoowXd9fWDaheHYiMQPnNSgCIjmAgevgqjuJmP-aWL5kHYay0RxLo95MI4ZQPrJ5UCX1sv8JORwo6wN3Q-4F4UQ3LV8RQK7KlDql_jKXT3FsSNm0vmgaHL6-2wU7AFUjnCKClJXtQDr84XocSntTGDJ4ea2AXnqLuurisF4ILdC7rZT5rBj_ZWAazW5BoWWmJFp23kof3VixQk2IJfzpBSlTXRKiD4ISaz3vSjIZs-kO9IhrTpQ"
+      val token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJleGFtcGxlIjp7InBlcm1pc3Npb25zIjpbImJsYWgiXX19XX0sImlzcyI6Imh0dHBzOi8vaW5zY2hyaWp2ZW4tY2xvdWQuZXUuYXV0aDAuY29tLyIsInN1YiI6ImZhY2Vib29rfDEwMjE0MDY3ODg5OTIyMDk5IiwiYXVkIjoiM2lMOG1mc0JDdWhvMWZwQ3lEUTR5YTVvaVJQbkhveWkiLCJpYXQiOjE1MDk5MjI3MjksImV4cCI6MTUwOTk1ODcyOSwiYXRfaGFzaCI6Ik5xMzV0eThRTlVkaDF3V0FaNmI5RkEiLCJub25jZSI6IjlKMVUzOXQyWkh0eDM1Mkx5XzA5ekVNTlN5a35SVVhqIn0.YN73hNt4m3lb6YKcVoEnK0q1vRPuld0CwoYakIV93GEG7elsDquJVXwIZox1eK1QS9-hW3TSdaK0_BZg3aOf_dcurOH5dsyOQKQaoowXd9fWDaheHYiMQPnNSgCIjmAgevgqjuJmP-aWL5kHYay0RxLo95MI4ZQPrJ5UCX1sv8JORwo6wN3Q-4F4UQ3LV8RQK7KlDql_jKXT3FsSNm0vmgaHL6-2wU7AFUjnCKClJXtQDr84XocSntTGDJ4ea2AXnqLuurisF4ILdC7rZT5rBj_ZWAazW5BoWWmJFp23kof3VixQk2IJfzpBSlTXRKiD4ISaz3vSjIZs-kO9IhrTpQ"
 
       val pem =
         """-----BEGIN CERTIFICATE-----
@@ -30,11 +31,15 @@ class JwtSpec extends PlaySpec {
 
       val key = CertParser.pemToPublicKey(pem)
 
-      Jwt.isValid(token, key, JwtAlgorithm.allRSA(), JwtOptions(expiration = false)) must be(true)
+      Jwt.isValid(token,
+                  key,
+                  JwtAlgorithm.allRSA(),
+                  JwtOptions(expiration = false)) must be(true)
     }
 
     "disallow an incorrect JWT signature" in {
-      val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJleGFtcGxlIjp7InBlcm1pc3Npb25zIjpbImJsYWgiXX19XX0sImlzcyI6Imh0dHBzOi8vaW5zY2hyaWp2ZW4tY2xvdWQuZXUuYXV0aDAuY29tLyIsInN1YiI6ImZhY2Vib29rfDEwMjE0MDY3ODg5OTIyMDk5IiwiYXVkIjoiM2lMOG1mc0JDdWhvMWZwQ3lEUTR5YTVvaVJQbkhveWkiLCJpYXQiOjE1MDk5MjI3MjksImV4cCI6MTUwOTk1ODcyOSwiYXRfaGFzaCI6Ik5xMzV0eThRTlVkaDF3V0FaNmI5RkEiLCJub25jZSI6IjlKMVUzOXQyWkh0eDM1Mkx5XzA5ekVNTlN5a35SVVhqIn0.YN73hNt4m3lb6YKcVoEnK0q1vRPuld0CwoYakIV93GEG7elsDquJVXwIZox1eK1QS9-hW3TSdaK0_BZg3aOf_dcurOH5dsyOQKQaoowXd9fWDaheHYiMQPnNSgCIjmAgevgqjuJmP-aWL5kHYay0RxLo95MI4ZQPrJ5UCX1sv8JORwo6wN3Q-4F4UQ3LV8RQK7KlDql_jKXT3FsSNm0vmgaHL6-2wU7AFUjnCKClJXtQDr84XocSTGDJ4ea2AXnqLuurisF4ILdC7rZT5rBj_ZWAazW5BoWWmJFp23kof3VixQk2IJfzpBSlTXRKiD4ISaz3vSjIZs-kO9IhrTpQ"
+      val token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJleGFtcGxlIjp7InBlcm1pc3Npb25zIjpbImJsYWgiXX19XX0sImlzcyI6Imh0dHBzOi8vaW5zY2hyaWp2ZW4tY2xvdWQuZXUuYXV0aDAuY29tLyIsInN1YiI6ImZhY2Vib29rfDEwMjE0MDY3ODg5OTIyMDk5IiwiYXVkIjoiM2lMOG1mc0JDdWhvMWZwQ3lEUTR5YTVvaVJQbkhveWkiLCJpYXQiOjE1MDk5MjI3MjksImV4cCI6MTUwOTk1ODcyOSwiYXRfaGFzaCI6Ik5xMzV0eThRTlVkaDF3V0FaNmI5RkEiLCJub25jZSI6IjlKMVUzOXQyWkh0eDM1Mkx5XzA5ekVNTlN5a35SVVhqIn0.YN73hNt4m3lb6YKcVoEnK0q1vRPuld0CwoYakIV93GEG7elsDquJVXwIZox1eK1QS9-hW3TSdaK0_BZg3aOf_dcurOH5dsyOQKQaoowXd9fWDaheHYiMQPnNSgCIjmAgevgqjuJmP-aWL5kHYay0RxLo95MI4ZQPrJ5UCX1sv8JORwo6wN3Q-4F4UQ3LV8RQK7KlDql_jKXT3FsSNm0vmgaHL6-2wU7AFUjnCKClJXtQDr84XocSTGDJ4ea2AXnqLuurisF4ILdC7rZT5rBj_ZWAazW5BoWWmJFp23kof3VixQk2IJfzpBSlTXRKiD4ISaz3vSjIZs-kO9IhrTpQ"
 
       val pem =
         """-----BEGIN CERTIFICATE-----
@@ -59,7 +64,10 @@ class JwtSpec extends PlaySpec {
 
       val key = CertParser.pemToPublicKey(pem)
 
-      Jwt.isValid(token, key, JwtAlgorithm.allRSA(), JwtOptions(expiration = false)) must be(false)
+      Jwt.isValid(token,
+                  key,
+                  JwtAlgorithm.allRSA(),
+                  JwtOptions(expiration = false)) must be(false)
     }
   }
 }

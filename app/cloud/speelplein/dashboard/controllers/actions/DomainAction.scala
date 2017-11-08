@@ -18,12 +18,16 @@ class DomainAction @Inject()(val parser: BodyParsers.Default)(
     implicit val executionContext: ExecutionContext)
     extends ActionRefiner[Request, DomainRequest] {
   def refine[A](input: Request[A]): Future[Either[Result, DomainRequest[A]]] =
-    Future.successful {
+    Future.successful[Either[Result, DomainRequest[A]]] {
       input.queryString
         .get("domain")
-        .map(x => (x.head, Tenant.fromDomain(x.head)))
-        .filter(tuple => tuple._2.isDefined)
-        .map(domain => new DomainRequest[A](domain._1, domain._2.get, input))
+        .flatMap(_.headOption)
+        .map(head => (head, Tenant.fromDomain(head)))
+        .flatMap {
+          case (userDomain, Some(tenant)) =>
+            Some(new DomainRequest[A](userDomain, tenant, input))
+          case _ => None
+        }
         .toRight(
           BadRequest(Json.obj("status" -> "error",
                               "reason" -> "Missing 'domain' URL parameter")))

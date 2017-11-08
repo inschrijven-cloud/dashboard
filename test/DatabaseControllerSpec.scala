@@ -16,9 +16,16 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 
-class DatabaseControllerSpec extends PlaySpec with GuiceOneAppPerSuite with Results with MockFactory {
+class DatabaseControllerSpec
+    extends PlaySpec
+    with GuiceOneAppPerSuite
+    with Results
+    with MockFactory {
   val databaseService: TenantDatabaseService = mock[TenantDatabaseService]
-  (databaseService.all _).expects().returning(Future.successful(Seq(DbName.create("test").get, DbName.create("sometestdb").get)))
+  (databaseService.all _)
+    .expects()
+    .returning(Future.successful(
+      Seq(DbName.create("test").get, DbName.create("sometestdb").get)))
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .configure(
@@ -38,7 +45,9 @@ class DatabaseControllerSpec extends PlaySpec with GuiceOneAppPerSuite with Resu
   "The database controller" should {
     "display all databases on the listing page" in {
       val controller = app.injector.instanceOf[DatabaseController]
-      val result: Future[Result] = controller.list().apply(FakeRequest("GET", "/blah?domain=global.speelplein.cloud"))
+      val result: Future[Result] = controller
+        .list()
+        .apply(FakeRequest("GET", "/blah?domain=global.speelplein.cloud"))
       val bodyText: String = contentAsString(result)
       bodyText must include("test")
       bodyText must include("sometestdb")

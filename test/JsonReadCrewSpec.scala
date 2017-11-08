@@ -1,5 +1,5 @@
 import cloud.speelplein.models._
-import cloud.speelplein.models.{ Address, ContactInfo, Crew, PhoneContact }
+import cloud.speelplein.models.{Address, ContactInfo, Crew, PhoneContact}
 import cloud.speelplein.models.JsonFormats.crewFormat
 
 import scala.concurrent.Future
@@ -57,14 +57,20 @@ class JsonReadCrewSpec extends PlaySpec {
 
       res.isSuccess mustBe true
       res.get mustBe Crew(
-        "John", "Doe",
+        "John",
+        "Doe",
         Address(Some("Street"), Some("55X"), Some(6666), Some("Some-City")),
         active = false,
         Some("BE66 6666 6666 6666"),
-        ContactInfo(Seq(
-          PhoneContact("0478 78 78 78", Some("mobile"), None),
-          PhoneContact("055 55 55 55", Some("landline"), Some("work phone, call this during business hours"))
-        ), Seq("john.smith@example.com", "test@example.com")),
+        ContactInfo(
+          Seq(
+            PhoneContact("0478 78 78 78", Some("mobile"), None),
+            PhoneContact("055 55 55 55",
+                         Some("landline"),
+                         Some("work phone, call this during business hours"))
+          ),
+          Seq("john.smith@example.com", "test@example.com")
+        ),
         Some(2016),
         Some(DayDate(22, 2, 2002)),
         "some remarks"

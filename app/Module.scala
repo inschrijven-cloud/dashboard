@@ -18,6 +18,7 @@ import cloud.speelplein.data.couchdb._
 import cloud.speelplein.data._
 import com.google.inject.AbstractModule
 
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class Module extends AbstractModule {
   override def configure(): Unit = {
     bind(classOf[ChildRepository]).to(classOf[CouchChildRepository])

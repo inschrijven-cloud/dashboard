@@ -1,4 +1,3 @@
-
 import cloud.speelplein.dashboard.controllers.ApplicationController
 
 import scala.concurrent.Future
@@ -15,7 +14,9 @@ class HeartBeatSpec extends PlaySpec with Results {
       controller.setControllerComponents(stubControllerComponents())
       val result: Future[Result] = controller.heartbeat().apply(FakeRequest())
       val body = contentAsJson(result)
-      body mustBe Json.obj("status" -> "ok", "statusCode" -> 200, "message" -> "online")
+      body mustBe Json.obj("status" -> "ok",
+                           "statusCode" -> 200,
+                           "message" -> "online")
     }
   }
 }
