@@ -1,8 +1,8 @@
-import be.thomastoye.speelsysteem.EntityWithId
+import cloud.speelplein.EntityWithId
 import org.scalatest._
 import play.api.libs.json.{ JsError, JsSuccess, Json }
-import be.thomastoye.speelsysteem.models.JsonFormats.entityWithIdReads
-import be.thomastoye.speelsysteem.models.JsonFormats.entityWithIdWrites
+import cloud.speelplein.models.JsonFormats.entityWithIdReads
+import cloud.speelplein.models.JsonFormats.entityWithIdWrites
 
 case class Example(field1: Int, field2: String) // has to be at file level, see http://stackoverflow.com/questions/36926225/scala-play-json-no-unapply-or-unapplyseq-function-found
 

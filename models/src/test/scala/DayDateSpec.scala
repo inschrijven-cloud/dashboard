@@ -1,6 +1,6 @@
 import java.time.LocalDate
 
-import be.thomastoye.speelsysteem.models.DayDate
+import cloud.speelplein.models.DayDate
 import org.scalatest._
 
 import scala.util.{ Failure, Success }

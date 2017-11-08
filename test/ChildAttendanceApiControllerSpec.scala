@@ -1,11 +1,14 @@
-import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainAction
-import be.thomastoye.speelsysteem.dashboard.controllers.api.ChildAttendanceApiController
-import be.thomastoye.speelsysteem.data.{ ChildAttendancesService, ChildRepository, DayService }
-import be.thomastoye.speelsysteem.models.Day.Id
-import be.thomastoye.speelsysteem.models.Shift.ShiftKind
-import be.thomastoye.speelsysteem.models.{ Shift, _ }
-import helpers.{ StubJwtAuthorizationBuilder, UnimplementedDayService }
+import cloud.speelplein.EntityWithId
+import cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController
+import cloud.speelplein.data.ChildRepository
+import cloud.speelplein.models.Day.Id
+import cloud.speelplein.models.Shift.ShiftKind
+import cloud.speelplein.models._
+import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController
+import cloud.speelplein.data.{ChildAttendancesService, ChildRepository}
+import cloud.speelplein.models._
+import helpers.{StubJwtAuthorizationBuilder, UnimplementedDayService}
 import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future

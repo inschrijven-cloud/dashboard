@@ -1,4 +1,4 @@
-import be.thomastoye.speelsysteem.models.Tenant
+import cloud.speelplein.models.Tenant
 import org.scalamock.scalatest.MockFactory
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.Results

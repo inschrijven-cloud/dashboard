@@ -1,6 +1,7 @@
-import be.thomastoye.speelsysteem.data.TenantDatabaseService
-import be.thomastoye.speelsysteem.data.couchdb.CouchTenantsService
-import be.thomastoye.speelsysteem.models.{ DbName, Tenant }
+import cloud.speelplein.data.couchdb.CouchTenantsService
+import cloud.speelplein.models.Tenant
+import cloud.speelplein.data.TenantDatabaseService
+import cloud.speelplein.models.Tenant
 import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future

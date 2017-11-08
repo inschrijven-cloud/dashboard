@@ -1,7 +1,7 @@
 import ReleaseTransformations._
 import GhPagesKeys._
 
-name := "speelsysteem-dashboard"
+name := "speelplein-cloud-dashboard"
 
 lazy val playVersion = "2.6.7"
 
@@ -19,7 +19,7 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(commonSettings)
   .settings(
-    packageName in Docker := "speelsysteem-dashboard"
+    packageName in Docker := "speelplein-cloud-dashboard"
   )
   .enablePlugins(PlayScala)
   .dependsOn(dataAccess)
@@ -103,6 +103,6 @@ releaseProcess := (thisProjectRef apply { ref =>
   )
 }).value
 
-git.remoteRepo := "git@github.com:speelsysteem/dashboard.git"
+git.remoteRepo := "git@github.com:inschrijven-cloud/dashboard.git"
 
 releaseIgnoreUntrackedFiles := true

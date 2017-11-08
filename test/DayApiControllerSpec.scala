@@ -1,10 +1,13 @@
-import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainAction
-import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
-import be.thomastoye.speelsysteem.data.{ ChildRepository, DayService }
-import be.thomastoye.speelsysteem.models.Shift.{ Id, ShiftKind }
-import be.thomastoye.speelsysteem.models._
-import be.thomastoye.speelsysteem.models.JsonFormats._
+import cloud.speelplein.EntityWithId
+import cloud.speelplein.dashboard.controllers.api.DayApiController
+import cloud.speelplein.data.ChildRepository
+import cloud.speelplein.models.Shift.{Id, ShiftKind}
+import cloud.speelplein.models._
+import cloud.speelplein.models.JsonFormats._
+import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.api.DayApiController
+import cloud.speelplein.data.{ChildRepository, DayService}
+import cloud.speelplein.models._
 import helpers.StubJwtAuthorizationBuilder
 
 import scala.concurrent.Future

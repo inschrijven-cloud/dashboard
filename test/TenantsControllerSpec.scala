@@ -1,11 +1,13 @@
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilder
-import be.thomastoye.speelsysteem.dashboard.controllers.api.TenantsController
-import be.thomastoye.speelsysteem.dashboard.controllers.api.TenantsController.TenantBinder
-import be.thomastoye.speelsysteem.data.TenantsService
-import be.thomastoye.speelsysteem.data.couchdb.CouchDatabase
-import be.thomastoye.speelsysteem.models.Tenant
+import cloud.speelplein.dashboard.controllers.api.TenantsController
+import cloud.speelplein.dashboard.controllers.api.TenantsController.TenantBinder
+import cloud.speelplein.data.TenantsService
+import cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder
+import cloud.speelplein.dashboard.controllers.api.TenantsController
+import cloud.speelplein.data.TenantsService
+import cloud.speelplein.data.couchdb.CouchDatabase
+import cloud.speelplein.models.Tenant
 import com.ibm.couchdb.Res
-import helpers.{ StubCouchDatabase, StubJwtAuthorizationBuilder }
+import helpers.{StubCouchDatabase, StubJwtAuthorizationBuilder}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.OneInstancePerTest
 

@@ -1,7 +1,7 @@
 package helpers
 
-import be.thomastoye.speelsysteem.data.couchdb.CouchDatabase
-import be.thomastoye.speelsysteem.models.Tenant
+import cloud.speelplein.data.couchdb.CouchDatabase
+import cloud.speelplein.models.Tenant
 import com.google.inject.AbstractModule
 import com.ibm.couchdb.TypeMapping
 

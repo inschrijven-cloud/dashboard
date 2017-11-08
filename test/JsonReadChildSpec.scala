@@ -1,6 +1,6 @@
-import be.thomastoye.speelsysteem.models._
-
-import be.thomastoye.speelsysteem.models.JsonFormats.childFormat
+import cloud.speelplein.models._
+import cloud.speelplein.models.{Address, ContactInfo, PhoneContact}
+import cloud.speelplein.models.JsonFormats.childFormat
 import org.scalatestplus.play._
 import play.api.libs.json.Json
 import play.api.mvc._

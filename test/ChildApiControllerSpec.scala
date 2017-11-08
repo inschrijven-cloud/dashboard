@@ -1,13 +1,15 @@
-import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainAction
-import be.thomastoye.speelsysteem.dashboard.controllers.api.ChildApiController
-import be.thomastoye.speelsysteem.data.ChildRepository
-import be.thomastoye.speelsysteem.models._
-import be.thomastoye.speelsysteem.models.JsonFormats._
+import cloud.speelplein.EntityWithId
+import cloud.speelplein.dashboard.controllers.api.ChildApiController
+import cloud.speelplein.models._
+import cloud.speelplein.models.JsonFormats._
+import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.api.ChildApiController
+import cloud.speelplein.data.ChildRepository
+import cloud.speelplein.models.Tenant
 import helpers.StubJwtAuthorizationBuilder
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.{ AnyContentAsJson, BodyParsers, Request, Results }
+import play.api.mvc.{AnyContentAsJson, BodyParsers, Request, Results}
 import play.api.libs.json.Json
 import play.api.test._
 import play.api.test.Helpers._

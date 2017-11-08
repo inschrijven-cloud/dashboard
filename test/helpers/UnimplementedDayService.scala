@@ -1,9 +1,10 @@
 package helpers
 
-import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.data.DayService
-import be.thomastoye.speelsysteem.models.{ Day, Tenant }
-import be.thomastoye.speelsysteem.models.Day.Id
+import cloud.speelplein.EntityWithId
+import cloud.speelplein.models.Tenant
+import cloud.speelplein.models.Day.Id
+import cloud.speelplein.data.DayService
+import cloud.speelplein.models.{Day, Tenant}
 
 import scala.concurrent.Future
 

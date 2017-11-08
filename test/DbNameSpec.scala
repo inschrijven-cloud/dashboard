@@ -1,4 +1,4 @@
-import be.thomastoye.speelsysteem.models.DbName
+import cloud.speelplein.models.DbName
 import org.scalatestplus.play._
 
 import scala.collection.mutable

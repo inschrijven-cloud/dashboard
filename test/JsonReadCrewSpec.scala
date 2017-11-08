@@ -1,6 +1,7 @@
-import be.thomastoye.speelsysteem.models._
+import cloud.speelplein.models._
+import cloud.speelplein.models.{Address, ContactInfo, Crew, PhoneContact}
+import cloud.speelplein.models.JsonFormats.crewFormat
 
-import be.thomastoye.speelsysteem.models.JsonFormats.crewFormat
 import scala.concurrent.Future
 import org.scalatestplus.play._
 import play.api.libs.json.Json

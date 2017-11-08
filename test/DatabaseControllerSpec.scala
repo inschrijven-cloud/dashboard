@@ -1,7 +1,8 @@
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.JwtAuthorizationBuilder
-import be.thomastoye.speelsysteem.dashboard.controllers.api.DatabaseController
-import be.thomastoye.speelsysteem.data.TenantDatabaseService
-import be.thomastoye.speelsysteem.models.DbName
+import cloud.speelplein.dashboard.controllers.api.DatabaseController
+import cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder
+import cloud.speelplein.dashboard.controllers.api.DatabaseController
+import cloud.speelplein.data.TenantDatabaseService
+import cloud.speelplein.models.DbName
 import helpers.StubJwtAuthorizationBuilder
 import org.scalamock.scalatest.MockFactory
 

@@ -1,8 +1,9 @@
 package helpers
 
-import be.thomastoye.speelsysteem.data.ChildRepository
-import be.thomastoye.speelsysteem.models.{ Child, Tenant }
-import be.thomastoye.speelsysteem.models.Shift.Id
+import cloud.speelplein.models.Child
+import cloud.speelplein.models.Shift.Id
+import cloud.speelplein.data.ChildRepository
+import cloud.speelplein.models.Tenant
 import com.google.inject.AbstractModule
 
 class StubChildRepository extends ChildRepository {

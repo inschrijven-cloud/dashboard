@@ -25,7 +25,7 @@
 
     <logger name="play" level="INFO" />
     <logger name="application" level="DEBUG" />
-    <logger name="be.thomastoye.speelsysteem" level="DEBUG" />
+    <logger name="cloud.speelplein" level="DEBUG" />
     <logger name="controllers" level="DEBUG" />
 
 

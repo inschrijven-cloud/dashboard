@@ -1,13 +1,15 @@
-import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainAction
-import be.thomastoye.speelsysteem.dashboard.controllers.api.CrewApiController
-import be.thomastoye.speelsysteem.data.CrewRepository
-import be.thomastoye.speelsysteem.models._
-import be.thomastoye.speelsysteem.models.JsonFormats._
+import cloud.speelplein.EntityWithId
+import cloud.speelplein.dashboard.controllers.api.CrewApiController
+import cloud.speelplein.models._
+import cloud.speelplein.models.JsonFormats._
+import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.api.CrewApiController
+import cloud.speelplein.data.CrewRepository
+import cloud.speelplein.models.{Crew, Tenant}
 import helpers.StubJwtAuthorizationBuilder
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.{ BodyParsers, Results }
+import play.api.mvc.{BodyParsers, Results}
 import play.api.libs.json.Json
 import play.api.test._
 import play.api.test.Helpers._

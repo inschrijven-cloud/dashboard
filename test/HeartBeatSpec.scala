@@ -1,4 +1,5 @@
-import be.thomastoye.speelsysteem.dashboard.controllers.ApplicationController
+
+import cloud.speelplein.dashboard.controllers.ApplicationController
 
 import scala.concurrent.Future
 import org.scalatestplus.play._

@@ -1,13 +1,16 @@
-import be.thomastoye.speelsysteem.EntityWithId
-import be.thomastoye.speelsysteem.dashboard.controllers.ApplicationController
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.DomainAction
-import be.thomastoye.speelsysteem.dashboard.controllers.api.DayApiController
-import be.thomastoye.speelsysteem.data.{ ChildRepository, DayService }
-import be.thomastoye.speelsysteem.models.Shift.Id
-import be.thomastoye.speelsysteem.models.{ Day, Tenant }
+import cloud.speelplein.EntityWithId
+import cloud.speelplein.dashboard.controllers.ApplicationController
+import cloud.speelplein.dashboard.controllers.api.DayApiController
+import cloud.speelplein.data.ChildRepository
+import cloud.speelplein.models.Shift.Id
+import cloud.speelplein.models.Tenant
+import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.api.DayApiController
+import cloud.speelplein.data.{ChildRepository, DayService}
+import cloud.speelplein.models.{Day, Tenant}
 import helpers.StubJwtAuthorizationBuilder
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ AsyncFlatSpec, EitherValues }
+import org.scalatest.{AsyncFlatSpec, EitherValues}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.mvc.Results
@@ -16,7 +19,7 @@ import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
 
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 

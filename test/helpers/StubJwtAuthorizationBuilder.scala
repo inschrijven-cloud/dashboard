@@ -1,11 +1,12 @@
 package helpers
 
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.{ DomainRequest, JwtAuthorizationBuilder, JwtRequest }
-import be.thomastoye.speelsysteem.dashboard.controllers.api.auth.Permission
-import be.thomastoye.speelsysteem.models.TenantMetadata
-import play.api.mvc.{ ActionFunction, Result }
+import cloud.speelplein.dashboard.controllers.actions.{JwtAuthorizationBuilder, JwtRequest}
+import cloud.speelplein.dashboard.controllers.api.auth.Permission
+import cloud.speelplein.dashboard.controllers.actions.{DomainRequest, JwtAuthorizationBuilder, JwtRequest}
+import cloud.speelplein.models.TenantMetadata
+import play.api.mvc.{ActionFunction, Result}
 
-import scala.concurrent.{ ExecutionContextExecutor, Future }
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.concurrent.ExecutionContext.Implicits._
 
 /** Doesn't perform authorization, lets every request pass */

@@ -1,8 +1,12 @@
-import be.thomastoye.speelsysteem.dashboard.controllers.actions.{ JwtAuthorizationBuilder, JwtAuthorizationBuilderImpl }
-import be.thomastoye.speelsysteem.dashboard.services._
-import be.thomastoye.speelsysteem.data.couchdb._
-import be.thomastoye.speelsysteem.data.util.{ UuidService, UuidServiceImpl }
-import be.thomastoye.speelsysteem.data._
+import cloud.speelplein.dashboard.controllers.actions.{ JwtAuthorizationBuilder, JwtAuthorizationBuilderImpl }
+import cloud.speelplein.dashboard.services._
+import cloud.speelplein.data.couchdb._
+import cloud.speelplein.data.util.{ UuidService, UuidServiceImpl }
+import cloud.speelplein.data._
+import cloud.speelplein.dashboard.controllers.actions.{ JwtAuthorizationBuilder, JwtAuthorizationBuilderImpl }
+import cloud.speelplein.dashboard.services.{ JwtVerificationService, PdiJwtVerificationService }
+import cloud.speelplein.data.couchdb._
+import cloud.speelplein.data._
 import com.google.inject.AbstractModule
 
 class Module extends AbstractModule {

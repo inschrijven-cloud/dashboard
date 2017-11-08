@@ -1,4 +1,4 @@
-import be.thomastoye.speelsysteem.models.Tenant
+import cloud.speelplein.models.Tenant
 import org.scalatest._
 
 class TenantValiditySpec extends WordSpec with MustMatchers {

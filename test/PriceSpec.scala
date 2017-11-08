@@ -1,4 +1,4 @@
-import be.thomastoye.speelsysteem.models.Price
+import cloud.speelplein.models.Price
 import org.scalatestplus.play.PlaySpec
 
 class PriceSpec extends PlaySpec {
