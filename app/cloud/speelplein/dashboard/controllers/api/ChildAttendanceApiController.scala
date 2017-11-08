@@ -33,17 +33,23 @@ object ChildAttendanceApiController {
   implicit val childAttendanceWrites =
     new Writes[(Day.Id, Seq[(Shift.Id, Int)])] {
       implicit val shiftsAttendanceWrites = new Writes[(Shift.Id, Int)] {
-        override def writes(o: (Shift.Id, Int)): JsValue = Json.obj(
-          "id" -> o._1,
-          "numChildAttendances" -> o._2
-        )
+        override def writes(o: (Shift.Id, Int)): JsValue = o match {
+          case (id, numChildAttendances) =>
+            Json.obj(
+              "id" -> id,
+              "numChildAttendances" -> numChildAttendances
+            )
+        }
       }
 
       override def writes(o: (Day.Id, Seq[(Shift.Id, Int)])): JsValue =
-        Json.obj(
-          "dayId" -> o._1,
-          "shifts" -> o._2
-        )
+        o match {
+          case (dayId, shifts) =>
+            Json.obj(
+              "dayId" -> dayId,
+              "shifts" -> shifts
+            )
+        }
     }
 }
 
@@ -121,11 +127,14 @@ class ChildAttendanceApiController @Inject()(
     req =>
       implicit val writes = new Writes[(Day.Id, Shift.Id, Child.Id)] {
         override def writes(o: (Day.Id, Shift.Id, Child.Id)): JsValue =
-          Json.obj(
-            "dayId" -> o._1,
-            "shiftId" -> o._2,
-            "childId" -> o._3
-          )
+          o match {
+            case (dayId, shiftId, childId) =>
+              Json.obj(
+                "dayId" -> dayId,
+                "shiftId" -> shiftId,
+                "childId" -> childId
+              )
+          }
       }
 
       childAttendancesService

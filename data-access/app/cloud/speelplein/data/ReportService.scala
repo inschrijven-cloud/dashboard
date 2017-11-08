@@ -7,6 +7,7 @@ import cloud.speelplein.models._
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
 
+import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -32,15 +33,18 @@ class ReportServiceImpl @Inject()(
         Seq("Dag", "Dagdeel", "Aantal kinderen", "Unieke kinderen op dag")
 
       val sheetDataRows: Iterable[Row] = allAttendances.toSeq
-        .filter(x => DayDate.createFromDayId(x._1).get.year == year)
-        .sortBy(x => DayDate.createFromDayId(x._1).get)
+        .filter {
+          case (dayId, attOnDay) =>
+            DayDate.createFromDayId(dayId).get.year == year
+        }
+        .sortBy { case (dayId, attOnDay) => DayDate.createFromDayId(dayId).get }
         .flatMap {
           case (dayId, attendances) =>
             val shiftRows = attendances.shiftsWithAttendances.map { s =>
               val shift = getShift(allDays, dayId, s.shiftId).get
 
               (s, shift)
-            } sortBy (_._2) map {
+            } sortBy { case (shiftWithAttendances, shift) => shift } map {
               case (shiftWithAttendances, shift) =>
                 Row().withCellValues("",
                                      shift.kind.description,

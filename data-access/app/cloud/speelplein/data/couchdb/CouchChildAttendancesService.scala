@@ -86,14 +86,15 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
         case (childId, childAttendances) =>
           childAttendances.flatMap(att =>
             att.shifts.map(shift => (att.day, shift.shiftId)))
-      } groupBy (_._1)
+      } groupBy { case (dayId, shiftId) => dayId }
 
       groupedByDay map {
         case (dayId, data) =>
-          val shiftsWithLength = data.groupBy(_._2).map {
-            case (shiftId, seq) =>
-              (shiftId, seq.length)
-          }
+          val shiftsWithLength =
+            data.groupBy { case (_, shiftId) => shiftId }.map {
+              case (shiftId, seq) =>
+                (shiftId, seq.length)
+            }
 
           (dayId, shiftsWithLength)
       }
@@ -126,11 +127,12 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
       db.docs.createMany {
         many.filterNot { case (key, value) => existingIds.contains(key) }
       }.toFuture flatMap { seq =>
-        Future.sequence(existingIds map (id => isDeleted(id) map ((id, _)))) map (_.filter(
-          _._2)) flatMap { list =>
+        Future.sequence(existingIds map (id => isDeleted(id) map ((id, _)))) map (_.filter {
+          case (id, isDeleted) => isDeleted
+        }) flatMap { list =>
           Future.sequence(
             list
-              .map(_._1)
+              .map { case (id, _) => id }
               .map(
                 id =>
                   db.docs
@@ -177,10 +179,10 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
       .query
       .toFuture
       .map(_.rows.map(doc => createDayAttendance(doc.id, doc.doc.doc)))
-      .map(_.groupBy(_._1).map {
+      .map(_.groupBy { case (childId, dayAtt) => childId }.map {
         case (childId, dayAtts) =>
           val dayAttendancesReduced = dayAtts
-            .map(_._2)
+            .map { case (childId, dayAtt) => dayAtt }
             .groupBy(dayAtt => dayAtt.day)
             .map {
               case (dayId, dayAttendancesOnDayId) =>
@@ -203,10 +205,10 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
       .toFuture
       .map(_.rows.map(doc => createDayAttendance(doc.id, doc.doc.doc)))
       .map {
-        _.groupBy(_._2.day) map {
+        _.groupBy { case (childId, dayAtt) => dayAtt.day } map {
           case (dayId, seq) =>
             val shiftWithAttendances = seq
-              .map(_._2)
+              .map { case (childId, dayAtt) => dayAtt }
               .flatMap(_.shifts)
               .map(_.shiftId)
               .groupBy(x => x)
@@ -217,7 +219,8 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
               }
               .toSeq
 
-            val uniqueChildren = seq.map(_._1).distinct.length
+            val uniqueChildren =
+              seq.map { case (dayAtt, childId) => childId }.distinct.length
 
             (dayId, AttendancesOnDay(uniqueChildren, shiftWithAttendances))
         }
@@ -251,9 +254,8 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
   private def createDayAttendance(idFromDb: String,
                                   persisted: ChildAttendancePersisted)(
       implicit tenant: Tenant): (Child.Id, DayAttendance) = {
-    val dayId = createFromChildAttendanceId(idFromDb)._1
-    val shiftId = createFromChildAttendanceId(idFromDb)._2
-    val childId = createFromChildAttendanceId(idFromDb)._3
+
+    val (dayId, shiftId, childId) = createFromChildAttendanceId(idFromDb)
 
     (childId,
      DayAttendance(
