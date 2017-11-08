@@ -5,12 +5,12 @@ object MedicalInformation {
 }
 
 case class MedicalInformation(
-  familyDoctor: Option[String],
-  allergies: Option[Allergies],
-  conditions: Option[Conditions],
-  otherShouldBeAwareOf: Option[String],
-  tetanusLastVaccinationYear: Option[Int],
-  otherRemarks: Option[String]
+    familyDoctor: Option[String],
+    allergies: Option[Allergies],
+    conditions: Option[Conditions],
+    otherShouldBeAwareOf: Option[String],
+    tetanusLastVaccinationYear: Option[Int],
+    otherRemarks: Option[String]
 )
 
 case class Allergies(allergies: Seq[String], extraInformation: Option[String])

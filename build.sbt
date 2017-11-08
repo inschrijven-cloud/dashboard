@@ -1,5 +1,4 @@
 import ReleaseTransformations._
-import GhPagesKeys._
 
 name := "speelplein-cloud-dashboard"
 
@@ -29,12 +28,13 @@ scalaVersion := "2.11.11"
 
 coverageEnabled in Test := true
 
+scalafmtOnCompile in ThisBuild := true
+
 libraryDependencies ++= Seq(
   filters,
   guice,
   "com.typesafe.play" %% "play-json" % playVersion,
   "com.pauldijou" %% "jwt-core" % "0.14.1",
-
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % "test",
   "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
 )
@@ -46,11 +46,10 @@ lazy val models = project
   .settings(
     libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-json" % playVersion,
-
       "org.scalatest" %% "scalatest" % "3.0.3" % "test"
     ),
-    publishLocal in Docker := { },
-    publish in Docker := { }
+    publishLocal in Docker := {},
+    publish in Docker := {}
   )
 
 lazy val dataAccess = Project("data-access", file("data-access"))
@@ -64,24 +63,23 @@ lazy val dataAccess = Project("data-access", file("data-access"))
       "com.norbitltd" % "spoiwo" % "1.0.6",
       "io.lemonlabs" %% "scala-uri" % "0.5.0",
       "io.verizon.delorean" %% "core" % "1.2.40-scalaz-7.2",
-
-
       "org.scalatest" %% "scalatest" % "3.0.3" % "test",
       "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
     ),
-    publishLocal in Docker := { },
-    publish in Docker := { }
+    publishLocal in Docker := {},
+    publish in Docker := {}
   )
   .dependsOn(models)
   .aggregate(models)
 
-ghpages.settings
+enablePlugins(GhpagesPlugin)
 enablePlugins(SiteScaladocPlugin)
 
 siteSourceDirectory := file("app/site")
 
-val publishScalaDoc = (ref: ProjectRef) => ReleaseStep(
-  action = releaseStepTaskAggregated(GhPagesKeys.pushSite in ref) // publish scaladoc
+val publishScalaDoc = (ref: ProjectRef) =>
+  ReleaseStep(
+    action = releaseStepTaskAggregated(ghpagesPushSite in ref) // publish scaladoc
 )
 
 releaseProcess := (thisProjectRef apply { ref =>

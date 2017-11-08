@@ -6,10 +6,14 @@ import cloud.speelplein.models.Tenant
 import com.norbitltd.spoiwo.model.enums.CellFill
 import com.norbitltd.spoiwo.model._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
-class ExportService @Inject() (childRepository: ChildRepository, crewRepository: CrewRepository, implicit val ec: ExecutionContext) {
-  private val headerStyle = CellStyle(fillPattern = CellFill.Solid, fillForegroundColor = Color.AquaMarine, font = Font(bold = true))
+class ExportService @Inject()(childRepository: ChildRepository,
+                              crewRepository: CrewRepository,
+                              implicit val ec: ExecutionContext) {
+  private val headerStyle = CellStyle(fillPattern = CellFill.Solid,
+                                      fillForegroundColor = Color.AquaMarine,
+                                      font = Font(bold = true))
 
   def childSheet(implicit tenant: Tenant): Future[Sheet] = {
     childRepository.findAll.map { children =>
@@ -24,10 +28,14 @@ class ExportService @Inject() (childRepository: ChildRepository, crewRepository:
           child.entity.legacyAddress.zipCode.map(_.toString).getOrElse(""),
           child.entity.legacyAddress.city.getOrElse(""),
           child.entity.legacyContact.email.mkString(", "),
-          child.entity.legacyContact.phone.map { phoneContact =>
-            phoneContact.phoneNumber + phoneContact.comment.map(x => s" ($x)").getOrElse("") +
-              phoneContact.kind.map(x => s" ($x)").getOrElse("")
-          }.mkString(", ")
+          child.entity.legacyContact.phone
+            .map { phoneContact =>
+              phoneContact.phoneNumber + phoneContact.comment
+                .map(x => s" ($x)")
+                .getOrElse("") +
+                phoneContact.kind.map(x => s" ($x)").getOrElse("")
+            }
+            .mkString(", ")
         )
       }
 
@@ -70,10 +78,14 @@ class ExportService @Inject() (childRepository: ChildRepository, crewRepository:
           crewMember.entity.address.city.getOrElse(""),
           crewMember.entity.bankAccount.getOrElse(""),
           crewMember.entity.contact.email.mkString("\n"),
-          crewMember.entity.contact.phone.map { phoneContact =>
-            phoneContact.phoneNumber + phoneContact.comment.map(x => s" ($x)").getOrElse("") +
-              phoneContact.kind.map(x => s" ($x)").getOrElse("")
-          }.mkString(", ")
+          crewMember.entity.contact.phone
+            .map { phoneContact =>
+              phoneContact.phoneNumber + phoneContact.comment
+                .map(x => s" ($x)")
+                .getOrElse("") +
+                phoneContact.kind.map(x => s" ($x)").getOrElse("")
+            }
+            .mkString(", ")
         )
       }
 

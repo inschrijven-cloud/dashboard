@@ -11,7 +11,8 @@ object JsonFormats {
 
   implicit val dayDateFormat = Json.format[DayDate]
   implicit val singleAttendanceFormat = Json.format[SingleAttendance]
-  implicit val contactPersonRelationshipFormat = Json.format[ContactPersonRelationship]
+  implicit val contactPersonRelationshipFormat =
+    Json.format[ContactPersonRelationship]
   implicit val dayAttendancesFormat = Json.format[DayAttendance]
   implicit val relativeTimeFormat = Json.format[RelativeTime]
   implicit val addressFormat = Json.format[Address]
@@ -37,55 +38,68 @@ object JsonFormats {
   implicit val shiftKindFormat: Format[ShiftKind] = new Format[ShiftKind] {
     override def writes(o: ShiftKind): JsValue = JsString(o.mnemonic)
 
-    override def reads(json: JsValue): JsResult[ShiftKind] = json.validate[String].map(ShiftKind.apply)
+    override def reads(json: JsValue): JsResult[ShiftKind] =
+      json.validate[String].map(ShiftKind.apply)
   }
 
   private val shiftWrites: Writes[Shift] = (
     (JsPath \ "id").write[String] and
-    (JsPath \ "price").write[Price] and
-    (JsPath \ "childrenCanBePresent").write[Boolean] and
-    (JsPath \ "crewCanBePresent").write[Boolean] and
-    (JsPath \ "kind").write[ShiftKind] and
-    (JsPath \ "location").writeNullable[String] and
-    (JsPath \ "description").writeNullable[String] and
-    (JsPath \ "startAndEnd").writeNullable[StartAndEndTime]
+      (JsPath \ "price").write[Price] and
+      (JsPath \ "childrenCanBePresent").write[Boolean] and
+      (JsPath \ "crewCanBePresent").write[Boolean] and
+      (JsPath \ "kind").write[ShiftKind] and
+      (JsPath \ "location").writeNullable[String] and
+      (JsPath \ "description").writeNullable[String] and
+      (JsPath \ "startAndEnd").writeNullable[StartAndEndTime]
   )(unlift(Shift.unapply))
 
   private val shiftReads: Reads[Shift] = (
     (JsPath \ "id").read[String] and
-    (JsPath \ "price").read[Price] and
-    (JsPath \ "childrenCanBePresent").read[Boolean] and
-    (JsPath \ "crewCanBePresent").read[Boolean] and
-    (JsPath \ "kind").read[ShiftKind] and
-    (JsPath \ "location").readNullable[String] and
-    (JsPath \ "description").readNullable[String] and
-    (JsPath \ "startAndEnd").readNullable[StartAndEndTime]
+      (JsPath \ "price").read[Price] and
+      (JsPath \ "childrenCanBePresent").read[Boolean] and
+      (JsPath \ "crewCanBePresent").read[Boolean] and
+      (JsPath \ "kind").read[ShiftKind] and
+      (JsPath \ "location").readNullable[String] and
+      (JsPath \ "description").readNullable[String] and
+      (JsPath \ "startAndEnd").readNullable[StartAndEndTime]
   )(Shift.apply _)
 
   implicit val shiftFormat: Format[Shift] = Format(shiftReads, shiftWrites)
 
   implicit val dayFormat = Json.format[Day]
 
-  implicit def entityWithIdWrites[ID, T](implicit idWrites: Writes[ID], entityWrites: Writes[T]): Writes[EntityWithId[ID, T]] = new Writes[EntityWithId[ID, T]] {
-    override def writes(o: EntityWithId[ID, T]): JsValue = {
-      Json.obj("id" -> Json.toJson(o.id)(idWrites)) ++ Json.toJson(o.entity)(entityWrites).as[JsObject]
+  implicit def entityWithIdWrites[ID, T](
+      implicit idWrites: Writes[ID],
+      entityWrites: Writes[T]): Writes[EntityWithId[ID, T]] = {
+    new Writes[EntityWithId[ID, T]] {
+      override def writes(o: EntityWithId[ID, T]): JsValue = {
+        Json.obj("id" -> Json.toJson(o.id)(idWrites)) ++ Json
+          .toJson(o.entity)(entityWrites)
+          .as[JsObject]
+      }
     }
   }
 
-  implicit def entityWithIdReads[ID, T](implicit idReads: Reads[ID], entityReads: Reads[T]) = new Reads[EntityWithId[ID, T]] {
-    override def reads(json: JsValue): JsResult[EntityWithId[ID, T]] = {
-      val idResult = (json \ "id").validate[ID]
-      val entityResult = json.validate[JsObject].map(_ - "id").flatMap(_.validate[T](entityReads))
+  implicit def entityWithIdReads[ID, T](implicit idReads: Reads[ID],
+                                        entityReads: Reads[T]) =
+    new Reads[EntityWithId[ID, T]] {
+      override def reads(json: JsValue): JsResult[EntityWithId[ID, T]] = {
+        val idResult = (json \ "id").validate[ID]
+        val entityResult = json
+          .validate[JsObject]
+          .map(_ - "id")
+          .flatMap(_.validate[T](entityReads))
 
-      for {
-        id <- idResult
-        entity <- entityResult
-      } yield EntityWithId(id, entity)
+        for {
+          id <- idResult
+          entity <- entityResult
+        } yield EntityWithId(id, entity)
+      }
     }
-  }
 
   implicit val dayWithIdWrites = entityWithIdWrites[Day.Id, Day]
   implicit val childWithIdWrites = entityWithIdWrites[Child.Id, Child]
-  implicit val contactPersonWithIdWrites = entityWithIdWrites[ContactPerson.Id, ContactPerson]
+  implicit val contactPersonWithIdWrites =
+    entityWithIdWrites[ContactPerson.Id, ContactPerson]
   implicit val crewWithIdWrites = entityWithIdWrites[Crew.Id, Crew]
 }

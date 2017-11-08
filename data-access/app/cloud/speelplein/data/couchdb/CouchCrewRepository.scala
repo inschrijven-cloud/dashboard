@@ -3,20 +3,24 @@ package cloud.speelplein.data.couchdb
 import javax.inject.Inject
 
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.data.{ CrewRepository, PlayJsonWriterUpickleCompat }
+import cloud.speelplein.data.{CrewRepository, PlayJsonWriterUpickleCompat}
 import cloud.speelplein.data.util.ScalazExtensions.PimpedScalazTask
-import upickle.default.{ Reader, Writer }
+import upickle.default.{Reader, Writer}
 import cloud.speelplein.models._
 import cloud.speelplein.models.Crew.Id
 import cloud.speelplein.models.JsonFormats._
-import cloud.speelplein.data.{ CrewRepository, PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat }
-import cloud.speelplein.models.{ Crew, Tenant }
-import com.ibm.couchdb.{ CouchDoc, MappedDocType, TypeMapping }
+import cloud.speelplein.data.{
+  CrewRepository,
+  PlayJsonReaderUpickleCompat,
+  PlayJsonWriterUpickleCompat
+}
+import cloud.speelplein.models.{Crew, Tenant}
+import com.ibm.couchdb.{CouchDoc, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ Future, Promise }
-import scalaz.{ -\/, \/- }
+import scala.concurrent.{Future, Promise}
+import scalaz.{-\/, \/-}
 
 object CouchCrewRepository {
   val crewKind = "type/crew/v1"
@@ -25,28 +29,46 @@ object CouchCrewRepository {
   implicit val crewWriter: Writer[Crew] = new PlayJsonWriterUpickleCompat[Crew]
 }
 
-class CouchCrewRepository @Inject() (couchDatabase: CouchDatabase) extends CrewRepository with StrictLogging {
+class CouchCrewRepository @Inject()(couchDatabase: CouchDatabase)
+    extends CrewRepository
+    with StrictLogging {
   import CouchCrewRepository._
 
-  private def db(tenant: Tenant) = couchDatabase.getDb(TypeMapping(classOf[Crew] -> CouchCrewRepository.crewKind), tenant)
+  private def db(tenant: Tenant) =
+    couchDatabase.getDb(
+      TypeMapping(classOf[Crew] -> CouchCrewRepository.crewKind),
+      tenant)
 
-  override def findById(id: Id)(implicit tenant: Tenant): Future[Option[EntityWithId[Id, Crew]]] = findAll.map(_.find(_.id == id))
+  override def findById(id: Id)(
+      implicit tenant: Tenant): Future[Option[EntityWithId[Id, Crew]]] =
+    findAll.map(_.find(_.id == id))
 
-  override def findAll(implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Crew]]] = {
+  override def findAll(
+      implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Crew]]] = {
     db(tenant).docs.getMany
       .byType[String]("all-contactperson", "default", MappedDocType(crewKind))
-      .includeDocs[Crew].build.query.toFuture
+      .includeDocs[Crew]
+      .build
+      .query
+      .toFuture
       .map(res => res.getDocs.map(doc => EntityWithId(doc._id, doc.doc)))
   }
 
-  override def insert(id: Crew.Id, crewMember: Crew)(implicit tenant: Tenant): Future[Crew.Id] = db(tenant).docs.create(crewMember, id).toFuture.map(_.id)
+  override def insert(id: Crew.Id, crewMember: Crew)(
+      implicit tenant: Tenant): Future[Crew.Id] =
+    db(tenant).docs.create(crewMember, id).toFuture.map(_.id)
 
-  override def count(implicit tenant: Tenant): Future[Int] = findAll.map(_.length)
+  override def count(implicit tenant: Tenant): Future[Int] =
+    findAll.map(_.length)
 
-  override def update(id: Id, crewMember: Crew)(implicit tenant: Tenant): Future[Unit] = {
+  override def update(id: Id, crewMember: Crew)(
+      implicit tenant: Tenant): Future[Unit] = {
     for {
       currentRev <- db(tenant).docs.get[Crew](id).toFuture.map(_._rev)
-      res <- db(tenant).docs.update[Crew](CouchDoc(crewMember, crewKind, _id = id, _rev = currentRev)).toFuture
+      res <- db(tenant).docs
+        .update[Crew](
+          CouchDoc(crewMember, crewKind, _id = id, _rev = currentRev))
+        .toFuture
     } yield { () }
   }
 

@@ -5,8 +5,8 @@ object ContactPerson {
 }
 
 case class ContactPerson(
-  firstName: String,
-  lastName: String,
-  address: Address,
-  phone: Seq[PhoneContact]
+    firstName: String,
+    lastName: String,
+    address: Address,
+    phone: Seq[PhoneContact]
 )

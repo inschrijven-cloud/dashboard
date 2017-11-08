@@ -7,8 +7,8 @@ object Day {
 }
 
 case class Day(
-  date: DayDate,
-  shifts: Seq[Shift]
+    date: DayDate,
+    shifts: Seq[Shift]
 )
 
 object Shift {
@@ -58,10 +58,10 @@ object Shift {
 
     def apply(mnemonic: String): ShiftKind = mnemonic match {
       case "VRO" => Early
-      case "VM" => Morning
+      case "VM"  => Morning
       case "MID" => Noon
-      case "NM" => Afternoon
-      case "AV" => Evening
+      case "NM"  => Afternoon
+      case "AV"  => Evening
       case "EXT" => External
       case "LEI" => CrewActivity
     }
@@ -80,13 +80,18 @@ case class Shift(
 ) extends Ordered[Shift] {
 
   override def compare(that: Shift): Int = {
-    val defaultStartEnd = StartAndEndTime(RelativeTime(23, 59), RelativeTime(23, 59))
-    this.startAndEnd.getOrElse(defaultStartEnd).start.compare(that.startAndEnd.getOrElse(defaultStartEnd).start)
+    val defaultStartEnd =
+      StartAndEndTime(RelativeTime(23, 59), RelativeTime(23, 59))
+    this.startAndEnd
+      .getOrElse(defaultStartEnd)
+      .start
+      .compare(that.startAndEnd.getOrElse(defaultStartEnd).start)
   }
 }
 
 case class RelativeTime(hour: Int, minute: Int) extends Ordered[RelativeTime] {
-  override def compare(that: RelativeTime): Int = this.hour * 60 + this.minute - (that.hour * 60 + that.minute)
+  override def compare(that: RelativeTime): Int =
+    this.hour * 60 + this.minute - (that.hour * 60 + that.minute)
 }
 
 case class StartAndEndTime(start: RelativeTime, end: RelativeTime)

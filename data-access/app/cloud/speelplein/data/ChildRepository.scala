@@ -9,7 +9,8 @@ import scala.concurrent.Future
 
 trait ChildRepository {
 
-  def findById(id: Id)(implicit tenant: Tenant): Future[Option[EntityWithId[Id, Child]]]
+  def findById(id: Id)(
+      implicit tenant: Tenant): Future[Option[EntityWithId[Id, Child]]]
 
   def findAll(implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Child]]]
 
@@ -21,5 +22,6 @@ trait ChildRepository {
 
   def delete(id: Id)(implicit tenant: Tenant): Future[Unit] // TODO Correct? What do we want when id does not exist?
 
-  def setMerged(retiredId: Id, absorpedIntoId: Id)(implicit tenant: Tenant): Future[Unit]
+  def setMerged(retiredId: Id, absorpedIntoId: Id)(
+      implicit tenant: Tenant): Future[Unit]
 }
