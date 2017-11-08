@@ -1,13 +1,13 @@
 import cloud.speelplein.dashboard.controllers.actions._
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
-import cloud.speelplein.dashboard.controllers.actions.{DomainAction, JwtAuthorizationBuilderImpl, JwtRequest, JwtVerifyAction}
+import cloud.speelplein.dashboard.controllers.actions.{ DomainAction, JwtAuthorizationBuilderImpl, JwtRequest, JwtVerifyAction }
 import cloud.speelplein.dashboard.services.PdiJwtVerificationService
 import cloud.speelplein.models.TenantMetadata
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.EitherValues
 import org.scalatestplus.play.PlaySpec
 import play.api
-import play.api.{Configuration, mvc}
+import play.api.{ Configuration, mvc }
 import play.api.libs.json.Json
 import play.api.mvc.Results
 import play.api.test.FakeRequest
@@ -15,7 +15,7 @@ import play.api.mvc._
 import play.api.test._
 import play.api.test.Helpers._
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 

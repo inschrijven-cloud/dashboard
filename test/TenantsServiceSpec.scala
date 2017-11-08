@@ -1,6 +1,6 @@
-import cloud.speelplein.data.couchdb.CouchTenantsService
-import cloud.speelplein.models.Tenant
 import cloud.speelplein.data.TenantDatabaseService
+import cloud.speelplein.data.couchdb.CouchTenantsService
+import cloud.speelplein.models.{ DbName, Tenant }
 import cloud.speelplein.models.Tenant
 import org.scalamock.scalatest.MockFactory
 

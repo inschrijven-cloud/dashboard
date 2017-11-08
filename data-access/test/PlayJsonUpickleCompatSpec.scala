@@ -1,5 +1,5 @@
 import cloud.speelplein.data.PlayJsonWriterUpickleCompat
-import cloud.speelplein.data.{PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat}
+import cloud.speelplein.data.{ PlayJsonReaderUpickleCompat, PlayJsonWriterUpickleCompat }
 import org.scalatest._
 import play.api.libs.json._
 import play.api.libs.json.Json._

@@ -7,7 +7,7 @@ import cloud.speelplein.data.TenantsService
 import cloud.speelplein.data.couchdb.CouchDatabase
 import cloud.speelplein.models.Tenant
 import com.ibm.couchdb.Res
-import helpers.{StubCouchDatabase, StubJwtAuthorizationBuilder}
+import helpers.{ StubCouchDatabase, StubJwtAuthorizationBuilder }
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.OneInstancePerTest
 

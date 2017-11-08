@@ -9,7 +9,7 @@ import cloud.speelplein.models.Tenant
 import helpers.StubJwtAuthorizationBuilder
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.{AnyContentAsJson, BodyParsers, Request, Results}
+import play.api.mvc.{ AnyContentAsJson, BodyParsers, Request, Results }
 import play.api.libs.json.Json
 import play.api.test._
 import play.api.test.Helpers._

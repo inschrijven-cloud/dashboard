@@ -6,9 +6,9 @@ import cloud.speelplein.models.Shift.ShiftKind
 import cloud.speelplein.models._
 import cloud.speelplein.dashboard.controllers.actions.DomainAction
 import cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController
-import cloud.speelplein.data.{ChildAttendancesService, ChildRepository}
+import cloud.speelplein.data.{ ChildAttendancesService, ChildRepository }
 import cloud.speelplein.models._
-import helpers.{StubJwtAuthorizationBuilder, UnimplementedDayService}
+import helpers.{ StubJwtAuthorizationBuilder, UnimplementedDayService }
 import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future

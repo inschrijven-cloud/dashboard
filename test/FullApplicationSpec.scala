@@ -18,7 +18,7 @@ class FullApplicationSpec extends PlaySpec with GuiceOneServerPerSuite with Resu
     "work and be able to get heartbeat" in {
       val wsClient = app.injector.instanceOf[WSClient]
       val publicAddress = s"localhost:$port"
-      val url = s"http://$publicAddress/heartbeat"
+      val url = s"http://$publicAddress/api/v1/heartbeat"
       // await is from play.api.test.FutureAwaits
       val response = await(wsClient.url(url).get())
 

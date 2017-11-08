@@ -1,15 +1,13 @@
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.dashboard.controllers.api.ContactPersonApiController
-import cloud.speelplein.models.{PhoneContact, Tenant}
+import cloud.speelplein.models.{ Address, ContactPerson, PhoneContact, Tenant }
 import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.dashboard.controllers.actions.DomainAction
 import cloud.speelplein.dashboard.controllers.api.ContactPersonApiController
 import cloud.speelplein.data.ContactPersonRepository
-import cloud.speelplein.models.{ContactPerson, PhoneContact, Tenant}
 import helpers.StubJwtAuthorizationBuilder
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
-import play.api.mvc.{AnyContentAsJson, BodyParsers, Request, Results}
+import play.api.mvc.{ AnyContentAsJson, BodyParsers, Request, Results }
 import play.api.libs.json.Json
 import play.api.test._
 import play.api.test.Helpers._

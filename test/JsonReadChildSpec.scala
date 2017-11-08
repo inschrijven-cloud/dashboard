@@ -1,5 +1,5 @@
 import cloud.speelplein.models._
-import cloud.speelplein.models.{Address, ContactInfo, PhoneContact}
+import cloud.speelplein.models.{ Address, ContactInfo, PhoneContact }
 import cloud.speelplein.models.JsonFormats.childFormat
 import org.scalatestplus.play._
 import play.api.libs.json.Json

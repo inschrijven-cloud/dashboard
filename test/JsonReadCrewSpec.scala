@@ -1,5 +1,5 @@
 import cloud.speelplein.models._
-import cloud.speelplein.models.{Address, ContactInfo, Crew, PhoneContact}
+import cloud.speelplein.models.{ Address, ContactInfo, Crew, PhoneContact }
 import cloud.speelplein.models.JsonFormats.crewFormat
 
 import scala.concurrent.Future

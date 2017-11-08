@@ -1,12 +1,12 @@
 import cloud.speelplein.EntityWithId
 import cloud.speelplein.dashboard.controllers.api.DayApiController
 import cloud.speelplein.data.ChildRepository
-import cloud.speelplein.models.Shift.{Id, ShiftKind}
+import cloud.speelplein.models.Shift.{ Id, ShiftKind }
 import cloud.speelplein.models._
 import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.dashboard.controllers.actions.DomainAction
 import cloud.speelplein.dashboard.controllers.api.DayApiController
-import cloud.speelplein.data.{ChildRepository, DayService}
+import cloud.speelplein.data.{ ChildRepository, DayService }
 import cloud.speelplein.models._
 import helpers.StubJwtAuthorizationBuilder
 

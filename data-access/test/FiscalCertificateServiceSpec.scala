@@ -1,9 +1,9 @@
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.data.{ChildAttendancesService, ChildRepository, FiscalCertificateService}
+import cloud.speelplein.data.{ ChildAttendancesService, ChildRepository, FiscalCertificateService }
 import cloud.speelplein.models.Child.Id
 import cloud.speelplein.models.Shift.ShiftKind
 import cloud.speelplein.models._
-import cloud.speelplein.data.{ChildAttendancesService, ChildRepository, DayService, FiscalCertificateService}
+import cloud.speelplein.data.{ ChildAttendancesService, ChildRepository, DayService, FiscalCertificateService }
 import cloud.speelplein.models._
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill

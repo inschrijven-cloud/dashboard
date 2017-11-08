@@ -1,7 +1,7 @@
 import cloud.speelplein.EntityWithId
-import cloud.speelplein.data.{ChildRepository, ExportService}
+import cloud.speelplein.data.{ ChildRepository, ExportService }
 import cloud.speelplein.models._
-import cloud.speelplein.data.{ChildRepository, CrewRepository, ExportService}
+import cloud.speelplein.data.{ ChildRepository, CrewRepository, ExportService }
 import cloud.speelplein.models._
 import com.norbitltd.spoiwo.model._
 import com.norbitltd.spoiwo.model.enums.CellFill
@@ -9,7 +9,7 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration._
 
 class ExportServiceSpec extends WordSpec with Matchers with MockFactory {
