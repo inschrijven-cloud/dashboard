@@ -39,7 +39,8 @@ class CouchDbConfigImpl @Inject()(config: Configuration) extends CouchDbConfig {
   val pass: Option[String] = config.getOptional[String]("couchdb.server.pass")
 }
 
-class RemoteDbConfigImp @Inject()(config: Configuration) extends CouchDbConfig {
+class RemoteDbConfigImpl @Inject()(config: Configuration)
+    extends CouchDbConfig {
   val host: String = config.get[String]("couchdb.remote.host")
   val port: Int = config.get[Int]("couchdb.remote.port")
   val https: Boolean =

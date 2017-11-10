@@ -11,7 +11,7 @@ import cloud.speelplein.dashboard.controllers.api.TenantsController.TenantBinder
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.TenantsService
-import cloud.speelplein.data.couchdb.RemoteDbConfigImp
+import cloud.speelplein.data.couchdb.RemoteDbConfigImpl
 import cloud.speelplein.models.JsonFormats.tenantFormat
 import cloud.speelplein.models.Tenant
 import play.api.libs.json.{Json, OFormat}
@@ -30,7 +30,7 @@ class TenantsController @Inject()(
     jwtAuthorizationBuilder: JwtAuthorizationBuilder,
     globalDomainOnlyAction: GlobalDomainOnlyAction,
     tenantsService: TenantsService,
-    remoteCouchDB: RemoteDbConfigImp
+    remoteCouchDB: RemoteDbConfigImpl
 )(implicit ec: ExecutionContext)
     extends ApiController {
   private def action(per: Permission) =
