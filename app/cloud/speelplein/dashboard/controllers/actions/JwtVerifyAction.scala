@@ -112,13 +112,17 @@ class JwtAuthorizationBuilderImpl @Inject()(
               .intersect(permissions.map(_.id))
               .nonEmpty || request.tenantData.roles.intersect(roles).nonEmpty) {
           Future.successful(Right(request))
-        } else
+        } else {
+          implicit val permissionFormat = Json.format[Permission]
           Future.successful(
             Left(Unauthorized(Json.obj(
               "status" -> "error",
               "reason" -> "You do not have the necessary permissions to execute this action",
-              "details" -> s"You need the have one of the following roles: $roles or one of the following permissions: $permissions"
+              "details" -> s"You need the have one of the expected roles OR one of the expected permissions",
+              "needOneOfTheseRoles" -> roles,
+              "needOneOfThesePermissions" -> permissions
             ))))
+        }
       }
     }
   }
