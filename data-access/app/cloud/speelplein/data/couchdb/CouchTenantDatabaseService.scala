@@ -26,25 +26,10 @@ class CouchTenantDatabaseService @Inject()(
     extends TenantDatabaseService
     with StrictLogging {
 
+  private val client = couchdbConfig.client
+
   implicit val replicationDocumentForm: Format[ReplicationDocument] =
     Json.format[ReplicationDocument]
-
-  private val client = (for {
-    user <- couchdbConfig.user
-    pass <- couchdbConfig.pass
-  } yield {
-    CouchDb(
-      couchdbConfig.host,
-      couchdbConfig.port,
-      https = couchdbConfig.https,
-      user,
-      pass
-    )
-  }) getOrElse CouchDb(
-    couchdbConfig.host,
-    couchdbConfig.port,
-    https = couchdbConfig.https
-  )
 
   override def all: Future[Seq[DbName]] =
     client.dbs.getAll.unsafeToFuture().map(_.map(DbName.create(_).get))

@@ -102,4 +102,5 @@ object JsonFormats {
   implicit val contactPersonWithIdWrites =
     entityWithIdWrites[ContactPerson.Id, ContactPerson]
   implicit val crewWithIdWrites = entityWithIdWrites[Crew.Id, Crew]
+  implicit val configWithIdWrites = entityWithIdWrites[String, ConfigWrapper]
 }

@@ -80,6 +80,18 @@ object Permission {
   val createTenant =
     Permission("superuser:create-tenant", "Nieuwe organisaties aanmaken")
 
+  val listAllConfig =
+    Permission("superuser:list-all-config", "Alle configuratie oplijsten")
+
+  val initializeAllConfigDb =
+    Permission("superuser:init-config-db",
+               "De configuratiedatabase initialiseren")
+
+  val createConfig =
+    Permission(
+      "superuser:create-config",
+      "Nieuwe configuratiedocumenten voor gebruikers aanmaken en updaten")
+
   val all: Map[String, Seq[Permission]] = Map(
     "Kinderen" -> Seq(childRetrieve,
                       childUpdate,
@@ -107,7 +119,10 @@ object Permission {
                             listTenants,
                             initTenantDbs,
                             syncTenantDb,
-                            createTenant)
+                            createTenant,
+                            listAllConfig,
+                            initializeAllConfigDb,
+                            createConfig)
   )
 
   val allFlat

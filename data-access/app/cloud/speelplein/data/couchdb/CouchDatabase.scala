@@ -17,6 +17,8 @@ trait CouchDbConfig {
   val user: Option[String]
   val pass: Option[String]
 
+  val client: CouchDb
+
   def uri: Uri = {
     val uri = Uri.empty
       .withScheme(if (https) "https" else "http")
@@ -37,6 +39,23 @@ class CouchDbConfigImpl @Inject()(config: Configuration) extends CouchDbConfig {
     config.getOptional[Boolean]("couchdb.server.https").getOrElse(true)
   val user: Option[String] = config.getOptional[String]("couchdb.server.user")
   val pass: Option[String] = config.getOptional[String]("couchdb.server.pass")
+
+  val client: CouchDb = (for {
+    user <- user
+    pass <- pass
+  } yield {
+    CouchDb(
+      host,
+      port,
+      https,
+      user,
+      pass
+    )
+  }) getOrElse CouchDb(
+    host,
+    port,
+    https
+  )
 }
 
 class RemoteDbConfigImpl @Inject()(config: Configuration)
@@ -47,6 +66,23 @@ class RemoteDbConfigImpl @Inject()(config: Configuration)
     config.getOptional[Boolean]("couchdb.remote.https").getOrElse(true)
   val user: Option[String] = config.getOptional[String]("couchdb.remote.user")
   val pass: Option[String] = config.getOptional[String]("couchdb.remote.pass")
+
+  val client: CouchDb = (for {
+    user <- user
+    pass <- pass
+  } yield {
+    CouchDb(
+      host,
+      port,
+      https,
+      user,
+      pass
+    )
+  }) getOrElse CouchDb(
+    host,
+    port,
+    https
+  )
 }
 
 trait CouchDatabase {
