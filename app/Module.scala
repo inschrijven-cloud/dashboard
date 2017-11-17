@@ -1,21 +1,15 @@
-import cloud.speelplein.dashboard.controllers.actions.{
-  JwtAuthorizationBuilder,
-  JwtAuthorizationBuilderImpl
-}
-import cloud.speelplein.dashboard.services._
-import cloud.speelplein.data.couchdb._
 import cloud.speelplein.data.util.{UuidService, UuidServiceImpl}
-import cloud.speelplein.data._
 import cloud.speelplein.dashboard.controllers.actions.{
   JwtAuthorizationBuilder,
   JwtAuthorizationBuilderImpl
 }
-import cloud.speelplein.dashboard.services.{
-  JwtVerificationService,
-  PdiJwtVerificationService
-}
 import cloud.speelplein.data.couchdb._
 import cloud.speelplein.data._
+import cloud.speelplein.data.auth0.{
+  Auth0Configuration,
+  Auth0ConfigurationFromConfigFile,
+  Auth0UserService
+}
 import com.google.inject.AbstractModule
 
 @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
@@ -39,5 +33,8 @@ class Module extends AbstractModule {
     bind(classOf[CouchDbConfig]).to(classOf[CouchDbConfigImpl])
     bind(classOf[TenantsService]).to(classOf[CouchTenantsService])
     bind(classOf[CouchDbConfig]).to(classOf[CouchDbConfigImpl])
+    bind(classOf[UserService]).to(classOf[Auth0UserService])
+    bind(classOf[Auth0Configuration])
+      .to(classOf[Auth0ConfigurationFromConfigFile])
   }
 }

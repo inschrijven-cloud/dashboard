@@ -1,6 +1,6 @@
-# Home page
-GET           /                                                     cloud.speelplein.dashboard.controllers.ApplicationController.heartbeat
+# Heartbeat / status
 
+GET           /                                                     cloud.speelplein.dashboard.controllers.ApplicationController.heartbeat
 GET           /api/v1/heartbeat                                     cloud.speelplein.dashboard.controllers.ApplicationController.heartbeat
 
 # Day API
@@ -65,11 +65,9 @@ GET           /api/v1/files/export/children                         cloud.speelp
 GET           /api/v1/files/export/children/medical                 cloud.speelplein.dashboard.controllers.api.ExportController.downloadChildrenWitbExtraMedicalAttention
 GET           /api/v1/files/export/crew                             cloud.speelplein.dashboard.controllers.api.ExportController.downloadCrew
 
-# Authorization and authentication API
+### Superadmin API
 
-GET           /api/v1/auth/permissions/all                          cloud.speelplein.dashboard.controllers.api.AuthController.allPermissions
-
-# Superadmin API
+# Tenants
 
 GET           /api/v1/tenants                                       cloud.speelplein.dashboard.controllers.api.TenantsController.list
 POST          /api/v1/tenants/new                                   cloud.speelplein.dashboard.controllers.api.TenantsController.create
@@ -78,14 +76,27 @@ POST          /api/v1/tenants/:name/generate-design-docs            cloud.speelp
 POST          /api/v1/tenants/:name/sync-to                         cloud.speelplein.dashboard.controllers.api.TenantsController.syncTo(name)
 POST          /api/v1/tenants/:name/sync-from                       cloud.speelplein.dashboard.controllers.api.TenantsController.syncFrom(name)
 
+# Config
+
 GET           /api/v1/config/all                                    cloud.speelplein.dashboard.controllers.api.FrontendConfigController.getAllConfig
 POST          /api/v1/config/generate-design-docs                   cloud.speelplein.dashboard.controllers.api.FrontendConfigController.generateDesignDocs
 POST          /api/v1/config.json/:domain                           cloud.speelplein.dashboard.controllers.api.FrontendConfigController.insertConfigDocument(domain: String)
 PUT           /api/v1/config.json/:domain                           cloud.speelplein.dashboard.controllers.api.FrontendConfigController.updateConfigDocument(domain: String)
 
+# Users, roles and permissions (authorization and authentication)
 
+GET           /api/v1/auth/user                                     cloud.speelplein.dashboard.controllers.api.UserApiController.getAll
+GET           /api/v1/auth/user/:id                                 cloud.speelplein.dashboard.controllers.api.UserApiController.getById(id: String)
+PUT           /api/v1/auth/user/:userId                             cloud.speelplein.dashboard.controllers.api.UserApiController.getTenantData(userId: String)
+PUT           /api/v1/auth/user/:userId/:tenant                     cloud.speelplein.dashboard.controllers.api.UserApiController.putTenantData(userId: String, tenant: String)
+GET           /api/v1/auth/permissions                              cloud.speelplein.dashboard.controllers.api.AuthController.allPermissions
+
+
+# Databases
 
 GET           /api/v1/databases                                     cloud.speelplein.dashboard.controllers.api.DatabaseController.list
+
+### Other routes
 
 # Dashboard (frontend) config
 

@@ -3,8 +3,8 @@ package cloud.speelplein.dashboard.controllers.actions
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
-import cloud.speelplein.models.JsonFormats.auth0AppMetadata
-import cloud.speelplein.dashboard.services.JwtVerificationService
+import cloud.speelplein.data.JwtVerificationService
+import cloud.speelplein.models.JsonFormats.auth0AppMetadataFormat
 import cloud.speelplein.models.{Auth0AppMetadata, Tenant, TenantMetadata}
 import play.api.libs.json.Json
 import play.api.mvc._

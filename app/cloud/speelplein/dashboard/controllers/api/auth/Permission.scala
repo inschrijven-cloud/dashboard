@@ -92,6 +92,17 @@ object Permission {
       "superuser:create-config",
       "Nieuwe configuratiedocumenten voor gebruikers aanmaken en updaten")
 
+  val userRetrieve =
+    Permission("user:list", "Alle gebruikers en hun gebruikersdata oplijsten")
+
+  val userPutTenantData = Permission(
+    "users:put-data",
+    "Gebruikersdata voor de huidige organisatie aanmaken en aanpassen")
+
+  val userPutTenantDataAnyDomain = Permission(
+    "users:put-data",
+    "Gebruikersdata voor een willekeurige organisatie aanmaken en aanpassen")
+
   val all: Map[String, Seq[Permission]] = Map(
     "Kinderen" -> Seq(childRetrieve,
                       childUpdate,
@@ -122,7 +133,12 @@ object Permission {
                             createTenant,
                             listAllConfig,
                             initializeAllConfigDb,
-                            createConfig)
+                            createConfig,
+                            userPutTenantDataAnyDomain),
+    "Gebruikers" -> Seq(
+      userRetrieve,
+      userPutTenantData
+    )
   )
 
   val allFlat

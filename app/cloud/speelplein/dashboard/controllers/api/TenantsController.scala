@@ -35,7 +35,7 @@ class TenantsController @Inject()(
     extends ApiController {
   private def action(per: Permission) =
     Action andThen domainAction andThen globalDomainOnlyAction andThen jwtAuthorizationBuilder
-      .authenticate(listTenants)
+      .authenticate(per)
 
   def list: Action[AnyContent] = action(listTenants).async { req =>
     tenantsService.all.map(all => Ok(Json.toJson(all)))

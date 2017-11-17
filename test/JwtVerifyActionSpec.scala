@@ -1,12 +1,6 @@
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  JwtVerifyAction
-}
-import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  JwtVerifyAction
-}
-import cloud.speelplein.dashboard.services.PdiJwtVerificationService
+import cloud.speelplein.dashboard.controllers.actions.{DomainAction, JwtVerifyAction}
+import cloud.speelplein.dashboard.controllers.actions.{DomainAction, JwtVerifyAction}
+import cloud.speelplein.data.PdiJwtVerificationService
 import cloud.speelplein.models.TenantMetadata
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.EitherValues

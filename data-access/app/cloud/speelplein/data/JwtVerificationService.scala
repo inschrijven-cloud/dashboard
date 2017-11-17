@@ -1,4 +1,4 @@
-package cloud.speelplein.dashboard.services
+package cloud.speelplein.data
 
 import javax.inject.Inject
 

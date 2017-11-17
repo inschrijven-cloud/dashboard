@@ -38,7 +38,6 @@ libraryDependencies ++= Seq(
   filters,
   guice,
   "com.typesafe.play" %% "play-json" % playVersion,
-  "com.pauldijou" %% "jwt-core" % "0.14.1",
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % "test",
   "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
 )
@@ -62,11 +61,13 @@ lazy val dataAccess = Project("data-access", file("data-access"))
   .settings(
     libraryDependencies ++= Seq(
       ws,
+      ehcache,
       "com.ibm" %% "couchdb-scala" % "0.7.2",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
       "com.norbitltd" % "spoiwo" % "1.0.6",
       "io.lemonlabs" %% "scala-uri" % "0.5.0",
       "io.verizon.delorean" %% "core" % "1.2.40-scalaz-7.2",
+      "com.pauldijou" %% "jwt-core" % "0.14.1",
       "org.scalatest" %% "scalatest" % "3.0.3" % "test",
       "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test"
     ),

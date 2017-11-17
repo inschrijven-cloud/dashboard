@@ -1,5 +1,7 @@
 package cloud.speelplein.models
 
+import java.time.Instant
+
 import cloud.speelplein.EntityWithId
 import cloud.speelplein.models.Shift.ShiftKind
 import play.api.libs.functional.syntax._
@@ -33,7 +35,7 @@ object JsonFormats {
   implicit val tenantFormat = Json.format[Tenant]
 
   implicit val appMetadataTenant = Json.format[TenantMetadata]
-  implicit val auth0AppMetadata = Json.format[Auth0AppMetadata]
+  implicit val auth0AppMetadataFormat = Json.format[Auth0AppMetadata]
 
   implicit val shiftKindFormat: Format[ShiftKind] = new Format[ShiftKind] {
     override def writes(o: ShiftKind): JsValue = JsString(o.mnemonic)
@@ -79,6 +81,20 @@ object JsonFormats {
       }
     }
   }
+
+  implicit val tenantUserDataWrites = Json.format[TenantUserData]
+
+  implicit val defaultUserWrites = Json.writes[User]
+  implicit val auth0UserReads: Reads[User] = (
+    (JsPath \ "user_id").read[String] and
+      (JsPath \ "name").read[String] and
+      (JsPath \ "email").read[String] and
+      (JsPath \ "app_metadata" \ "tenants").read[Seq[TenantUserData]] and
+      (JsPath \ "logins_count").read[Int] and
+      (JsPath \ "last_login").read[Instant] and
+      (JsPath \ "picture").readNullable[String] and
+      (JsPath \ "picture_large").readNullable[String]
+  )(User.apply _)
 
   implicit def entityWithIdReads[ID, T](implicit idReads: Reads[ID],
                                         entityReads: Reads[T]) =

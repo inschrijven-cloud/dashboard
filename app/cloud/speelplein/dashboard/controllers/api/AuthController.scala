@@ -15,6 +15,9 @@ class AuthController @Inject()(domainAction: DomainAction)(
     extends ApiController {
   def allPermissions: Action[AnyContent] = (Action andThen domainAction) {
     req =>
-      Ok(Json.toJson(Permission.all))
+      Ok(Json.toJson(Permission.all.map {
+        case (categoryName, values) =>
+          Json.obj("categoryName" -> categoryName, "permissions" -> values)
+      }))
   }
 }

@@ -14,6 +14,9 @@ resolvers += Resolver.typesafeRepo("releases")
 
 resolvers += Classpaths.sbtPluginReleases
 
+resolvers += Resolver.bintrayIvyRepo("sbt", "sbt-plugin-releases")
+
+
 // scoverage repo on Bintray
 resolvers += Resolver.url("scoverage-bintray", url("https://dl.bintray.com/sksamuel/sbt-plugins/"))(Resolver.ivyStylePatterns)
 

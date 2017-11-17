@@ -28,8 +28,8 @@ class DomainAction @Inject()(val parser: BodyParsers.Default)(
             Some(new DomainRequest[A](userDomain, tenant, input))
           case _ => None
         }
-        .toRight(
-          BadRequest(Json.obj("status" -> "error",
-                              "reason" -> "Missing 'domain' URL parameter")))
+        .toRight(BadRequest(
+          Json.obj("status" -> "error",
+                   "reason" -> "Missing or invalid 'domain' URL parameter")))
     }
 }
