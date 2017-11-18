@@ -51,8 +51,9 @@ class DomainActionSpec
 
       val eventualResult = controller.all.apply(FakeRequest())
       val body = contentAsJson(eventualResult)
-      body mustBe Json.obj("status" -> "error",
-                           "reason" -> "Missing 'domain' URL parameter")
+      body mustBe Json.obj(
+        "status" -> "error",
+        "reason" -> "Missing or invalid 'domain' URL parameter")
       status(eventualResult) mustBe 400
     }
 

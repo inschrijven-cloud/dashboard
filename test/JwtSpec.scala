@@ -1,4 +1,4 @@
-import cloud.speelplein.data.util.CertParser
+import cloud.speelplein.dashboard.util.CertParser
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtOptions}
 import org.scalatestplus.play._
 

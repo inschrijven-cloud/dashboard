@@ -1,7 +1,6 @@
-import cloud.speelplein.dashboard.controllers.api.TenantsController
-import cloud.speelplein.dashboard.controllers.api.TenantsController.TenantBinder
-import cloud.speelplein.data.TenantsService
 import cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder
+import cloud.speelplein.dashboard.controllers.api.TenantsController.TenantBinder
+import cloud.speelplein.data.UserService
 import cloud.speelplein.dashboard.controllers.api.TenantsController
 import cloud.speelplein.data.TenantsService
 import cloud.speelplein.data.couchdb.CouchDatabase
@@ -59,6 +58,7 @@ class TenantsControllerSpec
     .overrides(bind[TenantsService].toInstance(tenantsService))
     .overrides(bind[JwtAuthorizationBuilder].to[StubJwtAuthorizationBuilder])
     .overrides(bind[CouchDatabase].to[StubCouchDatabase])
+    .overrides(bind(classOf[UserService]).to(mock[UserService]))
     .configure(conf: _*)
     .build()
 

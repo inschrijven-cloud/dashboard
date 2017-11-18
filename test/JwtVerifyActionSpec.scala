@@ -1,5 +1,11 @@
-import cloud.speelplein.dashboard.controllers.actions.{DomainAction, JwtVerifyAction}
-import cloud.speelplein.dashboard.controllers.actions.{DomainAction, JwtVerifyAction}
+import cloud.speelplein.dashboard.controllers.actions.{
+  DomainAction,
+  JwtVerifyAction
+}
+import cloud.speelplein.dashboard.controllers.actions.{
+  DomainAction,
+  JwtVerifyAction
+}
 import cloud.speelplein.data.PdiJwtVerificationService
 import cloud.speelplein.models.TenantMetadata
 import org.scalamock.scalatest.MockFactory
