@@ -11,7 +11,6 @@ import cloud.speelplein.models.JsonFormats.{
 import com.typesafe.scalalogging.StrictLogging
 import play.api.Configuration
 import play.api.cache._
-import play.api.libs.json.{JsObject, Json}
 import play.api.libs.json._
 import play.api.libs.ws.WSClient
 
