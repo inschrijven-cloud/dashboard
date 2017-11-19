@@ -2,7 +2,7 @@ package cloud.speelplein.dashboard.controllers.actions
 
 import javax.inject.Inject
 
-import cloud.speelplein.dashboard.controllers.api.auth.Permission
+import cloud.speelplein.dashboard.controllers.api.auth.{Permission, Role}
 import cloud.speelplein.data.JwtVerificationService
 import cloud.speelplein.models.JsonFormats.auth0AppMetadataFormat
 import cloud.speelplein.models.{Auth0AppMetadata, Tenant, TenantMetadata}
@@ -78,19 +78,11 @@ class JwtVerifyAction @Inject()(
 
 trait JwtAuthorizationBuilder {
   def authenticate(
-      permissions: Seq[Permission],
-      roles: Seq[String]): ActionFunction[DomainRequest, JwtRequest]
-
-  def authenticate(
-      permissions: Seq[Permission]): ActionFunction[DomainRequest, JwtRequest] =
-    authenticate(permissions, Seq.empty)
+      permissions: Seq[Permission]): ActionFunction[DomainRequest, JwtRequest]
 
   def authenticate(
       permission: Permission): ActionFunction[DomainRequest, JwtRequest] =
-    authenticate(Seq(permission), Seq.empty)
-
-  def authenticate(role: String): ActionFunction[DomainRequest, JwtRequest] =
-    authenticate(Seq.empty, Seq(role))
+    authenticate(Seq(permission))
 }
 
 class JwtAuthorizationBuilderImpl @Inject()(
@@ -100,30 +92,39 @@ class JwtAuthorizationBuilderImpl @Inject()(
 )(implicit val ec: ExecutionContext)
     extends JwtAuthorizationBuilder {
 
-  def authenticate(
-      permissions: Seq[Permission],
-      roles: Seq[String]): ActionFunction[DomainRequest, JwtRequest] = {
+  def authenticate(permissions: Seq[Permission])
+    : ActionFunction[DomainRequest, JwtRequest] = {
     jwtVerifyAction andThen new ActionRefiner[JwtRequest, JwtRequest] {
       def executionContext: ExecutionContext = ec
 
       def refine[A](
           request: JwtRequest[A]): Future[Either[Result, JwtRequest[A]]] = {
+
+        val impliedPermissions = request.tenantData.roles
+          .flatMap(Role.parseRoleName)
+          .flatMap(_.impliedPermissions)
+
         if (request.tenantData.permissions
               .intersect(permissions.map(_.id))
-              .nonEmpty || request.tenantData.roles.intersect(roles).nonEmpty) {
+              .nonEmpty || permissions
+              .intersect(impliedPermissions)
+              .nonEmpty) {
           Future.successful(Right(request))
         } else {
+
           implicit val permissionFormat = Json.format[Permission]
+
           Future.successful(
             Left(Unauthorized(Json.obj(
               "status" -> "error",
               "reason" -> "You do not have the necessary permissions to execute this action",
-              "details" -> s"You need the have one of the expected roles OR one of the expected permissions",
+              "details" -> s"You need the have one of the expected permissions OR have a role that implies this permission",
               "debugInfo" -> Json.obj(
-                "needOneOfTheseRoles" -> roles,
+                "tenantName" -> request.tenant.name,
                 "needOneOfThesePermissions" -> permissions,
                 "yourRoles" -> request.tenantData.roles,
-                "yourPermissions" -> request.tenantData.permissions
+                "yourPermissions" -> request.tenantData.permissions,
+                "yourImpliedPermissionsByRole" -> impliedPermissions
               )
             ))))
         }

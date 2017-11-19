@@ -1,5 +1,4 @@
 import cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder
-import cloud.speelplein.dashboard.controllers.api.TenantsController.TenantBinder
 import cloud.speelplein.data.UserService
 import cloud.speelplein.dashboard.controllers.api.TenantsController
 import cloud.speelplein.data.TenantsService
@@ -79,11 +78,8 @@ class TenantsControllerSpec
         app.injector.instanceOf[akka.stream.Materializer]
 
       val resultFut: Future[Result] = controller
-        .create()
-        .apply(
-          FakeRequest("POST", "/blah?domain=global.speelplein.cloud")
-            .withBody[TenantBinder](TenantBinder("test-tenant-name"))
-        )
+        .create("test-tenant-name")
+        .apply(FakeRequest("POST", "/blah?domain=global.speelplein.cloud"))
 
       whenReady(resultFut) { res =>
         res.header.status mustBe 201
@@ -96,9 +92,9 @@ class TenantsControllerSpec
       implicit val materializer =
         app.injector.instanceOf[akka.stream.Materializer]
 
-      val resultFut = controller.create.apply(
-        FakeRequest("POST", "/blah?domain=global.speelplein.cloud")
-          .withBody[TenantBinder](TenantBinder("some-tenant-}{)(*&^%$#@!")))
+      val resultFut = controller
+        .create("some-tenant-}{)(*&^%$#@!")
+        .apply(FakeRequest("POST", "/blah?domain=global.speelplein.cloud"))
 
       whenReady(resultFut) { res =>
         res.header.status mustBe 400

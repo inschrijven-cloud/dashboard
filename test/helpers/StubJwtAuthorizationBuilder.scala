@@ -18,7 +18,7 @@ import scala.concurrent.ExecutionContext.Implicits._
 
 /** Doesn't perform authorization, lets every request pass */
 class StubJwtAuthorizationBuilder extends JwtAuthorizationBuilder {
-  override def authenticate(permissions: Seq[Permission], roles: Seq[String]) =
+  override def authenticate(permissions: Seq[Permission]) =
     new ActionFunction[DomainRequest, JwtRequest] {
       override def invokeBlock[A](request: DomainRequest[A],
                                   block: JwtRequest[A] => Future[Result]) = {

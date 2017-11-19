@@ -70,7 +70,7 @@ GET           /api/v1/files/export/crew                             cloud.speelp
 # Tenants
 
 GET           /api/v1/tenants                                       cloud.speelplein.dashboard.controllers.api.TenantsController.list
-POST          /api/v1/tenants/new                                   cloud.speelplein.dashboard.controllers.api.TenantsController.create
+PUT           /api/v1/tenants/:name                                 cloud.speelplein.dashboard.controllers.api.TenantsController.create(name: String)
 GET           /api/v1/tenants/:name                                 cloud.speelplein.dashboard.controllers.api.TenantsController.details(name)
 POST          /api/v1/tenants/:name/generate-design-docs            cloud.speelplein.dashboard.controllers.api.TenantsController.generateDesignDocs(name)
 POST          /api/v1/tenants/:name/sync-to                         cloud.speelplein.dashboard.controllers.api.TenantsController.syncTo(name)
@@ -90,6 +90,7 @@ GET           /api/v1/auth/user/:id                                 cloud.speelp
 PUT           /api/v1/auth/user/:userId                             cloud.speelplein.dashboard.controllers.api.UserApiController.getTenantData(userId: String)
 PUT           /api/v1/auth/user/:userId/:tenant                     cloud.speelplein.dashboard.controllers.api.UserApiController.putTenantData(userId: String, tenant: String)
 GET           /api/v1/auth/permissions                              cloud.speelplein.dashboard.controllers.api.AuthController.allPermissions
+GET           /api/v1/auth/roles                                    cloud.speelplein.dashboard.controllers.api.AuthController.allRoles
 
 
 # Databases

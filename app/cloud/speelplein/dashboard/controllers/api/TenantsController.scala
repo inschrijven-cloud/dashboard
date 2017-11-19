@@ -7,7 +7,6 @@ import cloud.speelplein.dashboard.controllers.actions.{
   GlobalDomainOnlyAction,
   JwtAuthorizationBuilder
 }
-import cloud.speelplein.dashboard.controllers.api.TenantsController.TenantBinder
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.TenantsService
@@ -18,12 +17,6 @@ import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent}
 
 import scala.concurrent.{ExecutionContext, Future}
-
-object TenantsController {
-  case class TenantBinder(name: String)
-  implicit val tenantBinderFormat: OFormat[TenantBinder] =
-    Json.format[TenantBinder]
-}
 
 class TenantsController @Inject()(
     domainAction: DomainAction,
@@ -41,12 +34,12 @@ class TenantsController @Inject()(
     tenantsService.all.map(all => Ok(Json.toJson(all)))
   }
 
-  def create: Action[TenantBinder] =
-    action(createTenant).async(parse.json[TenantBinder]) { req =>
-      if (Tenant.isValidNewTenantName(req.body.name)) {
+  def create(name: String): Action[AnyContent] =
+    action(createTenant).async { req =>
+      if (Tenant.isValidNewTenantName(name)) {
         tenantsService
-          .create(Tenant(req.body.name))
-          .map(_ => created(req.body.name))
+          .create(Tenant(name))
+          .map(_ => created(name))
       } else
         Future.successful(
           BadRequest(

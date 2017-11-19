@@ -29,8 +29,9 @@ class CouchTenantsService @Inject()(databaseService: TenantDatabaseService)(
     }
   }
 
-  override def create(tenant: Tenant): Future[Ok] = {
-    databaseService.create(tenant.databaseName)
+  override def create(tenant: Tenant): Future[Unit] = {
+    databaseService.create(tenant.databaseName) flatMap (_ =>
+      initializeDatabase(tenant)) map (_ => ())
   }
 
   override def details(tenant: Tenant): Future[Unit] = Future.successful(())
