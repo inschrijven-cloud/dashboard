@@ -43,7 +43,7 @@ class CouchCrewRepository @Inject()(couchDatabase: CouchDatabase)
   override def findAll(
       implicit tenant: Tenant): Future[Seq[EntityWithId[Id, Crew]]] = {
     db(tenant).docs.getMany
-      .byType[String]("all-contactperson", "default", MappedDocType(crewKind))
+      .byType[String]("all-crew", "default", MappedDocType(crewKind))
       .includeDocs[Crew]
       .build
       .query
