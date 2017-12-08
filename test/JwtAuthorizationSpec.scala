@@ -1,6 +1,6 @@
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
+  TenantAction,
   JwtAuthorizationBuilderImpl,
   JwtRequest,
   JwtVerifyAction
@@ -28,7 +28,7 @@ class JwtAuthorizationSpec
     with Results
     with MockFactory
     with EitherValues {
-  val domainAction = new DomainAction(
+  val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
   val jwtVerificationService = new PdiJwtVerificationService(
     Configuration.from(Map(
@@ -65,9 +65,9 @@ class JwtAuthorizationSpec
 
   "JwtAuthorizationBuilder" should {
     "authorize when user has a required permission in their JWT" in {
-      val domainRes = Await.result(
-        domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+      val tenantRes = Await.result(
+        tenantAction.refine(
+          FakeRequest("GET", "/blah?tenant=example")
             .withHeaders(Headers(
               "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
         ),
@@ -79,7 +79,7 @@ class JwtAuthorizationSpec
       val jwtRes = Await.result(
         jwtAuthorizationBuilder
           .authenticate(permission)
-          .invokeBlock(domainRes.right.value,
+          .invokeBlock(tenantRes.right.value,
                        (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
@@ -88,9 +88,9 @@ class JwtAuthorizationSpec
     }
 
     "authorize when user has one of the required permissions in their JWT" in {
-      val domainRes = Await.result(
-        domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+      val tenantRes = Await.result(
+        tenantAction.refine(
+          FakeRequest("GET", "/blah?tenant=example")
             .withHeaders(Headers(
               "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
         ),
@@ -104,7 +104,7 @@ class JwtAuthorizationSpec
       val jwtRes = Await.result(
         jwtAuthorizationBuilder
           .authenticate(permissions)
-          .invokeBlock(domainRes.right.value,
+          .invokeBlock(tenantRes.right.value,
                        (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
@@ -113,9 +113,9 @@ class JwtAuthorizationSpec
     }
 
     "return unauthorized when user does not have a required permission in their JWT" in {
-      val domainRes = Await.result(
-        domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+      val tenantRes = Await.result(
+        tenantAction.refine(
+          FakeRequest("GET", "/blah?tenant=example")
             .withHeaders(Headers(
               "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
         ),
@@ -127,7 +127,7 @@ class JwtAuthorizationSpec
       val jwtRes = Await.result(
         jwtAuthorizationBuilder
           .authenticate(permission)
-          .invokeBlock(domainRes.right.value,
+          .invokeBlock(tenantRes.right.value,
                        (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
@@ -136,9 +136,9 @@ class JwtAuthorizationSpec
     }
 
     "authorize when user has a role that implies a permission in their JWT" in {
-      val domainRes = Await.result(
-        domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+      val tenantRes = Await.result(
+        tenantAction.refine(
+          FakeRequest("GET", "/blah?tenant=example")
             .withHeaders(Headers(
               "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInJvbGVzIjpbImFuaW1hdG9yIiwiaG9vZmRhbmltYXRvciJdLCJwZXJtaXNzaW9ucyI6W119LHsibmFtZSI6Imdsb2JhbCIsInJvbGVzIjpbInN1cGVydXNlciJdLCJwZXJtaXNzaW9ucyI6W119LHsibmFtZSI6ImRlc3BlZWxiZXJnIiwicm9sZXMiOlsiYW5pbWF0b3IiLCJob29mZGFuaW1hdG9yIl0sInBlcm1pc3Npb25zIjpbXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUxMTEyNTE0NywiZXhwIjoxNTExMTYxMTQ3LCJhdF9oYXNoIjoib3Y0dmhVLXQ2bmk4d1RIWDFaSHNFQSIsIm5vbmNlIjoiblhWSURrejd4YWNCLnV5VklOYk1aeEVPSGI0UDhRTmEifQ.WzYZclv6UyOJ_9-s4f_8VFFW7sTXLLxyLYy4c8g3aGrCqKCkeFR9RmYUWikWFa6NIyPjl4cEQxauLVJFmHBFLIeexkXSt2Q0EOLWFh5OMei3cFPpb85aMsa8s95W0NAZc4gK4x3p-cnYWxdwb_fYGNE2JV9qbXEM5ZEvUpN9Zxsuf-ftpFQ7OfZsd6RyOiT8IIrOAMuqvFYXMyPGkQS2QSR5jp3bj6Eidrs-y7xJnkoM-8h3Bx9rGkfptqZEqE81eAc99EC6Cmf-JwDu0RIz7NZTCy-Lsp5rps9iY05VBq4HWSCT2LvL6Mp-Ug3MmvM_Wy9cPJOrzGztgjsuOpVr_g"))
         ),
@@ -148,7 +148,7 @@ class JwtAuthorizationSpec
       val jwtRes = Await.result(
         jwtAuthorizationBuilder
           .authenticate(Permission.childRetrieve)
-          .invokeBlock(domainRes.right.value,
+          .invokeBlock(tenantRes.right.value,
                        (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )
@@ -157,9 +157,9 @@ class JwtAuthorizationSpec
     }
 
     "return unauthorized when user does not have a required role in their JWT" in {
-      val domainRes = Await.result(
-        domainAction.refine(
-          FakeRequest("GET", "/blah?domain=example.speelplein.cloud")
+      val tenantRes = Await.result(
+        tenantAction.refine(
+          FakeRequest("GET", "/blah?tenant=example")
             .withHeaders(Headers(
               "Authorization" -> "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFURkdSVGN6TlVJeVFrTTNNRE5DUWpnNU5VTXdPVFkzUlVNNU16a3dRalV6UmtaRFFUQTBNdyJ9.eyJodHRwczovL2luc2NocmlqdmVuLmNsb3VkL2FwcF9tZXRhZGF0YSI6eyJ0ZW5hbnRzIjpbeyJuYW1lIjoiZXhhbXBsZSIsInBlcm1pc3Npb25zIjpbImJsYWgiXSwicm9sZXMiOlsiYWRtaW4iXX1dfSwiaXNzIjoiaHR0cHM6Ly9pbnNjaHJpanZlbi1jbG91ZC5ldS5hdXRoMC5jb20vIiwic3ViIjoiZmFjZWJvb2t8MTAyMTQwNjc4ODk5MjIwOTkiLCJhdWQiOiIzaUw4bWZzQkN1aG8xZnBDeURRNHlhNW9pUlBuSG95aSIsImlhdCI6MTUwOTk4MTE1NSwiZXhwIjoxNTEwMDE3MTU1LCJhdF9oYXNoIjoiZ0E5RFpXS1dwRHhlTzhSeU13TWZ3dyIsIm5vbmNlIjoiaWZkbXNTeWJld21DSzBnQ2pUaVRDWU9YZGFxMzJic3gifQ.sSgq_Jz9kcr4GKgm-e2ygvSRaT3p04xcG-hpIXCxAedjH7wiDDbedEt75dYVg8fMrwCToYF2aEnBYjJU_3JjLAufcL1zKG1GDtb9k6mowoHz92IG7ibbVOyjwbpRTdMuD7t82JWdpAPuhhmtilNUeYLbIqM5Tzc1ZUbrBiniF1ylYa2js_-wLYYITyNER_5Vv9oTYoy9wD8qdneS9__4GPVRBtAQdZTKOqHo3R6yfhDkbQuRpOw8zw8GdBHiYC3LJoNfW7TyeJezQvsTAVA8T4HifRMLrlotoDwp4tAJlQXHWOqYoEymUlPWrLV_1aI7sO_3pk687OWSTmm7eH6NYQ"))
         ),
@@ -171,7 +171,7 @@ class JwtAuthorizationSpec
       val jwtRes = Await.result(
         jwtAuthorizationBuilder
           .authenticate(permission)
-          .invokeBlock(domainRes.right.value,
+          .invokeBlock(tenantRes.right.value,
                        (req: JwtRequest[_]) => Future.successful(Ok("ok"))),
         2.seconds
       )

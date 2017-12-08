@@ -6,7 +6,7 @@ import cloud.speelplein.dashboard.controllers.actions.{
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainRequest,
+  TenantRequest,
   JwtAuthorizationBuilder,
   JwtRequest
 }
@@ -19,13 +19,12 @@ import scala.concurrent.ExecutionContext.Implicits._
 /** Doesn't perform authorization, lets every request pass */
 class StubJwtAuthorizationBuilder extends JwtAuthorizationBuilder {
   override def authenticate(permissions: Seq[Permission]) =
-    new ActionFunction[DomainRequest, JwtRequest] {
-      override def invokeBlock[A](request: DomainRequest[A],
+    new ActionFunction[TenantRequest, JwtRequest] {
+      override def invokeBlock[A](request: TenantRequest[A],
                                   block: JwtRequest[A] => Future[Result]) = {
         block(
           new JwtRequest(
             TenantMetadata(request.tenant.name, Seq.empty, Seq.empty),
-            request.userDomain,
             request.tenant,
             false,
             request))

@@ -3,8 +3,8 @@ package cloud.speelplein.dashboard.controllers.api
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  GlobalDomainOnlyAction,
+  TenantAction,
+  GlobalTenantOnlyAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission.listDatabases
@@ -16,17 +16,17 @@ import play.api.mvc.{Action, AnyContent}
 import scala.concurrent.ExecutionContext
 
 class DatabaseController @Inject()(
-    domainAction: DomainAction,
+    tenantAction: TenantAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder,
     databaseService: TenantDatabaseService,
-    globalDomainOnlyAction: GlobalDomainOnlyAction
+    globalTenantOnlyAction: GlobalTenantOnlyAction
 )(implicit ec: ExecutionContext)
     extends ApiController {
 
   def list: Action[AnyContent] =
     (Action
-      andThen domainAction
-      andThen globalDomainOnlyAction
+      andThen tenantAction
+      andThen globalTenantOnlyAction
       andThen jwtAuthorizationBuilder.authenticate(listDatabases)).async {
       req =>
         databaseService.all map { dbs =>

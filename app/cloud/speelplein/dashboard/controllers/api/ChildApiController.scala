@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import cloud.speelplein.EntityWithId
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
+  TenantAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
@@ -23,12 +23,12 @@ import scala.concurrent.ExecutionContext
 
 class ChildApiController @Inject()(
     childRepository: ChildRepository,
-    domainAction: DomainAction,
+    tenantAction: TenantAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
   private def action(perm: Permission) =
-    Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(
+    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
       perm)
 
   def all: Action[AnyContent] = action(childRetrieve).async { req =>

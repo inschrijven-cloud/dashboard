@@ -3,8 +3,8 @@ package cloud.speelplein.dashboard.controllers.api
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  GlobalDomainOnlyAction,
+  TenantAction,
+  GlobalTenantOnlyAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
@@ -19,15 +19,15 @@ import play.api.mvc.{Action, AnyContent}
 import scala.concurrent.{ExecutionContext, Future}
 
 class TenantsController @Inject()(
-    domainAction: DomainAction,
+    tenantAction: TenantAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder,
-    globalDomainOnlyAction: GlobalDomainOnlyAction,
+    globalTenantOnlyAction: GlobalTenantOnlyAction,
     tenantsService: TenantsService,
     remoteCouchDB: RemoteDbConfigImpl
 )(implicit ec: ExecutionContext)
     extends ApiController {
   private def action(per: Permission) =
-    Action andThen domainAction andThen globalDomainOnlyAction andThen jwtAuthorizationBuilder
+    Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
       .authenticate(per)
 
   def list: Action[AnyContent] = action(listTenants).async { req =>

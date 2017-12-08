@@ -4,7 +4,7 @@ import cloud.speelplein.data.ChildRepository
 import cloud.speelplein.models.Day.Id
 import cloud.speelplein.models.Shift.ShiftKind
 import cloud.speelplein.models._
-import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController
 import cloud.speelplein.data.{ChildAttendancesService, ChildRepository}
 import cloud.speelplein.models._
@@ -23,9 +23,9 @@ class ChildAttendanceApiControllerSpec
     extends PlaySpec
     with Results
     with MockFactory {
-  val domainAction = new DomainAction(
+  val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
-  val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+  val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
   val authBuilder = new StubJwtAuthorizationBuilder()
 
   "ChildAttendanceApiController#numberOfChildAttendances" should {
@@ -113,7 +113,7 @@ class ChildAttendanceApiControllerSpec
       val controller = new ChildAttendanceApiController(childRepo,
                                                         dayServiceStub,
                                                         childAttendanceService,
-                                                        domainAction,
+                                                        tenantAction,
                                                         authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 

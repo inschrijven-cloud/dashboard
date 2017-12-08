@@ -47,7 +47,7 @@ class DatabaseControllerSpec
       val controller = app.injector.instanceOf[DatabaseController]
       val result: Future[Result] = controller
         .list()
-        .apply(FakeRequest("GET", "/blah?domain=global.speelplein.cloud"))
+        .apply(FakeRequest("GET", "/blah?tenant=global"))
       val bodyText: String = contentAsString(result)
       bodyText must include("test")
       bodyText must include("sometestdb")

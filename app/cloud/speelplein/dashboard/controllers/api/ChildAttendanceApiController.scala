@@ -3,7 +3,7 @@ package cloud.speelplein.dashboard.controllers.api
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
+  TenantAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController._
@@ -57,12 +57,12 @@ class ChildAttendanceApiController @Inject()(
     childRepository: ChildRepository,
     dayService: DayService,
     childAttendancesService: ChildAttendancesService,
-    domainAction: DomainAction,
+    tenantAction: TenantAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
   private def action(perm: Permission) =
-    Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(
+    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
       perm)
 
   def numberOfChildAttendances: Action[AnyContent] =

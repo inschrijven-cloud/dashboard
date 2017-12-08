@@ -4,7 +4,7 @@ import java.io.File
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
+  TenantAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
@@ -19,13 +19,13 @@ import scala.concurrent.ExecutionContext
 class ReportController @Inject()(
     fiscalCertificateService: FiscalCertificateService,
     reportService: ReportService,
-    domainAction: DomainAction,
+    tenantAction: TenantAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder
 )(implicit ec: ExecutionContext)
     extends InjectedController
     with StrictLogging {
   private def action(per: Permission) =
-    Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(
+    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
       per)
 
   def downloadFiscalCertificates(year: Int): Action[AnyContent] =

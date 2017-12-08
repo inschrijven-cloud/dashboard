@@ -3,7 +3,7 @@ package cloud.speelplein.dashboard.controllers.api
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
+  TenantAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
@@ -19,12 +19,12 @@ import scala.concurrent.ExecutionContext
 class DayApiController @Inject()(
     dayService: DayService,
     childRepository: ChildRepository,
-    domainAction: DomainAction,
+    tenantAction: TenantAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
   private def action(per: Permission) =
-    Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(
+    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
       dayRetrieve)
 
   def all: Action[AnyContent] = action(dayRetrieve).async { req =>

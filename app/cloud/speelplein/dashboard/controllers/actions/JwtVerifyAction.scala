@@ -14,7 +14,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 class JwtRequest[A](val tenantData: TenantMetadata,
-                    val userDomain: String,
                     val tenant: Tenant,
                     val isGlobalSuperUser: Boolean,
                     request: Request[A])
@@ -24,10 +23,10 @@ class JwtVerifyAction @Inject()(
     jwtVerificationService: JwtVerificationService,
     parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
-    extends ActionRefiner[DomainRequest, JwtRequest] {
+    extends ActionRefiner[TenantRequest, JwtRequest] {
 
   def refine[A](
-      input: DomainRequest[A]): Future[Either[Result, JwtRequest[A]]] =
+      input: TenantRequest[A]): Future[Either[Result, JwtRequest[A]]] =
     Future.successful {
       val t = input.headers
         .get("Authorization")
@@ -54,7 +53,6 @@ class JwtVerifyAction @Inject()(
           case (isGlobalSuperUser, Some(metadata)) =>
             Success(
               new JwtRequest[A](metadata,
-                                input.userDomain,
                                 input.tenant,
                                 isGlobalSuperUser,
                                 input))
@@ -78,10 +76,10 @@ class JwtVerifyAction @Inject()(
 
 trait JwtAuthorizationBuilder {
   def authenticate(
-      permissions: Seq[Permission]): ActionFunction[DomainRequest, JwtRequest]
+      permissions: Seq[Permission]): ActionFunction[TenantRequest, JwtRequest]
 
   def authenticate(
-      permission: Permission): ActionFunction[DomainRequest, JwtRequest] =
+      permission: Permission): ActionFunction[TenantRequest, JwtRequest] =
     authenticate(Seq(permission))
 }
 
@@ -93,7 +91,7 @@ class JwtAuthorizationBuilderImpl @Inject()(
     extends JwtAuthorizationBuilder {
 
   def authenticate(permissions: Seq[Permission])
-    : ActionFunction[DomainRequest, JwtRequest] = {
+    : ActionFunction[TenantRequest, JwtRequest] = {
     jwtVerifyAction andThen new ActionRefiner[JwtRequest, JwtRequest] {
       def executionContext: ExecutionContext = ec
 

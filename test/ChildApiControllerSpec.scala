@@ -2,7 +2,7 @@ import cloud.speelplein.EntityWithId
 import cloud.speelplein.dashboard.controllers.api.ChildApiController
 import cloud.speelplein.models._
 import cloud.speelplein.models.JsonFormats._
-import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.ChildApiController
 import cloud.speelplein.data.ChildRepository
 import cloud.speelplein.models.Tenant
@@ -18,9 +18,9 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
-  val domainAction = new DomainAction(
+  val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
-  val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+  val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
   val authBuilder = new StubJwtAuthorizationBuilder()
 
   "ChildApiController#getById" should {
@@ -48,7 +48,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
         .once()
 
       val controller =
-        new ChildApiController(childRepo, domainAction, authBuilder)
+        new ChildApiController(childRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       status(controller.getById("non-existant-id").apply(fakeReq)) mustBe NOT_FOUND
@@ -68,7 +68,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
         .never()
 
       val controller =
-        new ChildApiController(childRepo, domainAction, authBuilder)
+        new ChildApiController(childRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val res = controller.getById("existing-id").apply(fakeReq)
@@ -107,7 +107,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
         .once()
 
       val controller =
-        new ChildApiController(childRepo, domainAction, authBuilder)
+        new ChildApiController(childRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr(
@@ -124,7 +124,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
         .returning(Future.successful(Seq.empty))
 
       val controller =
-        new ChildApiController(childRepo, domainAction, authBuilder)
+        new ChildApiController(childRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr()
@@ -141,7 +141,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
         .once()
 
       val controller =
-        new ChildApiController(childRepo, domainAction, authBuilder)
+        new ChildApiController(childRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       status(controller.delete("the-id-to-delete").apply(fakeReq)) mustBe OK
@@ -167,7 +167,7 @@ class ChildApiControllerSpec extends PlaySpec with Results with MockFactory {
         .returning(Future.successful(()))
         .once()
       val controller =
-        new ChildApiController(childRepo, domainAction, authBuilder)
+        new ChildApiController(childRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val body: FakeRequest[Child] =

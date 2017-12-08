@@ -99,7 +99,7 @@ object Permission {
     "users:put-data",
     "Gebruikersdata voor de huidige organisatie aanmaken en aanpassen")
 
-  val userPutTenantDataAnyDomain = Permission(
+  val userPutTenantDataAnyTenant = Permission(
     "users:put-data",
     "Gebruikersdata voor een willekeurige organisatie aanmaken en aanpassen")
 
@@ -134,7 +134,7 @@ object Permission {
                             listAllConfig,
                             initializeAllConfigDb,
                             createConfig,
-                            userPutTenantDataAnyDomain),
+                            userPutTenantDataAnyTenant),
     "Gebruikers" -> Seq(
       userRetrieve,
       userPutTenantData

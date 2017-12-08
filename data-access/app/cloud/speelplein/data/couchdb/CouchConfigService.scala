@@ -28,7 +28,7 @@ import play.api.libs.json.{JsObject, Json}
 import scala.concurrent.{ExecutionContext, Future}
 
 object CouchConfigService {
-  val kind = "type/domainConfig/v1"
+  val kind = "type/tenantConfig/v1"
   val configDbName = "ic-config"
 
   implicit val configReader: Reader[ConfigWrapper] =
@@ -47,9 +47,9 @@ class CouchConfigService @Inject()(
                                        ),
                                        configDbName)
 
-  override def getConfig(domain: String): Future[Option[ConfigWrapper]] =
+  override def getConfig(tenant: String): Future[Option[ConfigWrapper]] =
     db.docs
-      .get[ConfigWrapper](id = domain)
+      .get[ConfigWrapper](id = tenant)
       .toFuture
       .map(d => Some(d.doc))
       .recoverWith {

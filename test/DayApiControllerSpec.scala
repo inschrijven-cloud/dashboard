@@ -4,7 +4,7 @@ import cloud.speelplein.data.ChildRepository
 import cloud.speelplein.models.Shift.{Id, ShiftKind}
 import cloud.speelplein.models._
 import cloud.speelplein.models.JsonFormats._
-import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.DayApiController
 import cloud.speelplein.data.{ChildRepository, DayService}
 import cloud.speelplein.models._
@@ -20,9 +20,9 @@ import play.api.test._
 import play.api.test.Helpers._
 
 class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
-  val domainAction = new DomainAction(
+  val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
-  val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+  val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
   val authBuilder = new StubJwtAuthorizationBuilder()
 
   "DayApiController#all" should {
@@ -39,7 +39,7 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
       val childRepo = mock[ChildRepository]
 
       val controller =
-        new DayApiController(dayService, childRepo, domainAction, authBuilder)
+        new DayApiController(dayService, childRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val body = contentAsJson(controller.all.apply(fakeReq))
@@ -105,7 +105,7 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
       val childRepo = mock[ChildRepository]
 
       val controller =
-        new DayApiController(dayService, childRepo, domainAction, authBuilder)
+        new DayApiController(dayService, childRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val body = contentAsJson(controller.all.apply(fakeReq))
@@ -176,7 +176,7 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val controller = new DayApiController(dayService,
                                             mock[ChildRepository],
-                                            domainAction,
+                                            tenantAction,
                                             authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
@@ -207,7 +207,7 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val controller = new DayApiController(dayService,
                                             mock[ChildRepository],
-                                            domainAction,
+                                            tenantAction,
                                             authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
@@ -244,7 +244,7 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val controller = new DayApiController(dayService,
                                             mock[ChildRepository],
-                                            domainAction,
+                                            tenantAction,
                                             authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
@@ -276,7 +276,7 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
 
       val controller = new DayApiController(dayService,
                                             mock[ChildRepository],
-                                            domainAction,
+                                            tenantAction,
                                             authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 

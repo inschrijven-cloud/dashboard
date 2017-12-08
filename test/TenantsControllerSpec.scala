@@ -66,7 +66,7 @@ class TenantsControllerSpec
       val controller = app.injector.instanceOf[TenantsController]
       val result: Future[Result] = controller
         .list()
-        .apply(FakeRequest("GET", "/blah?domain=global.speelplein.cloud"))
+        .apply(FakeRequest("GET", "/blah?tenant=global"))
       contentAsJson(result) must be(
         Json.arr(Json.obj("name" -> "some-tenant"),
                  Json.obj("name" -> "another-tenant")))
@@ -79,7 +79,7 @@ class TenantsControllerSpec
 
       val resultFut: Future[Result] = controller
         .create("test-tenant-name")
-        .apply(FakeRequest("POST", "/blah?domain=global.speelplein.cloud"))
+        .apply(FakeRequest("POST", "/blah?tenant=global"))
 
       whenReady(resultFut) { res =>
         res.header.status mustBe 201
@@ -94,7 +94,7 @@ class TenantsControllerSpec
 
       val resultFut = controller
         .create("some-tenant-}{)(*&^%$#@!")
-        .apply(FakeRequest("POST", "/blah?domain=global.speelplein.cloud"))
+        .apply(FakeRequest("POST", "/blah?tenant=global"))
 
       whenReady(resultFut) { res =>
         res.header.status mustBe 400

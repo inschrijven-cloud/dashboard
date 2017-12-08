@@ -3,14 +3,14 @@ package cloud.speelplein.dashboard.controllers.api
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  GlobalDomainOnlyAction,
+  TenantAction,
+  GlobalTenantOnlyAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission.{
   userPutTenantData,
-  userPutTenantDataAnyDomain,
+  userPutTenantDataAnyTenant,
   userRetrieve
 }
 import cloud.speelplein.data.UserService
@@ -23,14 +23,14 @@ import scala.concurrent.ExecutionContext
 
 class UserApiController @Inject()(
     userService: UserService,
-    domainAction: DomainAction,
-    globalDomainOnlyAction: GlobalDomainOnlyAction,
+    tenantAction: TenantAction,
+    globalTenantOnlyAction: GlobalTenantOnlyAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder,
     implicit val ec: ExecutionContext)
     extends ApiController {
 
   private def action(per: Permission) =
-    Action andThen domainAction andThen globalDomainOnlyAction andThen jwtAuthorizationBuilder
+    Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
       .authenticate(per)
 
   case class RolesAndPermissions(roles: Seq[String], permissions: Seq[String])
@@ -60,7 +60,7 @@ class UserApiController @Inject()(
 
   def putTenantData(userId: String,
                     tenant: String): Action[RolesAndPermissions] =
-    action(userPutTenantDataAnyDomain).async(parse.json[RolesAndPermissions]) {
+    action(userPutTenantDataAnyTenant).async(parse.json[RolesAndPermissions]) {
       req =>
         userService.setRolesAndPermissionsForUser(userId,
                                                   Tenant.apply(tenant),

@@ -1,18 +1,11 @@
 package cloud.speelplein.models
 
 object Tenant {
-  def fromDomain(domain: String): Option[Tenant] = domain match {
-    case l if l.startsWith("localhost") => Some(Tenant("localhost"))
-    case dom if dom.endsWith(".speelplein.cloud") =>
-      Some(Tenant(dom.split("\\.").head))
-    case _ => None
-  }
 
   def isValidNewTenantName(name: String): Boolean = {
 
     // wordlist from https://github.com/deanpcmad/saas_deny_subdomains/blob/master/lib/saas_deny_subdomains/subdomains.rb (MIT)
     val forbiddenWords = Seq(
-      "global",
       "localhost",
       "www",
       "admin",

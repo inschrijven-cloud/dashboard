@@ -8,11 +8,11 @@ import play.api.mvc.Results._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GlobalDomainOnlyAction @Inject()(val parser: BodyParsers.Default)(
+class GlobalTenantOnlyAction @Inject()(val parser: BodyParsers.Default)(
     implicit val executionContext: ExecutionContext)
-    extends ActionRefiner[DomainRequest, DomainRequest] {
+    extends ActionRefiner[TenantRequest, TenantRequest] {
   def refine[A](
-      input: DomainRequest[A]): Future[Either[Result, DomainRequest[A]]] =
+      input: TenantRequest[A]): Future[Either[Result, TenantRequest[A]]] =
     Future.successful {
       if (input.tenant.name == "global") {
         Right(input)

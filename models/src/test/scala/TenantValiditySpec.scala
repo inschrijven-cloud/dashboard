@@ -5,7 +5,6 @@ class TenantValiditySpec extends WordSpec with MustMatchers {
   "Tenant#isValidNewTenantName" should {
     "disallow words in the forbidden list" in {
       Tenant.isValidNewTenantName("www") mustBe false
-      Tenant.isValidNewTenantName("global") mustBe false
       Tenant.isValidNewTenantName("localhost") mustBe false
       Tenant.isValidNewTenantName("docs") mustBe false
     }

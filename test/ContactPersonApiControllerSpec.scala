@@ -1,7 +1,7 @@
 import cloud.speelplein.EntityWithId
 import cloud.speelplein.models.{Address, ContactPerson, PhoneContact, Tenant}
 import cloud.speelplein.models.JsonFormats._
-import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.ContactPersonApiController
 import cloud.speelplein.data.ContactPersonRepository
 import helpers.StubJwtAuthorizationBuilder
@@ -19,9 +19,9 @@ class ContactPersonApiControllerSpec
     extends PlaySpec
     with Results
     with MockFactory {
-  val domainAction = new DomainAction(
+  val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
-  val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+  val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
   val authBuilder = new StubJwtAuthorizationBuilder()
 
   "ContactPersonApiController#getById" should {
@@ -44,7 +44,7 @@ class ContactPersonApiControllerSpec
         .once()
 
       val controller = new ContactPersonApiController(contactPersonRepository,
-                                                      domainAction,
+                                                      tenantAction,
                                                       authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
@@ -65,7 +65,7 @@ class ContactPersonApiControllerSpec
         .never()
 
       val controller = new ContactPersonApiController(contactPersonRepository,
-                                                      domainAction,
+                                                      tenantAction,
                                                       authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
@@ -95,7 +95,7 @@ class ContactPersonApiControllerSpec
         .once()
 
       val controller = new ContactPersonApiController(contactPersonRepository,
-                                                      domainAction,
+                                                      tenantAction,
                                                       authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
@@ -113,7 +113,7 @@ class ContactPersonApiControllerSpec
         .returning(Future.successful(Seq.empty))
 
       val controller = new ContactPersonApiController(contactPersonRepository,
-                                                      domainAction,
+                                                      tenantAction,
                                                       authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
@@ -131,7 +131,7 @@ class ContactPersonApiControllerSpec
         .once()
 
       val controller = new ContactPersonApiController(contactPersonRepository,
-                                                      domainAction,
+                                                      tenantAction,
                                                       authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
@@ -153,7 +153,7 @@ class ContactPersonApiControllerSpec
         .returning(Future.successful(()))
         .once()
       val controller = new ContactPersonApiController(contactPersonRepository,
-                                                      domainAction,
+                                                      tenantAction,
                                                       authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 

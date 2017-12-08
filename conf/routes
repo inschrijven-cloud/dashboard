@@ -80,8 +80,8 @@ POST          /api/v1/tenants/:name/sync-from                       cloud.speelp
 
 GET           /api/v1/config/all                                    cloud.speelplein.dashboard.controllers.api.FrontendConfigController.getAllConfig
 POST          /api/v1/config/generate-design-docs                   cloud.speelplein.dashboard.controllers.api.FrontendConfigController.generateDesignDocs
-POST          /api/v1/config.json/:domain                           cloud.speelplein.dashboard.controllers.api.FrontendConfigController.insertConfigDocument(domain: String)
-PUT           /api/v1/config.json/:domain                           cloud.speelplein.dashboard.controllers.api.FrontendConfigController.updateConfigDocument(domain: String)
+POST          /api/v1/config.json/:tenant                           cloud.speelplein.dashboard.controllers.api.FrontendConfigController.insertConfigDocument(tenant: String)
+PUT           /api/v1/config.json/:tenant                           cloud.speelplein.dashboard.controllers.api.FrontendConfigController.updateConfigDocument(tenant: String)
 
 # Users, roles and permissions (authorization and authentication)
 

@@ -2,7 +2,7 @@ import cloud.speelplein.EntityWithId
 import cloud.speelplein.dashboard.controllers.api.CrewApiController
 import cloud.speelplein.models._
 import cloud.speelplein.models.JsonFormats._
-import cloud.speelplein.dashboard.controllers.actions.DomainAction
+import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.CrewApiController
 import cloud.speelplein.data.CrewRepository
 import cloud.speelplein.models.{Crew, Tenant}
@@ -18,9 +18,9 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
-  val domainAction = new DomainAction(
+  val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
-  val fakeReq = FakeRequest("GET", "/blah?domain=test.speelplein.cloud")
+  val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
   val authBuilder = new StubJwtAuthorizationBuilder()
 
   "CrewApiController#getById" should {
@@ -47,7 +47,7 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
         .once()
 
       val controller =
-        new CrewApiController(crewRepo, domainAction, authBuilder)
+        new CrewApiController(crewRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       status(controller.getById("non-existant-id").apply(fakeReq)) mustBe NOT_FOUND
@@ -67,7 +67,7 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
         .never()
 
       val controller =
-        new CrewApiController(crewRepo, domainAction, authBuilder)
+        new CrewApiController(crewRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val res = controller.getById("existing-id").apply(fakeReq)
@@ -104,7 +104,7 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
         .once()
 
       val controller =
-        new CrewApiController(crewRepo, domainAction, authBuilder)
+        new CrewApiController(crewRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr(
@@ -121,7 +121,7 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
         .returning(Future.successful(Seq.empty))
 
       val controller =
-        new CrewApiController(crewRepo, domainAction, authBuilder)
+        new CrewApiController(crewRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       contentAsJson(controller.all.apply(fakeReq)) mustBe Json.arr()
@@ -138,7 +138,7 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
         .once()
 
       val controller =
-        new CrewApiController(crewRepo, domainAction, authBuilder)
+        new CrewApiController(crewRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       status(controller.delete("the-id-to-delete").apply(fakeReq)) mustBe OK
@@ -163,7 +163,7 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
         .returning(Future.successful(()))
         .once()
       val controller =
-        new CrewApiController(crewRepo, domainAction, authBuilder)
+        new CrewApiController(crewRepo, tenantAction, authBuilder)
       controller.setControllerComponents(stubControllerComponents())
 
       val body: FakeRequest[Crew] =

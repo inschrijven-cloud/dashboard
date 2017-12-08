@@ -5,7 +5,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
+  TenantAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
@@ -20,12 +20,12 @@ import scala.concurrent.ExecutionContext
 class ExportController @Inject()(
     exportService: ExportService,
     cc: ControllerComponents,
-    domainAction: DomainAction,
+    tenantAction: TenantAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder
 )(implicit ec: ExecutionContext)
     extends InjectedController {
   private def action(per: Permission) =
-    Action andThen domainAction andThen jwtAuthorizationBuilder.authenticate(
+    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
       per)
 
   def downloadChildren: Action[AnyContent] = action(exportChildren).async {

@@ -8,8 +8,8 @@ import cloud.speelplein.dashboard.controllers.api.auth.Permission.{
   listAllConfig
 }
 import cloud.speelplein.dashboard.controllers.actions.{
-  DomainAction,
-  GlobalDomainOnlyAction,
+  TenantAction,
+  GlobalTenantOnlyAction,
   JwtAuthorizationBuilder
 }
 import cloud.speelplein.data.ConfigService
@@ -23,45 +23,45 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FrontendConfigController @Inject()(
     configService: ConfigService,
-    domainAction: DomainAction,
-    globalDomainOnlyAction: GlobalDomainOnlyAction,
+    tenantAction: TenantAction,
+    globalTenantOnlyAction: GlobalTenantOnlyAction,
     jwtAuthorizationBuilder: JwtAuthorizationBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
 
-  def configJson: Action[AnyContent] = (Action andThen domainAction).async {
+  def configJson: Action[AnyContent] = (Action andThen tenantAction).async {
     req =>
-      configService.getConfig(req.userDomain).map { configOpt =>
+      configService.getConfig(req.tenant.name).map { configOpt =>
         configOpt.map(conf => Ok(conf.config)) getOrElse NotFound(
-          Json.obj("status" -> "not found", "domain" -> req.userDomain))
+          Json.obj("status" -> "not found", "tenant" -> req.tenant.name))
       }
   }
 
   def getAllConfig: Action[AnyContent] =
-    (Action andThen domainAction andThen globalDomainOnlyAction andThen jwtAuthorizationBuilder
+    (Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
       .authenticate(listAllConfig)).async { req =>
       configService.getAllConfig.map(res => Ok(Json.toJson(res)))
     }
 
   def generateDesignDocs(): Action[AnyContent] =
-    (Action andThen domainAction andThen globalDomainOnlyAction andThen jwtAuthorizationBuilder
+    (Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
       .authenticate(initializeAllConfigDb)).async { req =>
       configService.insertDesignDocs.map(Ok(_))
     }
 
-  def insertConfigDocument(domain: String): Action[ConfigWrapper] =
-    (Action andThen domainAction andThen globalDomainOnlyAction andThen jwtAuthorizationBuilder
+  def insertConfigDocument(tenant: String): Action[ConfigWrapper] =
+    (Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
       .authenticate(createConfig)).async(parse.json(configFormat)) { req =>
       configService
-        .insert(domain, ConfigWrapper(req.body.config))
-        .map(_ => created(domain))
+        .insert(tenant, ConfigWrapper(req.body.config))
+        .map(_ => created(tenant))
     }
 
-  def updateConfigDocument(domain: String): Action[ConfigWrapper] =
-    (Action andThen domainAction andThen globalDomainOnlyAction andThen jwtAuthorizationBuilder
+  def updateConfigDocument(tenant: String): Action[ConfigWrapper] =
+    (Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
       .authenticate(createConfig)).async(parse.json(configFormat)) { req =>
       configService
-        .update(domain, ConfigWrapper(req.body.config))
-        .map(_ => updated(domain))
+        .update(tenant, ConfigWrapper(req.body.config))
+        .map(_ => updated(tenant))
     }
 }
