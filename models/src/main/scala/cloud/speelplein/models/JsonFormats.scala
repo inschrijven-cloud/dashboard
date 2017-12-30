@@ -34,7 +34,7 @@ object JsonFormats {
   }
   implicit val tenantFormat = Json.format[Tenant]
 
-  implicit val appMetadataTenant = Json.format[TenantMetadata]
+  implicit val appTenantUserDataFormat = Json.format[TenantUserData]
   implicit val auth0AppMetadataFormat = Json.format[Auth0AppMetadata]
 
   implicit val shiftKindFormat: Format[ShiftKind] = new Format[ShiftKind] {
@@ -81,8 +81,6 @@ object JsonFormats {
       }
     }
   }
-
-  implicit val tenantUserDataWrites = Json.format[TenantUserData]
 
   implicit val defaultUserWrites = Json.writes[User]
   implicit val auth0UserReads: Reads[User] = (

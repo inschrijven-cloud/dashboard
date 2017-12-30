@@ -6,11 +6,11 @@ import cloud.speelplein.dashboard.controllers.actions.{
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.actions.{
-  TenantRequest,
   JwtAuthorizationBuilder,
-  JwtRequest
+  JwtRequest,
+  TenantRequest
 }
-import cloud.speelplein.models.TenantMetadata
+import cloud.speelplein.models.TenantUserData
 import play.api.mvc.{ActionFunction, Result}
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -24,7 +24,7 @@ class StubJwtAuthorizationBuilder extends JwtAuthorizationBuilder {
                                   block: JwtRequest[A] => Future[Result]) = {
         block(
           new JwtRequest(
-            TenantMetadata(request.tenant.name, Seq.empty, Seq.empty),
+            TenantUserData(request.tenant.name, Seq.empty, Seq.empty),
             request.tenant,
             false,
             request))

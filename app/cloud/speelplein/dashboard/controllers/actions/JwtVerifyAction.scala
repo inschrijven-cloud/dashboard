@@ -5,7 +5,7 @@ import javax.inject.Inject
 import cloud.speelplein.dashboard.controllers.api.auth.{Permission, Role}
 import cloud.speelplein.data.JwtVerificationService
 import cloud.speelplein.models.JsonFormats.auth0AppMetadataFormat
-import cloud.speelplein.models.{Auth0AppMetadata, Tenant, TenantMetadata}
+import cloud.speelplein.models.{Auth0AppMetadata, Tenant, TenantUserData}
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.mvc.Results._
@@ -13,7 +13,7 @@ import play.api.mvc.Results._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
-class JwtRequest[A](val tenantData: TenantMetadata,
+class JwtRequest[A](val tenantData: TenantUserData,
                     val tenant: Tenant,
                     val isGlobalSuperUser: Boolean,
                     request: Request[A])
@@ -41,7 +41,7 @@ class JwtVerifyAction @Inject()(
         .map(metadata => {
           val isGlobalSuperUser = metadata.tenants
             .filter(_.name == "global")
-            .exists((metadata: TenantMetadata) =>
+            .exists((metadata: TenantUserData) =>
               metadata.roles.contains("superuser"))
 
           val maybeTenantMetadata =

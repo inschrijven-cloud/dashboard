@@ -6,7 +6,7 @@ import cloud.speelplein.data.{JwtVerificationService, UserService}
 import cloud.speelplein.models.{Tenant, TenantUserData, User}
 import cloud.speelplein.models.JsonFormats.{
   auth0UserReads,
-  tenantUserDataWrites
+  appTenantUserDataFormat
 }
 import com.typesafe.scalalogging.StrictLogging
 import play.api.Configuration

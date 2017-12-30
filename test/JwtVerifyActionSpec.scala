@@ -1,13 +1,13 @@
 import cloud.speelplein.dashboard.controllers.actions.{
-  TenantAction,
-  JwtVerifyAction
+  JwtVerifyAction,
+  TenantAction
 }
 import cloud.speelplein.dashboard.controllers.actions.{
-  TenantAction,
-  JwtVerifyAction
+  JwtVerifyAction,
+  TenantAction
 }
 import cloud.speelplein.data.PdiJwtVerificationService
-import cloud.speelplein.models.TenantMetadata
+import cloud.speelplein.models.TenantUserData
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.EitherValues
 import org.scalatestplus.play.PlaySpec
@@ -75,9 +75,9 @@ class JwtVerifyActionSpec
 
       jwtRes.isRight mustBe true
       jwtRes.right.value.isGlobalSuperUser mustBe false
-      jwtRes.right.value.tenantData mustBe TenantMetadata("example",
-                                                          Seq("blah"),
-                                                          Seq("admin"))
+      jwtRes.right.value.tenantData mustBe TenantUserData("example",
+                                                          Seq("admin"),
+                                                          Seq("blah"))
     }
 
     "fail when JWT is invalid" in {
@@ -112,10 +112,10 @@ class JwtVerifyActionSpec
 
       jwtRes.isRight mustBe true
       jwtRes.right.value.isGlobalSuperUser mustBe true
-      jwtRes.right.value.tenantData mustBe TenantMetadata(
+      jwtRes.right.value.tenantData mustBe TenantUserData(
         "example",
-        Seq("child:retrieve", "superuser:list-databases"),
-        Seq("admin"))
+        Seq("admin"),
+        Seq("child:retrieve", "superuser:list-databases"))
     }
   }
 }

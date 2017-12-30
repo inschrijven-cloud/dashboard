@@ -6,7 +6,6 @@ import cloud.speelplein.dashboard.controllers.actions.{
   JwtVerifyAction
 }
 import cloud.speelplein.data.PdiJwtVerificationService
-import cloud.speelplein.models.TenantMetadata
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.EitherValues
 import org.scalatestplus.play.PlaySpec
