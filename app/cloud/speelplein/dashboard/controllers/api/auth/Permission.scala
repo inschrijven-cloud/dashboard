@@ -27,7 +27,18 @@ object Permission {
   val childAttendanceCreate =
     Permission("child-attendance:create", "Aanwezigheden van kinderen aanmaken")
   val childAttendanceDelete =
-    Permission("child-attendance:delete", "Aanwezigheden verwijderen")
+    Permission("child-attendance:delete",
+               "Aanwezigheden van kinderen verwijderen")
+
+  val crewAttendanceRetrieve = Permission(
+    "crew-attendance:retrieve",
+    "Oplijsten van aanwezigheden van animatoren")
+  val crewAttendanceCreate =
+    Permission("crew-attendance:create",
+               "Aanwezigheden van animatoren aanmaken")
+  val crewAttendanceDelete =
+    Permission("crew-attendance:delete",
+               "Aanwezigheden van animatoren verwijderen")
 
   val contactPersonRetrieve = Permission(
     "contactperson:retrieve",
@@ -112,6 +123,9 @@ object Permission {
     "Aanwezigheden van kinderen" -> Seq(childAttendanceRetrieve,
                                         childAttendanceCreate,
                                         childAttendanceDelete),
+    "Aanwezigheden van animatoren" -> Seq(crewAttendanceRetrieve,
+                                          crewAttendanceCreate,
+                                          crewAttendanceDelete),
     "Contactpersonen" -> Seq(contactPersonRetrieve,
                              contactPersonUpdate,
                              contactPersonCreate,

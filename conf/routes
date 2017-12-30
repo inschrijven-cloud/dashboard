@@ -36,7 +36,7 @@ PUT           /api/v1/crew/:id                                      cloud.speelp
 DELETE        /api/v1/crew/:id                                      cloud.speelplein.dashboard.controllers.api.CrewApiController.delete(id)
 
 
-# Attendance API
+# Attendance API - Children
 
 GET           /api/v1/day/attendances/child                         cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController.numberOfChildAttendances
 GET           /api/v1/day/:id/attendances/child                     cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController.childAttendancesOnDay(id)
@@ -49,6 +49,20 @@ GET           /api/v1/day/attendances/child/all/raw                 cloud.speelp
 GET           /api/v1/child/:id/attendances                         cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController.getAttendancesForChild(id)
 POST          /api/v1/child/:childId/attendances/:dayId             cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController.addAttendancesForChild(childId, dayId)
 DELETE        /api/v1/child/:childId/attendances/:dayId             cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController.deleteAttendancesForChild(childId, dayId)
+
+# Attendance API - Crew
+
+GET           /api/v1/day/attendances/crew                          cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.numberOfCrewAttendances
+GET           /api/v1/day/:id/attendances/crew                      cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.crewAttendancesOnDay(id)
+
+GET           /api/v1/day/attendances/crew/all                      cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.findAllPerCrew
+GET           /api/v1/day/attendances/crew/all/byDay                cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.findAllPerDay
+GET           /api/v1/day/attendances/crew/all/byChild              cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.findAllPerCrew
+GET           /api/v1/day/attendances/crew/all/raw                  cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.findAllRaw
+
+GET           /api/v1/crew/:id/attendances                          cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.getAttendancesForCrew(id)
+POST          /api/v1/crew/:crewId/attendances/:dayId               cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.addAttendancesForCrew(crewId, dayId)
+DELETE        /api/v1/crew/:crewId/attendances/:dayId               cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.deleteAttendancesForCrew(crewId, dayId)
 
 # Report API
 

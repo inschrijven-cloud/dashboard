@@ -51,6 +51,7 @@ class CouchTenantsService @Inject()(databaseService: TenantDatabaseService)(
       "all-children" -> viewAll("type/child/v1"),
       "all-crew" -> viewAll("type/crew/v1"),
       "all-child-attendances" -> viewAll("type/childattendance/v2"),
+      "all-crew-attendances" -> viewAll("type/crewattendance/v2"),
       "all-days" -> viewAll("type/day/v1"),
       "all-contactperson" -> viewAll("type/contactperson/v1")
     )

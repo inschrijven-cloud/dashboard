@@ -3,14 +3,14 @@ package cloud.speelplein.data.couchdb
 import java.time.Instant
 import javax.inject.Inject
 
-import cloud.speelplein.data.ChildAttendancesService.{
+import cloud.speelplein.data.CrewAttendancesService.{
   AttendancesOnDay,
   ShiftWithAttendances
 }
-import cloud.speelplein.data.couchdb.CouchChildAttendancesService._
+import cloud.speelplein.data.couchdb.CouchCrewAttendancesService._
 import cloud.speelplein.data.util.ScalazExtensions._
 import cloud.speelplein.data.{
-  ChildAttendancesService,
+  CrewAttendancesService,
   PlayJsonReaderUpickleCompat,
   PlayJsonWriterUpickleCompat
 }
@@ -30,61 +30,59 @@ import upickle.default.{Reader, Writer}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object CouchChildAttendancesService {
-  val childAttendanceKind = "type/childattendance/v2"
-  case class ChildAttendancePersisted(
-      /** When the child was enrolled (intention to participate in an activity) */
+object CouchCrewAttendancesService {
+  val crewAttendanceKind = "type/crewattendance/v2"
+  case class CrewAttendancePersisted(
+      /** When the crew member was enrolled (intention to participate in an activity) */
       enrolled: Option[Instant] = None,
-      /** Who registered the child's intent to participate in an activity */
+      /** Who registered the crew member's intent to participate in an activity */
       enrolledRegisteredBy: Option[Crew.Id] = None,
-      /** When the child arrived to participate in an activity */
+      /** When the crew member arrived to participate in an activity */
       arrived: Option[Instant] = None,
-      /** Which crew member registered the child as arrived */
+      /** Which crew member registered the crew member as arrived */
       arrivedRegisteredBy: Option[Crew.Id] = None,
-      /** When the child left/went home after the activity */
+      /** When the crew member left/went home after the activity */
       left: Option[Instant] = None,
-      /** Who registered the child leaving */
+      /** Who registered the crew member leaving */
       leftRegisteredBy: Option[Crew.Id] = None
   )
 
-  implicit val childAttendancePersistedReader
-    : Reader[ChildAttendancePersisted] =
-    new PlayJsonReaderUpickleCompat[ChildAttendancePersisted]()(
-      Json.format[ChildAttendancePersisted]
+  implicit val crewAttendancePersistedReader: Reader[CrewAttendancePersisted] =
+    new PlayJsonReaderUpickleCompat[CrewAttendancePersisted]()(
+      Json.format[CrewAttendancePersisted]
     )
 
-  implicit val childAttendancePersistedWriter
-    : Writer[ChildAttendancePersisted] =
-    new PlayJsonWriterUpickleCompat[ChildAttendancePersisted]()(
-      Json.format[ChildAttendancePersisted]
+  implicit val crewAttendancePersistedWriter: Writer[CrewAttendancePersisted] =
+    new PlayJsonWriterUpickleCompat[CrewAttendancePersisted]()(
+      Json.format[CrewAttendancePersisted]
     )
 }
 
-class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
-    extends ChildAttendancesService
+class CouchCrewAttendancesService @Inject()(couchDatabase: CouchDatabase)
+    extends CrewAttendancesService
     with StrictLogging {
 
   private def db(implicit tenant: Tenant) =
     couchDatabase.getDb(
-      TypeMapping(classOf[ChildAttendancePersisted] -> childAttendanceKind),
+      TypeMapping(classOf[CrewAttendancePersisted] -> crewAttendanceKind),
       tenant)
 
-  override def findAttendancesForChild(childId: Child.Id)(
+  override def findAttendancesForCrew(crewId: Crew.Id)(
       implicit tenant: Tenant): Future[Seq[DayAttendance]] = {
-    findAll map { _.getOrElse(childId, Seq.empty) }
+    findAll map { _.getOrElse(crewId, Seq.empty) }
   }
 
-  override def findNumberAttendancesForChild(childId: Child.Id)(
+  override def findNumberAttendancesForCrew(crewId: Crew.Id)(
       implicit tenant: Tenant): Future[Option[Int]] = {
-    findAll.map(_.get(childId).map(_.map(_.shifts.length).sum))
+    findAll.map(_.get(crewId).map(_.map(_.shifts.length).sum))
   }
 
-  override def findNumberOfChildAttendances(
+  override def findNumberOfCrewAttendances(
       implicit tenant: Tenant): Future[Map[Day.Id, Map[Shift.Id, Int]]] =
     findAll map { all =>
       val groupedByDay = all.toSeq flatMap {
-        case (childId, childAttendances) =>
-          childAttendances.flatMap(att =>
+        case (crewId, crewAttendances) =>
+          crewAttendances.flatMap(att =>
             att.shifts.map(shift => (att.day, shift.shiftId)))
       } groupBy { case (dayId, shiftId) => dayId }
 
@@ -100,17 +98,16 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
       }
     }
 
-  override def findNumberOfChildAttendances(day: DayDate, shiftId: Shift.Id)(
+  override def findNumberOfCrewAttendances(day: DayDate, shiftId: Shift.Id)(
       implicit tenant: Tenant): Future[Int] = ???
 
-  override def addAttendancesForChild(childId: Child.Id,
-                                      day: DayDate,
-                                      shifts: Seq[Shift.Id])(
+  override def addAttendancesForCrew(crewId: Crew.Id,
+                                     day: DayDate,
+                                     shifts: Seq[Shift.Id])(
       implicit tenant: Tenant): Future[Seq[Res.DocOk]] = {
-    val many: Map[String, ChildAttendancePersisted] = Map(shifts.map {
-      shiftId =>
-        createChildAttendanceId(day.getDayId, shiftId, childId) -> ChildAttendancePersisted(
-          enrolled = Some(Instant.now))
+    val many: Map[String, CrewAttendancePersisted] = Map(shifts.map { shiftId =>
+      createCrewAttendanceId(day.getDayId, shiftId, crewId) -> CrewAttendancePersisted(
+        enrolled = Some(Instant.now))
     }: _*)
 
     // Only insert attendances that do not exist already
@@ -136,10 +133,10 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
               .map(
                 id =>
                   db.docs
-                    .update[ChildAttendancePersisted](
+                    .update[CrewAttendancePersisted](
                       CouchDoc(
-                        ChildAttendancePersisted(enrolled = Some(Instant.now)),
-                        kind = childAttendanceKind,
+                        CrewAttendancePersisted(enrolled = Some(Instant.now)),
+                        kind = crewAttendanceKind,
                         _id = id)
                     )
                     .toFuture)
@@ -149,66 +146,66 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
     }
   }
 
-  override def addAttendanceForChild(
-      childId: Child.Id,
+  override def addAttendanceForCrew(
+      crewId: Crew.Id,
       day: DayDate,
       shift: Shift.Id)(implicit tenant: Tenant): Future[Res.DocOk] = {
-    addAttendancesForChild(childId, day, Seq(shift)).map(_.head)
+    addAttendancesForCrew(crewId, day, Seq(shift)).map(_.head)
   }
 
-  override def removeAttendancesForChild(
-      childId: Child.Id,
+  override def removeAttendancesForCrew(
+      crewId: Crew.Id,
       day: DayDate,
       shifts: Seq[Shift.Id])(implicit tenant: Tenant): Future[Unit] = {
     db.docs
       .getMany(shifts.map(shiftId =>
-        createChildAttendanceId(day.getDayId, shiftId, childId)))
+        createCrewAttendanceId(day.getDayId, shiftId, crewId)))
       .toFuture flatMap { docs =>
       db.docs.deleteMany(docs.getDocs).toFuture.map(_ => ())
     }
   }
 
   override def findAll(
-      implicit tenant: Tenant): Future[Map[Child.Id, Seq[DayAttendance]]] = {
+      implicit tenant: Tenant): Future[Map[Crew.Id, Seq[DayAttendance]]] = {
     db.docs.getMany
-      .byType[String]("all-child-attendances",
+      .byType[String]("all-crew-attendances",
                       "default",
-                      MappedDocType(childAttendanceKind))
+                      MappedDocType(crewAttendanceKind))
       .includeDocs
       .build
       .query
       .toFuture
       .map(_.rows.map(doc => createDayAttendance(doc.id, doc.doc.doc)))
-      .map(_.groupBy { case (childId, dayAtt) => childId }.map {
-        case (childId, dayAtts) =>
+      .map(_.groupBy { case (crewId, dayAtt) => crewId }.map {
+        case (crewId, dayAtts) =>
           val dayAttendancesReduced = dayAtts
-            .map { case (childId, dayAtt) => dayAtt }
+            .map { case (crewId, dayAtt) => dayAtt }
             .groupBy(dayAtt => dayAtt.day)
             .map {
               case (dayId, dayAttendancesOnDayId) =>
                 DayAttendance(dayId, dayAttendancesOnDayId.flatMap(_.shifts))
             }
 
-          (childId, dayAttendancesReduced.toSeq)
+          (crewId, dayAttendancesReduced.toSeq)
       })
   }
 
   override def findAllPerDay(
       implicit tenant: Tenant): Future[Map[Id, AttendancesOnDay]] = {
     db.docs.getMany
-      .byType[String]("all-child-attendances",
+      .byType[String]("all-crew-attendances",
                       "default",
-                      MappedDocType(childAttendanceKind))
+                      MappedDocType(crewAttendanceKind))
       .includeDocs
       .build
       .query
       .toFuture
       .map(_.rows.map(doc => createDayAttendance(doc.id, doc.doc.doc)))
       .map {
-        _.groupBy { case (childId, dayAtt) => dayAtt.day } map {
+        _.groupBy { case (crewId, dayAtt) => dayAtt.day } map {
           case (dayId, seq) =>
             val shiftWithAttendances = seq
-              .map { case (childId, dayAtt) => dayAtt }
+              .map { case (crewId, dayAtt) => dayAtt }
               .flatMap(_.shifts)
               .map(_.shiftId)
               .groupBy(x => x)
@@ -219,24 +216,24 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
               }
               .toSeq
 
-            val uniqueChildren =
-              seq.map { case (dayAtt, childId) => childId }.distinct.length
+            val uniqueCrew =
+              seq.map { case (dayAtt, crewId) => crewId }.distinct.length
 
-            (dayId, AttendancesOnDay(uniqueChildren, shiftWithAttendances))
+            (dayId, AttendancesOnDay(uniqueCrew, shiftWithAttendances))
         }
       }
   }
 
   override def findAllRaw(
-      implicit tenant: Tenant): Future[Seq[(Day.Id, Shift.Id, Child.Id)]] = {
+      implicit tenant: Tenant): Future[Seq[(Day.Id, Shift.Id, Crew.Id)]] = {
     db.docs.getMany
-      .byType[String]("all-child-attendances",
+      .byType[String]("all-crew-attendances",
                       "default",
-                      MappedDocType(childAttendanceKind))
+                      MappedDocType(crewAttendanceKind))
       .build
       .query
       .toFuture
-      .map(x => x.rows.map(y => createFromChildAttendanceId(y.id)))
+      .map(x => x.rows.map(y => createFromCrewAttendanceId(y.id)))
   }
 
   private def isDeleted(attendanceId: String)(
@@ -252,12 +249,12 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
       }
 
   private def createDayAttendance(idFromDb: String,
-                                  persisted: ChildAttendancePersisted)(
-      implicit tenant: Tenant): (Child.Id, DayAttendance) = {
+                                  persisted: CrewAttendancePersisted)(
+      implicit tenant: Tenant): (Crew.Id, DayAttendance) = {
 
-    val (dayId, shiftId, childId) = createFromChildAttendanceId(idFromDb)
+    val (dayId, shiftId, crewId) = createFromCrewAttendanceId(idFromDb)
 
-    (childId,
+    (crewId,
      DayAttendance(
        dayId,
        Seq(
@@ -273,14 +270,14 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
      ))
   }
 
-  private def createFromChildAttendanceId(id: String)(
-      implicit tenant: Tenant): (Day.Id, Shift.Id, Child.Id) = {
+  private def createFromCrewAttendanceId(id: String)(
+      implicit tenant: Tenant): (Day.Id, Shift.Id, Crew.Id) = {
     (id.split("--")(0), id.split("--")(1), id.split("--")(2))
   }
 
-  private def createChildAttendanceId(
+  private def createCrewAttendanceId(
       dayId: Day.Id,
       shiftId: Shift.Id,
-      childId: Child.Id)(implicit tenant: Tenant): String =
-    s"$dayId--$shiftId--$childId"
+      crewId: Crew.Id)(implicit tenant: Tenant): String =
+    s"$dayId--$shiftId--$crewId"
 }
