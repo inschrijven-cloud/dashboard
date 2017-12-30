@@ -51,7 +51,13 @@ class TenantsController @Inject()(
 
   def generateDesignDocs(tenant: String): Action[AnyContent] =
     action(initTenantDbs).async { req =>
-      tenantsService.initializeDatabase(req.tenant).map(res => Ok(res))
+      if (Tenant.isValidNewTenantName(tenant)) {
+        tenantsService
+          .initializeDatabase(Tenant.apply(tenant))
+          .map(res => Ok(res))
+      } else {
+        Future.successful(BadRequest("Invalid tenant name"))
+      }
     }
 
   def syncTo(tenant: String): Action[AnyContent] = action(syncTenantDb).async {
