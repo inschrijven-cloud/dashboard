@@ -17,7 +17,7 @@ import cloud.speelplein.data.{
 import cloud.speelplein.models.Day.Id
 import cloud.speelplein.models.JsonFormats.dayFormat
 import cloud.speelplein.models.{Day, Tenant}
-import com.ibm.couchdb.{CouchException, MappedDocType, TypeMapping}
+import com.ibm.couchdb.{CouchDoc, CouchException, MappedDocType, TypeMapping}
 import com.typesafe.scalalogging.StrictLogging
 import upickle.default.{Reader, Writer}
 
@@ -71,6 +71,13 @@ class CouchDayService @Inject()(couchDatabase: CouchDatabase)
     p.future
   }
 
-  override def update(id: Id, day: Day)(implicit tenant: Tenant): Future[Unit] =
-    ???
+  override def update(id: Id, day: Day)(
+      implicit tenant: Tenant): Future[Unit] = {
+    for {
+      currentRev <- db(tenant).docs.get[Day](id).toFuture.map(_._rev)
+      res <- db(tenant).docs
+        .update[Day](CouchDoc(day, dayKind, _id = id, _rev = currentRev))
+        .toFuture
+    } yield { () }
+  }
 }
