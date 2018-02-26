@@ -1,6 +1,6 @@
 import ReleaseTransformations._
 
-name := "speelplein-cloud-dashboard"
+name := "inschrijven-cloud-dashboard"
 
 lazy val playVersion = "2.6.7"
 
@@ -18,7 +18,7 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(commonSettings)
   .settings(
-    packageName in Docker := "speelplein-cloud-dashboard"
+    packageName in Docker := "inschrijven-cloud-dashboard"
   )
   .enablePlugins(PlayScala)
   .dependsOn(dataAccess)
