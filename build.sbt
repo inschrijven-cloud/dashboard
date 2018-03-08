@@ -62,6 +62,7 @@ lazy val dataAccess = Project("data-access", file("data-access"))
     libraryDependencies ++= Seq(
       ws,
       ehcache,
+      "io.waylay.influxdb" %% "influxdb-scala" % "2.0.1",
       "com.ibm" %% "couchdb-scala" % "0.7.2",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
       "com.norbitltd" % "spoiwo" % "1.0.6",

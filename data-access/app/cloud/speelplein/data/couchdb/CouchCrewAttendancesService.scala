@@ -236,6 +236,17 @@ class CouchCrewAttendancesService @Inject()(couchDatabase: CouchDatabase)
       .map(x => x.rows.map(y => createFromCrewAttendanceId(y.id)))
   }
 
+  override def count(implicit tenant: Tenant): Future[Int] =
+    db.query
+      .view[String, Int]("default", "all-crew-attendances-count")
+      .get
+      .group(true)
+      .reduce[Int]
+      .build
+      .query
+      .toFuture
+      .map(_.rows.head.value)
+
   private def isDeleted(attendanceId: String)(
       implicit tenant: Tenant): Future[Boolean] =
     db.docs

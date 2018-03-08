@@ -16,4 +16,6 @@ trait DayService {
       implicit tenant: Tenant): Future[Option[EntityWithId[Id, Day]]]
 
   def update(id: Day.Id, day: Day)(implicit tenant: Tenant): Future[Unit]
+
+  def count(implicit tenant: Tenant): Future[Int]
 }

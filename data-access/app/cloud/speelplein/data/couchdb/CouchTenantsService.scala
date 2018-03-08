@@ -47,13 +47,34 @@ class CouchTenantsService @Inject()(databaseService: TenantDatabaseService)(
         """.stripMargin)
     }
 
+    def count(kind: String): CouchView = {
+      CouchView(
+        map = s"""
+           |function(doc) {
+           |  if(doc.kind === '$kind') {
+           |    emit('count', doc._id);
+           |  }
+           |}
+        """.stripMargin,
+        "_count"
+      )
+    }
+
     val designDocs: Map[String, CouchView] = Map(
+      // View all
       "all-children" -> viewAll("type/child/v1"),
       "all-crew" -> viewAll("type/crew/v1"),
       "all-child-attendances" -> viewAll("type/childattendance/v2"),
       "all-crew-attendances" -> viewAll("type/crewattendance/v2"),
       "all-days" -> viewAll("type/day/v1"),
-      "all-contactperson" -> viewAll("type/contactperson/v1")
+      "all-contactperson" -> viewAll("type/contactperson/v1"),
+      // Count all
+      "all-children-count" -> count("type/child/v1"),
+      "all-crew-count" -> count("type/crew/v1"),
+      "all-child-attendances-count" -> count("type/childattendance/v2"),
+      "all-crew-attendances-count" -> count("type/crewattendance/v2"),
+      "all-days-count" -> count("type/day/v1"),
+      "all-contactperson-count" -> count("type/contactperson/v1")
     )
 
     case class Revs(childRev: String, crewRev: String)

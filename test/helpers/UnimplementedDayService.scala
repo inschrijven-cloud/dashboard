@@ -14,4 +14,5 @@ trait UnimplementedDayService extends DayService {
   override def insert(day: Day)(implicit tenant: Tenant) = ???
   override def findById(id: Id)(implicit tenant: Tenant) = ???
   override def update(id: Id, day: Day)(implicit tenant: Tenant) = ???
+  override def count(implicit tenant: Tenant): Future[Int] = ???
 }

@@ -80,4 +80,16 @@ class CouchDayService @Inject()(couchDatabase: CouchDatabase)
         .toFuture
     } yield { () }
   }
+
+  override def count(implicit tenant: Tenant): Future[Int] =
+    db(tenant).query
+      .view[String, Int]("default", "all-days-count")
+      .get
+      .group(true)
+      .reduce[Int]
+      .build
+      .query
+      .toFuture
+      .map(_.rows.head.value)
+
 }

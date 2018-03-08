@@ -54,4 +54,6 @@ trait ChildAttendancesService {
   def findAllRaw(
       implicit tenant: Tenant): Future[Seq[(Day.Id, Shift.Id, Child.Id)]]
 
+  def count(implicit tenant: Tenant): Future[Int]
+
 }

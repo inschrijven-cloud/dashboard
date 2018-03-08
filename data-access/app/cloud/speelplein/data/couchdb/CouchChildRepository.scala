@@ -100,7 +100,15 @@ class CouchChildRepository @Inject()(couchDatabase: CouchDatabase)
     db.docs.create[Child](child, id).toFuture.map(_.id)
 
   override def count(implicit tenant: Tenant): Future[Int] =
-    findAll.map(_.length)
+    db(tenant).query
+      .view[String, Int]("default", "all-children-count")
+      .get
+      .group(true)
+      .reduce[Int]
+      .build
+      .query
+      .toFuture
+      .map(_.rows.head.value)
 
   override def update(id: Id, child: Child)(
       implicit tenant: Tenant): Future[Unit] = {

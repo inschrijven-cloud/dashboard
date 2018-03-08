@@ -273,6 +273,17 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
      ))
   }
 
+  override def count(implicit tenant: Tenant): Future[Int] =
+    db.query
+      .view[String, Int]("default", "all-child-attendances-count")
+      .get
+      .group(true)
+      .reduce[Int]
+      .build
+      .query
+      .toFuture
+      .map(_.rows.head.value)
+
   private def createFromChildAttendanceId(id: String)(
       implicit tenant: Tenant): (Day.Id, Shift.Id, Child.Id) = {
     (id.split("--")(0), id.split("--")(1), id.split("--")(2))

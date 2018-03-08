@@ -10,6 +10,11 @@ import cloud.speelplein.data.auth0.{
   Auth0ConfigurationFromConfigFile,
   Auth0UserService
 }
+import cloud.speelplein.data.metrics.{
+  InfluxDBMetricsService,
+  InfluxDBProvider,
+  MetricsService
+}
 import com.google.inject.AbstractModule
 
 @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
@@ -38,5 +43,7 @@ class Module extends AbstractModule {
     bind(classOf[UserService]).to(classOf[Auth0UserService])
     bind(classOf[Auth0Configuration])
       .to(classOf[Auth0ConfigurationFromConfigFile])
+    bind(classOf[InfluxDBProvider])
+    bind(classOf[MetricsService]).to(classOf[InfluxDBMetricsService])
   }
 }

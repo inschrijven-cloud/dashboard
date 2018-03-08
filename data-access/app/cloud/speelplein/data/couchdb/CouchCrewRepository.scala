@@ -56,7 +56,15 @@ class CouchCrewRepository @Inject()(couchDatabase: CouchDatabase)
     db(tenant).docs.create(crewMember, id).toFuture.map(_.id)
 
   override def count(implicit tenant: Tenant): Future[Int] =
-    findAll.map(_.length)
+    db(tenant).query
+      .view[String, Int]("default", "all-crew-count")
+      .get
+      .group(true)
+      .reduce[Int]
+      .build
+      .query
+      .toFuture
+      .map(_.rows.head.value)
 
   override def update(id: Id, crewMember: Crew)(
       implicit tenant: Tenant): Future[Unit] = {
