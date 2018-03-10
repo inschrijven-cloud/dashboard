@@ -220,7 +220,7 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
               .toSeq
 
             val uniqueChildren =
-              seq.map { case (dayAtt, childId) => childId }.distinct.length
+              seq.map { case (childId, dayAtt) => childId }.distinct.length
 
             (dayId, AttendancesOnDay(uniqueChildren, shiftWithAttendances))
         }
