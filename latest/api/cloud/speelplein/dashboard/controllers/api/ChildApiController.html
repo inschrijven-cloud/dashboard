@@ -89,7 +89,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="cloud.speelplein.dashboard.controllers.api.ChildApiController#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(childRepository:cloud.speelplein.data.ChildRepository,tenantAction:cloud.speelplein.dashboard.controllers.actions.TenantAction,jwtAuthorizationBuilder:cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder)(implicitec:scala.concurrent.ExecutionContext):cloud.speelplein.dashboard.controllers.api.ChildApiController"></a>
+      <a id="&lt;init&gt;(childRepository:cloud.speelplein.data.ChildRepository,tenantAction:cloud.speelplein.dashboard.controllers.actions.TenantAction,auditAuthorizationBuilder:cloud.speelplein.dashboard.controllers.actions.LoggingVerifyingBuilder)(implicitec:scala.concurrent.ExecutionContext):cloud.speelplein.dashboard.controllers.api.ChildApiController"></a>
       <a id="&lt;init&gt;:ChildApiController"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -97,10 +97,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ChildApiController</span><span class="params">(<span name="childRepository">childRepository: <span class="extype" name="cloud.speelplein.data.ChildRepository">ChildRepository</span></span>, <span name="tenantAction">tenantAction: <a href="../actions/TenantAction.html" class="extype" name="cloud.speelplein.dashboard.controllers.actions.TenantAction">TenantAction</a></span>, <span name="jwtAuthorizationBuilder">jwtAuthorizationBuilder: <a href="../actions/JwtAuthorizationBuilder.html" class="extype" name="cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder">JwtAuthorizationBuilder</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span>
+        <span class="name">ChildApiController</span><span class="params">(<span name="childRepository">childRepository: <span class="extype" name="cloud.speelplein.data.ChildRepository">ChildRepository</span></span>, <span name="tenantAction">tenantAction: <a href="../actions/TenantAction.html" class="extype" name="cloud.speelplein.dashboard.controllers.actions.TenantAction">TenantAction</a></span>, <span name="auditAuthorizationBuilder">auditAuthorizationBuilder: <a href="../actions/LoggingVerifyingBuilder.html" class="extype" name="cloud.speelplein.dashboard.controllers.actions.LoggingVerifyingBuilder">LoggingVerifyingBuilder</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ec">ec: <span class="extype" name="scala.concurrent.ExecutionContext">ExecutionContext</span></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#cloud.speelplein.dashboard.controllers.api.ChildApiController@&lt;init&gt;(childRepository:cloud.speelplein.data.ChildRepository,tenantAction:cloud.speelplein.dashboard.controllers.actions.TenantAction,jwtAuthorizationBuilder:cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder)(implicitec:scala.concurrent.ExecutionContext):cloud.speelplein.dashboard.controllers.api.ChildApiController" title="Permalink" target="_top">
+      <a href="../../../../../index.html#cloud.speelplein.dashboard.controllers.api.ChildApiController@&lt;init&gt;(childRepository:cloud.speelplein.data.ChildRepository,tenantAction:cloud.speelplein.dashboard.controllers.actions.TenantAction,auditAuthorizationBuilder:cloud.speelplein.dashboard.controllers.actions.LoggingVerifyingBuilder)(implicitec:scala.concurrent.ExecutionContext):cloud.speelplein.dashboard.controllers.api.ChildApiController" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
@@ -3584,7 +3584,7 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="cloud.speelplein.dashboard.controllers.api.ChildApiController#merge" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="merge(retiredId:cloud.speelplein.models.Child.Id,absorpedIntoId:cloud.speelplein.models.Child.Id):play.api.mvc.Action[play.api.mvc.AnyContent]"></a>
+      <a id="merge(retiredId:cloud.speelplein.models.Child.Id,absorbedIntoId:cloud.speelplein.models.Child.Id):play.api.mvc.Action[play.api.mvc.AnyContent]"></a>
       <a id="merge(Id,Id):Action[AnyContent]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -3592,10 +3592,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">merge</span><span class="params">(<span name="retiredId">retiredId: <span class="extype" name="cloud.speelplein.models.Child.Id">Id</span></span>, <span name="absorpedIntoId">absorpedIntoId: <span class="extype" name="cloud.speelplein.models.Child.Id">Id</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>]</span>
+        <span class="name">merge</span><span class="params">(<span name="retiredId">retiredId: <span class="extype" name="cloud.speelplein.models.Child.Id">Id</span></span>, <span name="absorbedIntoId">absorbedIntoId: <span class="extype" name="cloud.speelplein.models.Child.Id">Id</span></span>)</span><span class="result">: <span class="extype" name="play.api.mvc.Action">Action</span>[<span class="extype" name="play.api.mvc.AnyContent">AnyContent</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#cloud.speelplein.dashboard.controllers.api.ChildApiController@merge(retiredId:cloud.speelplein.models.Child.Id,absorpedIntoId:cloud.speelplein.models.Child.Id):play.api.mvc.Action[play.api.mvc.AnyContent]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#cloud.speelplein.dashboard.controllers.api.ChildApiController@merge(retiredId:cloud.speelplein.models.Child.Id,absorbedIntoId:cloud.speelplein.models.Child.Id):play.api.mvc.Action[play.api.mvc.AnyContent]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
