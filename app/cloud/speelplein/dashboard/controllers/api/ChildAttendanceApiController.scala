@@ -1,10 +1,11 @@
 package cloud.speelplein.dashboard.controllers.api
 
 import javax.inject.Inject
-
 import cloud.speelplein.dashboard.controllers.actions.{
-  TenantAction,
-  JwtAuthorizationBuilder
+  AuditLoggingRequest,
+  JwtAuthorizationBuilder,
+  LoggingVerifyingBuilder,
+  TenantAction
 }
 import cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController._
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
@@ -19,9 +20,9 @@ import cloud.speelplein.data.{
   DayService
 }
 import cloud.speelplein.models.JsonFormats._
-import cloud.speelplein.models.{Child, Day, DayDate, Shift}
+import cloud.speelplein.models._
 import play.api.libs.json.{JsValue, Json, Writes}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, ActionBuilder, AnyContent}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,12 +59,20 @@ class ChildAttendanceApiController @Inject()(
     dayService: DayService,
     childAttendancesService: ChildAttendancesService,
     tenantAction: TenantAction,
-    jwtAuthorizationBuilder: JwtAuthorizationBuilder
+    auditAuthorizationBuilder: LoggingVerifyingBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
-  private def action(perm: Permission) =
-    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
-      perm)
+
+  private def action(
+      perm: Permission,
+      data: AuditLogData): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    Action andThen tenantAction andThen auditAuthorizationBuilder.logAndVerify(
+      perm,
+      data)
+
+  private def action(
+      perm: Permission): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    action(perm, AuditLogData.empty)
 
   def numberOfChildAttendances: Action[AnyContent] =
     action(childAttendanceRetrieve).async { req =>
@@ -76,7 +85,7 @@ class ChildAttendanceApiController @Inject()(
   def childAttendancesOnDay(id: Day.Id): Action[AnyContent] = TODO
 
   def getAttendancesForChild(id: Child.Id): Action[AnyContent] =
-    action(childAttendanceRetrieve).async { req =>
+    action(childAttendanceRetrieve, AuditLogData.childId(id)).async { req =>
       childAttendancesService
         .findAttendancesForChild(id)(req.tenant)
         .map(att => Ok(Json.toJson(att)))
@@ -84,27 +93,31 @@ class ChildAttendanceApiController @Inject()(
 
   def addAttendancesForChild(childId: Child.Id,
                              dayId: Day.Id): Action[BindShiftIds] =
-    action(childAttendanceCreate).async(parse.json(bindShiftIdsReads)) { req =>
-      dayService.findById(dayId)(req.tenant) flatMap { maybeEntityWithId =>
-        maybeEntityWithId map { entityWithId =>
-          childAttendancesService.addAttendancesForChild(
-            childId,
-            entityWithId.entity.date,
-            req.body.shiftIds)(req.tenant) map (_ => Ok)
-        } getOrElse Future.successful(NotFound)
+    action(childAttendanceCreate,
+           AuditLogData.childId(childId).copy(dayId = Some(dayId)))
+      .async(parse.json(bindShiftIdsReads)) { req =>
+        dayService.findById(dayId)(req.tenant) flatMap { maybeEntityWithId =>
+          maybeEntityWithId map { entityWithId =>
+            childAttendancesService.addAttendancesForChild(
+              childId,
+              entityWithId.entity.date,
+              req.body.shiftIds)(req.tenant) map (_ => Ok)
+          } getOrElse Future.successful(NotFound)
+        }
       }
-    }
 
   def deleteAttendancesForChild(childId: Child.Id,
                                 dayId: Day.Id): Action[BindShiftIds] =
-    action(childAttendanceDelete).async(parse.json(bindShiftIdsReads)) { req =>
-      DayDate.createFromDayId(dayId) map { day =>
-        childAttendancesService
-          .removeAttendancesForChild(childId, day, req.body.shiftIds)(
-            req.tenant)
-          .map(_ => NoContent)
-      } getOrElse Future.successful(BadRequest("Could not parse day id"))
-    }
+    action(childAttendanceDelete,
+           AuditLogData.childId(childId).copy(dayId = Some(dayId)))
+      .async(parse.json(bindShiftIdsReads)) { req =>
+        DayDate.createFromDayId(dayId) map { day =>
+          childAttendancesService
+            .removeAttendancesForChild(childId, day, req.body.shiftIds)(
+              req.tenant)
+            .map(_ => NoContent)
+        } getOrElse Future.successful(BadRequest("Could not parse day id"))
+      }
 
   def findAllPerChild: Action[AnyContent] =
     action(childAttendanceRetrieve).async { req =>

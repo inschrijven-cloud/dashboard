@@ -1,15 +1,15 @@
 package cloud.speelplein.dashboard.controllers.api
 
 import javax.inject.Inject
-
 import cloud.speelplein.dashboard.controllers.actions.{
-  TenantAction,
-  JwtAuthorizationBuilder
+  AuditLoggingRequest,
+  LoggingVerifyingBuilder,
+  TenantAction
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.{ChildRepository, DayService}
-import cloud.speelplein.models.Day
+import cloud.speelplein.models.{AuditLogData, Day}
 import cloud.speelplein.models.JsonFormats.{dayFormat, dayWithIdWrites}
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -20,12 +20,19 @@ class DayApiController @Inject()(
     dayService: DayService,
     childRepository: ChildRepository,
     tenantAction: TenantAction,
-    jwtAuthorizationBuilder: JwtAuthorizationBuilder
+    auditAuthorizationBuilder: LoggingVerifyingBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
-  private def action(per: Permission) =
-    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
-      dayRetrieve)
+  private def action(
+      perm: Permission,
+      data: AuditLogData): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    Action andThen tenantAction andThen auditAuthorizationBuilder.logAndVerify(
+      perm,
+      data)
+
+  private def action(
+      perm: Permission): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    action(perm, AuditLogData.empty)
 
   def all: Action[AnyContent] = action(dayRetrieve).async { req =>
     dayService.findAll(req.tenant).map(days => Ok(Json.toJson(days)))
@@ -36,17 +43,18 @@ class DayApiController @Inject()(
       dayService.insert(req.body)(req.tenant).map(_ => Ok)
   }
 
-  def getById(id: Day.Id): Action[AnyContent] = action(dayRetrieve).async {
-    req =>
+  def getById(id: Day.Id): Action[AnyContent] =
+    action(dayRetrieve, AuditLogData.dayId(id)).async { req =>
       dayService.findById(id)(req.tenant).map { maybeDay =>
         maybeDay
           .map(dayWithId => Ok(Json.toJson(dayWithId)))
           .getOrElse(NotFound)
       }
-  }
+    }
 
   def update(id: Day.Id): Action[Day] =
-    action(dayUpdate).async(parse.json(dayFormat)) { req =>
-      dayService.update(id, req.body)(req.tenant).map(_ => Ok)
+    action(dayUpdate, AuditLogData.dayId(id)).async(parse.json(dayFormat)) {
+      req =>
+        dayService.update(id, req.body)(req.tenant).map(_ => Ok)
     }
 }

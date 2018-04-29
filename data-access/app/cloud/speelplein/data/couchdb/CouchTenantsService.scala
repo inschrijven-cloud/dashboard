@@ -68,13 +68,15 @@ class CouchTenantsService @Inject()(databaseService: TenantDatabaseService)(
       "all-crew-attendances" -> viewAll("type/crewattendance/v2"),
       "all-days" -> viewAll("type/day/v1"),
       "all-contactperson" -> viewAll("type/contactperson/v1"),
+      "all-audit-log-entry" -> viewAll("type/auditLogEntry/v1"),
       // Count all
       "all-children-count" -> count("type/child/v1"),
       "all-crew-count" -> count("type/crew/v1"),
       "all-child-attendances-count" -> count("type/childattendance/v2"),
       "all-crew-attendances-count" -> count("type/crewattendance/v2"),
       "all-days-count" -> count("type/day/v1"),
-      "all-contactperson-count" -> count("type/contactperson/v1")
+      "all-contactperson-count" -> count("type/contactperson/v1"),
+      "all-audit-log-entry-count" -> viewAll("type/auditLogEntry/v1")
     )
 
     case class Revs(childRev: String, crewRev: String)

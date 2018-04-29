@@ -114,6 +114,13 @@ object Permission {
     "users:put-data",
     "Gebruikersdata voor een willekeurige organisatie aanmaken en aanpassen")
 
+  val auditLogAddEntry = Permission(
+    "audit-log:add-entry",
+    "Data toevoegen aan het audit-logboek (wie wat heeft aangemaakt en opgevraagd)")
+  val auditLogRead = Permission(
+    "audit-log:read",
+    "Data in het audit-logboek bekijken (wie wat heeft aangemaakt en opgevraagd)")
+
   val all: Map[String, Seq[Permission]] = Map(
     "Kinderen" -> Seq(childRetrieve,
                       childUpdate,
@@ -152,6 +159,10 @@ object Permission {
     "Gebruikers" -> Seq(
       userRetrieve,
       userPutTenantData
+    ),
+    "Audit logboek" -> Seq(
+      auditLogAddEntry,
+      auditLogRead
     )
   )
 

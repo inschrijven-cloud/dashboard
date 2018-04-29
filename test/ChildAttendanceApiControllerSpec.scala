@@ -8,7 +8,7 @@ import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.ChildAttendanceApiController
 import cloud.speelplein.data.{ChildAttendancesService, ChildRepository}
 import cloud.speelplein.models._
-import helpers.{StubJwtAuthorizationBuilder, UnimplementedDayService}
+import helpers.{StubLoggingVerifyingBuilder, UnimplementedDayService}
 import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future
@@ -26,7 +26,7 @@ class ChildAttendanceApiControllerSpec
   val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
   val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
-  val authBuilder = new StubJwtAuthorizationBuilder()
+  val authBuilder = new StubLoggingVerifyingBuilder()
 
   "ChildAttendanceApiController#numberOfChildAttendances" should {
     "return a list with days and the number of children attending each shift" in {

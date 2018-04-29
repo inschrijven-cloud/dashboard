@@ -37,6 +37,10 @@ object JsonFormats {
   implicit val appTenantUserDataFormat = Json.format[TenantUserData]
   implicit val auth0AppMetadataFormat = Json.format[Auth0AppMetadata]
 
+  implicit val auditLogDataFormat = Json.format[AuditLogData]
+  implicit val auditLogTriggeredByFormat = Json.format[AuditLogTriggeredBy]
+  implicit val auditLogEntryFormat = Json.format[AuditLogEntry]
+
   implicit val shiftKindFormat: Format[ShiftKind] = new Format[ShiftKind] {
     override def writes(o: ShiftKind): JsValue = JsString(o.mnemonic)
 

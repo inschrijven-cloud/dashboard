@@ -16,6 +16,7 @@ import scala.util.{Failure, Success, Try}
 class JwtRequest[A](val tenantData: TenantUserData,
                     val tenant: Tenant,
                     val isGlobalSuperUser: Boolean,
+                    val rawJwt: String,
                     request: Request[A])
     extends WrappedRequest[A](request)
 
@@ -34,27 +35,34 @@ class JwtVerifyAction @Inject()(
         .getOrElse(Failure(
           new Exception("Authorization header not found or Bearer not set")))
         .map(header => header.drop("Bearer ".length))
-        .flatMap(token => jwtVerificationService.decode(token))
-        .map(json =>
-          (Json.parse(json) \ "https://inschrijven.cloud/app_metadata")
-            .as[Auth0AppMetadata])
-        .map(metadata => {
-          val isGlobalSuperUser = metadata.tenants
-            .filter(_.name == "global")
-            .exists((metadata: TenantUserData) =>
-              metadata.roles.contains("superuser"))
+        .flatMap(token =>
+          jwtVerificationService.decode(token).map(decoded => (decoded, token)))
+        .map {
+          case (json, rawToken) =>
+            ((Json.parse(json) \ "https://inschrijven.cloud/app_metadata")
+               .as[Auth0AppMetadata],
+             rawToken)
+        }
+        .map {
+          case (metadata, rawToken) => {
+            val isGlobalSuperUser = metadata.tenants
+              .filter(_.name == "global")
+              .exists((metadata: TenantUserData) =>
+                metadata.roles.contains("superuser"))
 
-          val maybeTenantMetadata =
-            metadata.tenants.find(_.name == input.tenant.name)
+            val maybeTenantMetadata =
+              metadata.tenants.find(_.name == input.tenant.name)
 
-          (isGlobalSuperUser, maybeTenantMetadata)
-        })
+            (isGlobalSuperUser, maybeTenantMetadata, rawToken)
+          }
+        }
         .flatMap {
-          case (isGlobalSuperUser, Some(metadata)) =>
+          case (isGlobalSuperUser, Some(metadata), rawToken) =>
             Success(
               new JwtRequest[A](metadata,
                                 input.tenant,
                                 isGlobalSuperUser,
+                                rawToken,
                                 input))
           case _ =>
             Failure(

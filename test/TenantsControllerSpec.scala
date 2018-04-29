@@ -1,11 +1,14 @@
-import cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder
+import cloud.speelplein.dashboard.controllers.actions.{
+  JwtAuthorizationBuilder,
+  LoggingVerifyingBuilder
+}
 import cloud.speelplein.data.UserService
 import cloud.speelplein.dashboard.controllers.api.TenantsController
 import cloud.speelplein.data.TenantsService
 import cloud.speelplein.data.couchdb.CouchDatabase
 import cloud.speelplein.models.Tenant
 import com.ibm.couchdb.Res
-import helpers.{StubCouchDatabase, StubJwtAuthorizationBuilder}
+import helpers.{StubCouchDatabase, StubLoggingVerifyingBuilder}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.OneInstancePerTest
 
@@ -55,7 +58,7 @@ class TenantsControllerSpec
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .overrides(bind[TenantsService].toInstance(tenantsService))
-    .overrides(bind[JwtAuthorizationBuilder].to[StubJwtAuthorizationBuilder])
+    .overrides(bind[LoggingVerifyingBuilder].to[StubLoggingVerifyingBuilder])
     .overrides(bind[CouchDatabase].to[StubCouchDatabase])
     .overrides(bind(classOf[UserService]).to(mock[UserService]))
     .configure(conf: _*)

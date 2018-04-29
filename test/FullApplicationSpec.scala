@@ -1,4 +1,4 @@
-import helpers.StubCouchDatabaseModule
+import helpers.{StubCouchDatabaseModule, StubLoggingVerifyingBuilderModule}
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Configuration
@@ -14,7 +14,9 @@ class FullApplicationSpec
     with GuiceOneServerPerSuite
     with Results {
   implicit override lazy val app =
-    GuiceApplicationBuilder(overrides = Seq(new StubCouchDatabaseModule()),
+    GuiceApplicationBuilder(overrides =
+                              Seq(new StubCouchDatabaseModule(),
+                                  new StubLoggingVerifyingBuilderModule()),
                             configuration =
                               Configuration("play.http.secret.key" -> "test"))
       .configure("play.http.secret.key" -> "sekret")

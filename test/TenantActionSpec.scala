@@ -8,7 +8,7 @@ import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.DayApiController
 import cloud.speelplein.data.{ChildRepository, DayService}
 import cloud.speelplein.models.{Day, Tenant}
-import helpers.StubJwtAuthorizationBuilder
+import helpers.StubLoggingVerifyingBuilder
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{AsyncFlatSpec, EitherValues}
 import org.scalatestplus.play.PlaySpec
@@ -43,10 +43,11 @@ class TenantActionSpec
 
       val childRepo = mock[ChildRepository]
 
-      val controller = new DayApiController(dayService,
-                                            childRepo,
-                                            tenantAction,
-                                            new StubJwtAuthorizationBuilder())
+      val controller =
+        new DayApiController(dayService,
+                             childRepo,
+                             tenantAction,
+                             new StubLoggingVerifyingBuilder())
       controller.setControllerComponents(stubControllerComponents())
 
       val eventualResult = controller.all.apply(FakeRequest())

@@ -1,18 +1,21 @@
 package cloud.speelplein.dashboard.controllers.api
 
 import java.io.File
-import javax.inject.Inject
 
+import javax.inject.Inject
 import cloud.speelplein.dashboard.controllers.actions.{
-  TenantAction,
-  JwtAuthorizationBuilder
+  AuditLoggingRequest,
+  JwtAuthorizationBuilder,
+  LoggingVerifyingBuilder,
+  TenantAction
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.{FiscalCertificateService, ReportService}
+import cloud.speelplein.models.AuditLogData
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
 import com.typesafe.scalalogging.StrictLogging
-import play.api.mvc.{Action, AnyContent, InjectedController}
+import play.api.mvc.{Action, ActionBuilder, AnyContent, InjectedController}
 
 import scala.concurrent.ExecutionContext
 
@@ -20,16 +23,24 @@ class ReportController @Inject()(
     fiscalCertificateService: FiscalCertificateService,
     reportService: ReportService,
     tenantAction: TenantAction,
-    jwtAuthorizationBuilder: JwtAuthorizationBuilder
+    auditAuthorizationBuilder: LoggingVerifyingBuilder
 )(implicit ec: ExecutionContext)
     extends InjectedController
     with StrictLogging {
-  private def action(per: Permission) =
-    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
-      per)
+
+  private def action(
+      perm: Permission,
+      data: AuditLogData): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    Action andThen tenantAction andThen auditAuthorizationBuilder.logAndVerify(
+      perm,
+      data)
+
+  private def action(
+      perm: Permission): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    action(perm, AuditLogData.empty)
 
   def downloadFiscalCertificates(year: Int): Action[AnyContent] =
-    action(exportFiscalCert).async { req =>
+    action(exportFiscalCert, AuditLogData.year(year)).async { req =>
       fiscalCertificateService.getFiscalCertificateSheet(year)(req.tenant) map {
         sheet =>
           val file = File.createTempFile("fiscale-attesten.xlsx",
@@ -50,7 +61,7 @@ class ReportController @Inject()(
                                   crewId: String): Action[AnyContent] = TODO
 
   def downloadChildrenPerDay(year: Int): Action[AnyContent] =
-    action(exportChildrenPerDay).async { req =>
+    action(exportChildrenPerDay, AuditLogData.year(year)).async { req =>
       reportService.getChildrenPerDay(year)(req.tenant) map { sheet =>
         val file = File.createTempFile(s"kinderen per dag - $year.xlsx",
                                        System.nanoTime().toString)

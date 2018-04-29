@@ -2,16 +2,18 @@ package cloud.speelplein.dashboard.controllers.api
 
 import java.io.File
 import java.time.LocalDate
-import javax.inject.Inject
 
+import javax.inject.Inject
 import cloud.speelplein.dashboard.controllers.actions.{
-  TenantAction,
-  JwtAuthorizationBuilder
+  AuditLoggingRequest,
+  JwtAuthorizationBuilder,
+  LoggingVerifyingBuilder,
+  TenantAction
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.ExportService
-import cloud.speelplein.models.DayDate
+import cloud.speelplein.models.{AuditLogData, DayDate}
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
 import play.api.mvc._
 
@@ -21,12 +23,20 @@ class ExportController @Inject()(
     exportService: ExportService,
     cc: ControllerComponents,
     tenantAction: TenantAction,
-    jwtAuthorizationBuilder: JwtAuthorizationBuilder
+    auditAuthorizationBuilder: LoggingVerifyingBuilder
 )(implicit ec: ExecutionContext)
     extends InjectedController {
-  private def action(per: Permission) =
-    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
-      per)
+
+  private def action(
+      perm: Permission,
+      data: AuditLogData): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    Action andThen tenantAction andThen auditAuthorizationBuilder.logAndVerify(
+      perm,
+      data)
+
+  private def action(
+      perm: Permission): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    action(perm, AuditLogData.empty)
 
   def downloadChildren: Action[AnyContent] = action(exportChildren).async {
     req =>
@@ -57,5 +67,5 @@ class ExportController @Inject()(
     }
   }
 
-  def downloadChildrenWitbExtraMedicalAttention: Action[AnyContent] = TODO
+  def downloadChildrenWithExtraMedicalAttention: Action[AnyContent] = TODO
 }

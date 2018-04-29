@@ -8,7 +8,7 @@ import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.DayApiController
 import cloud.speelplein.data.{ChildRepository, DayService}
 import cloud.speelplein.models._
-import helpers.StubJwtAuthorizationBuilder
+import helpers.StubLoggingVerifyingBuilder
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,7 +23,7 @@ class DayApiControllerSpec extends PlaySpec with Results with MockFactory {
   val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
   val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
-  val authBuilder = new StubJwtAuthorizationBuilder()
+  val authBuilder = new StubLoggingVerifyingBuilder()
 
   "DayApiController#all" should {
 

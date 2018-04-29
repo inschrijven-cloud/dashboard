@@ -76,7 +76,7 @@ GET           /api/v1/files/childrenPerDay/:year                    cloud.speelp
 # Export API
 
 GET           /api/v1/files/export/children                         cloud.speelplein.dashboard.controllers.api.ExportController.downloadChildren
-GET           /api/v1/files/export/children/medical                 cloud.speelplein.dashboard.controllers.api.ExportController.downloadChildrenWitbExtraMedicalAttention
+GET           /api/v1/files/export/children/medical                 cloud.speelplein.dashboard.controllers.api.ExportController.downloadChildrenWithExtraMedicalAttention
 GET           /api/v1/files/export/crew                             cloud.speelplein.dashboard.controllers.api.ExportController.downloadCrew
 
 ### Superadmin API
@@ -105,6 +105,12 @@ PUT           /api/v1/auth/user/:userId                             cloud.speelp
 PUT           /api/v1/auth/user/:userId/:tenant                     cloud.speelplein.dashboard.controllers.api.UserApiController.putTenantData(userId: String, tenant: String)
 GET           /api/v1/auth/permissions                              cloud.speelplein.dashboard.controllers.api.AuthController.allPermissions
 GET           /api/v1/auth/roles                                    cloud.speelplein.dashboard.controllers.api.AuthController.allRoles
+
+# Audit log
+
+#POST          /api/v1/audit/log                                     cloud.speelplein.dashboard.controllers.api.
+GET           /api/v1/audit/log                                     cloud.speelplein.dashboard.controllers.api.AuditApiController.getLog(offset: Int ?= 0, count: Int ?= 50)
+
 
 
 # Databases

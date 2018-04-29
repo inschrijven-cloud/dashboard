@@ -4,7 +4,7 @@ import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.ContactPersonApiController
 import cloud.speelplein.data.ContactPersonRepository
-import helpers.StubJwtAuthorizationBuilder
+import helpers.StubLoggingVerifyingBuilder
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
 import play.api.mvc.{AnyContentAsJson, BodyParsers, Request, Results}
@@ -22,7 +22,7 @@ class ContactPersonApiControllerSpec
   val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
   val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
-  val authBuilder = new StubJwtAuthorizationBuilder()
+  val authBuilder = new StubLoggingVerifyingBuilder()
 
   "ContactPersonApiController#getById" should {
     val cp = ContactPerson("first",

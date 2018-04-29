@@ -1,9 +1,10 @@
 package cloud.speelplein.dashboard.controllers.api
 
 import javax.inject.Inject
-
 import cloud.speelplein.dashboard.controllers.actions.{
+  AuditLoggingRequest,
   JwtAuthorizationBuilder,
+  LoggingVerifyingBuilder,
   TenantAction
 }
 import cloud.speelplein.dashboard.controllers.api.CrewAttendanceApiController.BindShiftIds
@@ -22,7 +23,7 @@ import cloud.speelplein.data.{
 import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.models._
 import play.api.libs.json.{JsValue, Json, Writes}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, ActionBuilder, AnyContent}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -59,12 +60,20 @@ class CrewAttendanceApiController @Inject()(
     dayService: DayService,
     crewAttendancesService: CrewAttendancesService,
     tenantAction: TenantAction,
-    jwtAuthorizationBuilder: JwtAuthorizationBuilder
+    auditAuthorizationBuilder: LoggingVerifyingBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
-  private def action(perm: Permission) =
-    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
-      perm)
+
+  private def action(
+      perm: Permission,
+      data: AuditLogData): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    Action andThen tenantAction andThen auditAuthorizationBuilder.logAndVerify(
+      perm,
+      data)
+
+  private def action(
+      perm: Permission): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    action(perm, AuditLogData.empty)
 
   def numberOfCrewAttendances: Action[AnyContent] =
     action(crewAttendanceRetrieve).async { req =>
@@ -77,7 +86,7 @@ class CrewAttendanceApiController @Inject()(
   def crewAttendancesOnDay(id: Day.Id): Action[AnyContent] = TODO
 
   def getAttendancesForCrew(id: Crew.Id): Action[AnyContent] =
-    action(crewAttendanceRetrieve).async { req =>
+    action(crewAttendanceRetrieve, AuditLogData.crewId(id)).async { req =>
       crewAttendancesService
         .findAttendancesForCrew(id)(req.tenant)
         .map(att => Ok(Json.toJson(att)))
@@ -85,26 +94,31 @@ class CrewAttendanceApiController @Inject()(
 
   def addAttendancesForCrew(crewId: Crew.Id,
                             dayId: Day.Id): Action[BindShiftIds] =
-    action(crewAttendanceCreate).async(parse.json(bindShiftIdsReads)) { req =>
-      dayService.findById(dayId)(req.tenant) flatMap { maybeEntityWithId =>
-        maybeEntityWithId map { entityWithId =>
-          crewAttendancesService.addAttendancesForCrew(
-            crewId,
-            entityWithId.entity.date,
-            req.body.shiftIds)(req.tenant) map (_ => Ok)
-        } getOrElse Future.successful(NotFound)
+    action(crewAttendanceCreate,
+           AuditLogData.crewId(crewId).copy(dayId = Some(dayId)))
+      .async(parse.json(bindShiftIdsReads)) { req =>
+        dayService.findById(dayId)(req.tenant) flatMap { maybeEntityWithId =>
+          maybeEntityWithId map { entityWithId =>
+            crewAttendancesService.addAttendancesForCrew(
+              crewId,
+              entityWithId.entity.date,
+              req.body.shiftIds)(req.tenant) map (_ => Ok)
+          } getOrElse Future.successful(NotFound)
+        }
       }
-    }
 
   def deleteAttendancesForCrew(crewId: Crew.Id,
                                dayId: Day.Id): Action[BindShiftIds] =
-    action(crewAttendanceDelete).async(parse.json(bindShiftIdsReads)) { req =>
-      DayDate.createFromDayId(dayId) map { day =>
-        crewAttendancesService
-          .removeAttendancesForCrew(crewId, day, req.body.shiftIds)(req.tenant)
-          .map(_ => NoContent)
-      } getOrElse Future.successful(BadRequest("Could not parse day id"))
-    }
+    action(crewAttendanceDelete,
+           AuditLogData.crewId(crewId).copy(dayId = Some(dayId)))
+      .async(parse.json(bindShiftIdsReads)) { req =>
+        DayDate.createFromDayId(dayId) map { day =>
+          crewAttendancesService
+            .removeAttendancesForCrew(crewId, day, req.body.shiftIds)(
+              req.tenant)
+            .map(_ => NoContent)
+        } getOrElse Future.successful(BadRequest("Could not parse day id"))
+      }
 
   def findAllPerCrew: Action[AnyContent] =
     action(crewAttendanceRetrieve).async { req =>

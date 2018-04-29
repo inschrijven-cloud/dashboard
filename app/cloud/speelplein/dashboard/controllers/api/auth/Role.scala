@@ -30,7 +30,9 @@ import cloud.speelplein.dashboard.controllers.api.auth.Permission.{
   exportChildren,
   exportChildrenPerDay,
   exportCrew,
-  exportFiscalCert
+  exportFiscalCert,
+  auditLogAddEntry,
+  auditLogRead
 }
 import play.api.libs.json.{Json, OFormat}
 
@@ -71,7 +73,8 @@ object Role {
         exportChildren,
         exportCrew,
         exportFiscalCert,
-        exportChildrenPerDay
+        exportChildrenPerDay,
+        auditLogAddEntry
       )
     )
 
@@ -83,7 +86,8 @@ object Role {
       crewRole.impliedPermissions ++ Seq(crewUpdate,
                                          crewCreate,
                                          crewDelete,
-                                         crewMerge)
+                                         crewMerge,
+                                         auditLogRead)
     )
 
   val superuser = Role(

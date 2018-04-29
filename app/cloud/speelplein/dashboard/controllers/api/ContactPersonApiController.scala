@@ -1,11 +1,12 @@
 package cloud.speelplein.dashboard.controllers.api
 
 import javax.inject.Inject
-
 import cloud.speelplein.EntityWithId
 import cloud.speelplein.dashboard.controllers.actions.{
-  TenantAction,
-  JwtAuthorizationBuilder
+  AuditLoggingRequest,
+  JwtAuthorizationBuilder,
+  LoggingVerifyingBuilder,
+  TenantAction
 }
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
@@ -15,21 +16,29 @@ import cloud.speelplein.models.JsonFormats.{
   contactPersonWithIdWrites,
   entityWithIdReads
 }
-import cloud.speelplein.models.{ContactPerson, JsonFormats}
+import cloud.speelplein.models.{AuditLogData, ContactPerson, JsonFormats}
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, ActionBuilder, AnyContent}
 
 import scala.concurrent.ExecutionContext
 
 class ContactPersonApiController @Inject()(
     contactPersonRepository: ContactPersonRepository,
     tenantAction: TenantAction,
-    jwtAuthorizationBuilder: JwtAuthorizationBuilder
+    auditAuthorizationBuilder: LoggingVerifyingBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
-  private def action(per: Permission) =
-    Action andThen tenantAction andThen jwtAuthorizationBuilder.authenticate(
-      per)
+
+  private def action(
+      perm: Permission,
+      data: AuditLogData): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    Action andThen tenantAction andThen auditAuthorizationBuilder.logAndVerify(
+      perm,
+      data)
+
+  private def action(
+      perm: Permission): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    action(perm, AuditLogData.empty)
 
   def all: Action[AnyContent] = action(contactPersonRetrieve).async { req =>
     contactPersonRepository.findAll(req.tenant).map(all => Ok(Json.toJson(all)))
@@ -45,25 +54,26 @@ class ContactPersonApiController @Inject()(
       }
 
   def getById(id: ContactPerson.Id): Action[AnyContent] =
-    action(contactPersonRetrieve).async { req =>
-      contactPersonRepository.findById(id)(req.tenant).map { personOpt =>
-        personOpt
-          .map(person => Json.toJson(person.entity))
-          .map(Ok(_))
-          .getOrElse(NotFound)
-      }
+    action(contactPersonRetrieve, AuditLogData.contactPersonId(id)).async {
+      req =>
+        contactPersonRepository.findById(id)(req.tenant).map { personOpt =>
+          personOpt
+            .map(person => Json.toJson(person.entity))
+            .map(Ok(_))
+            .getOrElse(NotFound)
+        }
     }
 
   def update(id: ContactPerson.Id): Action[ContactPerson] =
-    action(contactPersonUpdate).async(
-      parse.json(JsonFormats.contactPersonFormat)) { req =>
-      contactPersonRepository
-        .update(id, req.body)(req.tenant)
-        .map(_ => updated(id))
-    }
+    action(contactPersonUpdate, AuditLogData.contactPersonId(id))
+      .async(parse.json(JsonFormats.contactPersonFormat)) { req =>
+        contactPersonRepository
+          .update(id, req.body)(req.tenant)
+          .map(_ => updated(id))
+      }
 
   def delete(id: ContactPerson.Id): Action[AnyContent] =
-    action(contactPersonDelete).async { req =>
+    action(contactPersonDelete, AuditLogData.contactPersonId(id)).async { req =>
       contactPersonRepository.delete(id)(req.tenant).map(_ => Ok)
     }
 }

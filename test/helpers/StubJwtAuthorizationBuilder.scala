@@ -1,9 +1,5 @@
 package helpers
 
-import cloud.speelplein.dashboard.controllers.actions.{
-  JwtAuthorizationBuilder,
-  JwtRequest
-}
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.actions.{
   JwtAuthorizationBuilder,
@@ -27,6 +23,7 @@ class StubJwtAuthorizationBuilder extends JwtAuthorizationBuilder {
             TenantUserData(request.tenant.name, Seq.empty, Seq.empty),
             request.tenant,
             false,
+            "raw token stub",
             request))
       }
 

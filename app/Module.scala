@@ -45,5 +45,6 @@ class Module extends AbstractModule {
       .to(classOf[Auth0ConfigurationFromConfigFile])
     bind(classOf[InfluxDBProvider])
     bind(classOf[MetricsService]).to(classOf[InfluxDBMetricsService])
+    bind(classOf[AuditLogService]).to(classOf[CouchAuditLogService])
   }
 }

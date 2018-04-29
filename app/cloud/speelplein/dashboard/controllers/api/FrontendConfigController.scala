@@ -1,23 +1,18 @@
 package cloud.speelplein.dashboard.controllers.api
 
 import javax.inject.Inject
-
 import cloud.speelplein.dashboard.controllers.api.auth.Permission.{
   createConfig,
   initializeAllConfigDb,
   listAllConfig
 }
-import cloud.speelplein.dashboard.controllers.actions.{
-  TenantAction,
-  GlobalTenantOnlyAction,
-  JwtAuthorizationBuilder
-}
+import cloud.speelplein.dashboard.controllers.actions._
+import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.data.ConfigService
-import cloud.speelplein.models.{ConfigWrapper, Tenant}
+import cloud.speelplein.models.{AuditLogData, ConfigWrapper}
 import cloud.speelplein.models.JsonFormats.{configFormat, configWithIdWrites}
-import play.api.Logger
-import play.api.libs.json.{JsObject, Json}
-import play.api.mvc.{Action, AnyContent, BodyParsers}
+import play.api.libs.json.Json
+import play.api.mvc.{Action, ActionBuilder, AnyContent}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -25,9 +20,20 @@ class FrontendConfigController @Inject()(
     configService: ConfigService,
     tenantAction: TenantAction,
     globalTenantOnlyAction: GlobalTenantOnlyAction,
-    jwtAuthorizationBuilder: JwtAuthorizationBuilder
+    auditAuthorizationBuilder: LoggingVerifyingBuilder
 )(implicit ec: ExecutionContext)
     extends ApiController {
+
+  private def action(
+      perm: Permission,
+      data: AuditLogData): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    Action andThen tenantAction andThen auditAuthorizationBuilder.logAndVerify(
+      perm,
+      data)
+
+  private def action(
+      perm: Permission): ActionBuilder[AuditLoggingRequest, AnyContent] =
+    action(perm, AuditLogData.empty)
 
   def configJson: Action[AnyContent] = (Action andThen tenantAction).async {
     req =>
@@ -38,30 +44,28 @@ class FrontendConfigController @Inject()(
   }
 
   def getAllConfig: Action[AnyContent] =
-    (Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
-      .authenticate(listAllConfig)).async { req =>
+    action(listAllConfig).async { req =>
       configService.getAllConfig.map(res => Ok(Json.toJson(res)))
     }
 
   def generateDesignDocs(): Action[AnyContent] =
-    (Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
-      .authenticate(initializeAllConfigDb)).async { req =>
+    action(initializeAllConfigDb).async { req =>
       configService.insertDesignDocs.map(Ok(_))
     }
 
   def insertConfigDocument(tenant: String): Action[ConfigWrapper] =
-    (Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
-      .authenticate(createConfig)).async(parse.json(configFormat)) { req =>
-      configService
-        .insert(tenant, ConfigWrapper(req.body.config))
-        .map(_ => created(tenant))
-    }
+    action(createConfig, AuditLogData.tenantName(tenant))
+      .async(parse.json(configFormat)) { req =>
+        configService
+          .insert(tenant, ConfigWrapper(req.body.config))
+          .map(_ => created(tenant))
+      }
 
   def updateConfigDocument(tenant: String): Action[ConfigWrapper] =
-    (Action andThen tenantAction andThen globalTenantOnlyAction andThen jwtAuthorizationBuilder
-      .authenticate(createConfig)).async(parse.json(configFormat)) { req =>
-      configService
-        .update(tenant, ConfigWrapper(req.body.config))
-        .map(_ => updated(tenant))
-    }
+    action(createConfig, AuditLogData.tenantName(tenant))
+      .async(parse.json(configFormat)) { req =>
+        configService
+          .update(tenant, ConfigWrapper(req.body.config))
+          .map(_ => updated(tenant))
+      }
 }

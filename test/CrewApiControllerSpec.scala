@@ -6,7 +6,7 @@ import cloud.speelplein.dashboard.controllers.actions.TenantAction
 import cloud.speelplein.dashboard.controllers.api.CrewApiController
 import cloud.speelplein.data.CrewRepository
 import cloud.speelplein.models.{Crew, Tenant}
-import helpers.StubJwtAuthorizationBuilder
+import helpers.StubLoggingVerifyingBuilder
 import org.scalatestplus.play.PlaySpec
 import org.scalamock.scalatest.MockFactory
 import play.api.mvc.{BodyParsers, Results}
@@ -21,7 +21,7 @@ class CrewApiControllerSpec extends PlaySpec with Results with MockFactory {
   val tenantAction = new TenantAction(
     new BodyParsers.Default(stubControllerComponents().parsers))
   val fakeReq = FakeRequest("GET", "/blah?tenant=blah")
-  val authBuilder = new StubJwtAuthorizationBuilder()
+  val authBuilder = new StubLoggingVerifyingBuilder()
 
   "CrewApiController#getById" should {
     val crew = Crew("first",

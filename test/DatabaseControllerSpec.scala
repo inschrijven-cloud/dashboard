@@ -1,9 +1,12 @@
 import cloud.speelplein.dashboard.controllers.api.DatabaseController
-import cloud.speelplein.dashboard.controllers.actions.JwtAuthorizationBuilder
+import cloud.speelplein.dashboard.controllers.actions.{
+  JwtAuthorizationBuilder,
+  LoggingVerifyingBuilder
+}
 import cloud.speelplein.dashboard.controllers.api.DatabaseController
 import cloud.speelplein.data.TenantDatabaseService
 import cloud.speelplein.models.DbName
-import helpers.StubJwtAuthorizationBuilder
+import helpers.{StubJwtAuthorizationBuilder, StubLoggingVerifyingBuilder}
 import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future
@@ -40,6 +43,7 @@ class DatabaseControllerSpec
     )
     .overrides(bind[TenantDatabaseService].toInstance(databaseService))
     .overrides(bind[JwtAuthorizationBuilder].to[StubJwtAuthorizationBuilder])
+    .overrides(bind[LoggingVerifyingBuilder].to[StubLoggingVerifyingBuilder])
     .build()
 
   "The database controller" should {
