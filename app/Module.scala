@@ -1,7 +1,9 @@
 import cloud.speelplein.data.util.{UuidService, UuidServiceImpl}
 import cloud.speelplein.dashboard.controllers.actions.{
   JwtAuthorizationBuilder,
-  JwtAuthorizationBuilderImpl
+  JwtAuthorizationBuilderImpl,
+  LoggingVerifyingBuilder,
+  LoggingVerifyingBuilderImpl
 }
 import cloud.speelplein.data.couchdb._
 import cloud.speelplein.data._
@@ -46,5 +48,7 @@ class Module extends AbstractModule {
     bind(classOf[InfluxDBProvider])
     bind(classOf[MetricsService]).to(classOf[InfluxDBMetricsService])
     bind(classOf[AuditLogService]).to(classOf[CouchAuditLogService])
+    bind(classOf[LoggingVerifyingBuilder])
+      .to(classOf[LoggingVerifyingBuilderImpl])
   }
 }
