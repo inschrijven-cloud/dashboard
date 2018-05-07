@@ -74,7 +74,7 @@ class LoggingVerifyingBuilderSpec
               jwtString)
           }
         })
-        .returning(Future.successful("log-entry-id"))
+        .returning(Future.successful())
         .once()
 
       val builder = new LoggingVerifyingBuilderImpl(

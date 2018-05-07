@@ -121,6 +121,11 @@ object Permission {
     "audit-log:read",
     "Data in het audit-logboek bekijken (wie wat heeft aangemaakt en opgevraagd)")
 
+  val ageGroupsRead =
+    Permission("age-groups:retrieve", "Leeftijdsgroepen ophalen en bekijken")
+  val ageGroupsCreateAndUpdate =
+    Permission("age-groups:retrieve", "Leeftijdsgroepen aanmaken en updaten")
+
   val all: Map[String, Seq[Permission]] = Map(
     "Kinderen" -> Seq(childRetrieve,
                       childUpdate,
@@ -143,6 +148,7 @@ object Permission {
                         crewDelete,
                         crewMerge),
     "Dagen" -> Seq(dayCreate, dayRetrieve, dayUpdate, dayDelete),
+    "Leeftijdsgroepen" -> Seq(ageGroupsRead, ageGroupsCreateAndUpdate),
     "Exporteren van lijsten" -> Seq(exportChildren,
                                     exportCrew,
                                     exportFiscalCert,

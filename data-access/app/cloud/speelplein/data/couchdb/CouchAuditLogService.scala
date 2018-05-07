@@ -44,8 +44,9 @@ class CouchAuditLogService @Inject()(couchDatabase: CouchDatabase)(
       tenant)
 
   override def registerAuditLogEntry(entry: AuditLogEntry)(
-      implicit tenant: Tenant): Future[String] = {
-    db.docs.create[AuditLogEntry](entry).toFuture.map(_.id)
+      implicit tenant: Tenant): Future[Unit] = tenant.name match {
+    case "global" => Future.successful()
+    case _        => db.docs.create[AuditLogEntry](entry).toFuture.map(_ => ())
   }
 
   override def getLogData(count: Int, offset: Int)(

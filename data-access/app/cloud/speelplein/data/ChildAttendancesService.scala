@@ -8,6 +8,7 @@ import scala.concurrent.Future
 
 object ChildAttendancesService {
   case class ShiftWithAttendances(shiftId: Shift.Id, numAttendances: Int)
+
   case class AttendancesOnDay(uniqueChildren: Int,
                               shiftsWithAttendances: Seq[ShiftWithAttendances])
 }
@@ -28,9 +29,14 @@ trait ChildAttendancesService {
   def addAttendancesForChild(
       childId: Child.Id,
       day: DayDate,
-      shifts: Seq[Shift.Id])(implicit tenant: Tenant): Future[Seq[Res.DocOk]]
+      shifts: Seq[Shift.Id],
+      ageGroupDate: Option[AgeGroupData] = None
+  )(implicit tenant: Tenant): Future[Seq[Res.DocOk]]
 
-  def addAttendanceForChild(childId: Child.Id, day: DayDate, shift: Shift.Id)(
+  def addAttendanceForChild(childId: Child.Id,
+                            day: DayDate,
+                            shift: Shift.Id,
+                            ageGroupData: Option[AgeGroupData] = None)(
       implicit tenant: Tenant): Future[Res.DocOk]
 
   def removeAttendancesForChild(

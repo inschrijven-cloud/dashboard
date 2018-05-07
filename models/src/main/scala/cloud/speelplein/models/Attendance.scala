@@ -16,7 +16,9 @@ case class SingleAttendance(
     /** When the child left/went home after the activity */
     left: Option[Instant] = None,
     /** Who registered the child leaving */
-    leftRegisteredBy: Option[Crew.Id] = None
+    leftRegisteredBy: Option[Crew.Id] = None,
+    /** If child is part of an age group */
+    ageGroup: Option[AgeGroupData] = None
 )
 
 case class DayAttendance(day: Day.Id, shifts: Seq[SingleAttendance])

@@ -27,9 +27,12 @@ import play.api.mvc.{Action, ActionBuilder, AnyContent}
 import scala.concurrent.{ExecutionContext, Future}
 
 object ChildAttendanceApiController {
-  case class BindShiftIds(shiftIds: Seq[Shift.Id])
+  case class BindAttendanceDataIds(
+      shiftIds: Seq[Shift.Id],
+      ageGroup: Option[AgeGroupData]
+  )
 
-  val bindShiftIdsReads = Json.reads[BindShiftIds]
+  val bindShiftIdsReads = Json.reads[BindAttendanceDataIds]
 
   implicit val childAttendanceWrites =
     new Writes[(Day.Id, Seq[(Shift.Id, Int)])] {
@@ -92,7 +95,7 @@ class ChildAttendanceApiController @Inject()(
     }
 
   def addAttendancesForChild(childId: Child.Id,
-                             dayId: Day.Id): Action[BindShiftIds] =
+                             dayId: Day.Id): Action[BindAttendanceDataIds] =
     action(childAttendanceCreate,
            AuditLogData.childId(childId).copy(dayId = Some(dayId)))
       .async(parse.json(bindShiftIdsReads)) { req =>
@@ -101,13 +104,15 @@ class ChildAttendanceApiController @Inject()(
             childAttendancesService.addAttendancesForChild(
               childId,
               entityWithId.entity.date,
-              req.body.shiftIds)(req.tenant) map (_ => Ok)
+              req.body.shiftIds,
+              req.body.ageGroup
+            )(req.tenant) map (_ => Ok)
           } getOrElse Future.successful(NotFound)
         }
       }
 
   def deleteAttendancesForChild(childId: Child.Id,
-                                dayId: Day.Id): Action[BindShiftIds] =
+                                dayId: Day.Id): Action[BindAttendanceDataIds] =
     action(childAttendanceDelete,
            AuditLogData.childId(childId).copy(dayId = Some(dayId)))
       .async(parse.json(bindShiftIdsReads)) { req =>

@@ -1,39 +1,6 @@
 package cloud.speelplein.dashboard.controllers.api.auth
 
-import cloud.speelplein.dashboard.controllers.api.auth.Permission.{
-  childAttendanceCreate,
-  childAttendanceDelete,
-  childAttendanceRetrieve,
-  childCreate,
-  childDelete,
-  childMerge,
-  childRetrieve,
-  childUpdate,
-  contactPersonCreate,
-  contactPersonDelete,
-  contactPersonRetrieve,
-  contactPersonUpdate,
-  createConfig,
-  createTenant,
-  crewAttendanceCreate,
-  crewAttendanceDelete,
-  crewAttendanceRetrieve,
-  crewCreate,
-  crewDelete,
-  crewMerge,
-  crewRetrieve,
-  crewUpdate,
-  dayCreate,
-  dayDelete,
-  dayRetrieve,
-  dayUpdate,
-  exportChildren,
-  exportChildrenPerDay,
-  exportCrew,
-  exportFiscalCert,
-  auditLogAddEntry,
-  auditLogRead
-}
+import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import play.api.libs.json.{Json, OFormat}
 
 case class Role(
@@ -70,6 +37,7 @@ object Role {
         dayRetrieve,
         dayUpdate,
         dayDelete,
+        ageGroupsRead,
         exportChildren,
         exportCrew,
         exportFiscalCert,
@@ -87,6 +55,7 @@ object Role {
                                          crewCreate,
                                          crewDelete,
                                          crewMerge,
+                                         ageGroupsCreateAndUpdate,
                                          auditLogRead)
     )
 

@@ -12,6 +12,7 @@ object JsonFormats {
   val emptyJsonObject = Json.obj()
 
   implicit val dayDateFormat = Json.format[DayDate]
+  implicit val ageGroupDataFormat = Json.format[AgeGroupData]
   implicit val singleAttendanceFormat = Json.format[SingleAttendance]
   implicit val contactPersonRelationshipFormat =
     Json.format[ContactPersonRelationship]
@@ -40,6 +41,9 @@ object JsonFormats {
   implicit val auditLogDataFormat = Json.format[AuditLogData]
   implicit val auditLogTriggeredByFormat = Json.format[AuditLogTriggeredBy]
   implicit val auditLogEntryFormat = Json.format[AuditLogEntry]
+
+  implicit val ageGroupConfigEntryFormat = Json.format[AgeGroupConfigEntry]
+  implicit val ageGroupConfigFormat = Json.format[AgeGroupConfig]
 
   implicit val shiftKindFormat: Format[ShiftKind] = new Format[ShiftKind] {
     override def writes(o: ShiftKind): JsValue = JsString(o.mnemonic)

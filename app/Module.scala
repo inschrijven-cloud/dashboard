@@ -50,5 +50,6 @@ class Module extends AbstractModule {
     bind(classOf[AuditLogService]).to(classOf[CouchAuditLogService])
     bind(classOf[LoggingVerifyingBuilder])
       .to(classOf[LoggingVerifyingBuilderImpl])
+    bind(classOf[AgeGroupService]).to(classOf[CouchAgeGroupService])
   }
 }

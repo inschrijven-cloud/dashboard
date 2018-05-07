@@ -14,6 +14,7 @@ import cloud.speelplein.data.{
   PlayJsonReaderUpickleCompat,
   PlayJsonWriterUpickleCompat
 }
+import cloud.speelplein.models.JsonFormats.ageGroupDataFormat
 import cloud.speelplein.models.Day.Id
 import cloud.speelplein.models._
 import com.ibm.couchdb.{
@@ -44,7 +45,9 @@ object CouchChildAttendancesService {
       /** When the child left/went home after the activity */
       left: Option[Instant] = None,
       /** Who registered the child leaving */
-      leftRegisteredBy: Option[Crew.Id] = None
+      leftRegisteredBy: Option[Crew.Id] = None,
+      /** If the child was registered in an age group for this attendance */
+      ageGroupData: Option[AgeGroupData] = None
   )
 
   implicit val childAttendancePersistedReader
@@ -105,12 +108,14 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
 
   override def addAttendancesForChild(childId: Child.Id,
                                       day: DayDate,
-                                      shifts: Seq[Shift.Id])(
+                                      shifts: Seq[Shift.Id],
+                                      ageGroupData: Option[AgeGroupData])(
       implicit tenant: Tenant): Future[Seq[Res.DocOk]] = {
     val many: Map[String, ChildAttendancePersisted] = Map(shifts.map {
       shiftId =>
         createChildAttendanceId(day.getDayId, shiftId, childId) -> ChildAttendancePersisted(
-          enrolled = Some(Instant.now))
+          enrolled = Some(Instant.now),
+          ageGroupData = ageGroupData)
     }: _*)
 
     // Only insert attendances that do not exist already
@@ -149,11 +154,12 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
     }
   }
 
-  override def addAttendanceForChild(
-      childId: Child.Id,
-      day: DayDate,
-      shift: Shift.Id)(implicit tenant: Tenant): Future[Res.DocOk] = {
-    addAttendancesForChild(childId, day, Seq(shift)).map(_.head)
+  override def addAttendanceForChild(childId: Child.Id,
+                                     day: DayDate,
+                                     shift: Shift.Id,
+                                     ageGroupData: Option[AgeGroupData])(
+      implicit tenant: Tenant): Future[Res.DocOk] = {
+    addAttendancesForChild(childId, day, Seq(shift), ageGroupData).map(_.head)
   }
 
   override def removeAttendancesForChild(
