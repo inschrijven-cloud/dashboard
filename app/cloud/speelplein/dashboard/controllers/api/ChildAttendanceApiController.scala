@@ -19,6 +19,7 @@ import cloud.speelplein.data.{
   ChildRepository,
   DayService
 }
+import cloud.speelplein.models.Day.Id
 import cloud.speelplein.models.JsonFormats._
 import cloud.speelplein.models._
 import play.api.libs.json.{JsValue, Json, Writes}
@@ -85,7 +86,24 @@ class ChildAttendanceApiController @Inject()(
       }
     }
 
-  def childAttendancesOnDay(id: Day.Id): Action[AnyContent] = TODO
+  def childAttendancesOnDay(id: Day.Id): Action[AnyContent] =
+    action(childAttendanceRetrieve).async { req =>
+      implicit val writes = new Writes[(Child.Id, Seq[SingleAttendance])] {
+        override def writes(o: (Child.Id, Seq[SingleAttendance])): JsValue = {
+          o match {
+            case (dayId, seq) =>
+              Json.obj(
+                "childId" -> dayId,
+                "attendances" -> seq
+              )
+          }
+        }
+      }
+
+      childAttendancesService.findAllOnDay(id)(req.tenant).map { attendances =>
+        Ok(Json.toJson(attendances))
+      }
+    }
 
   def getAttendancesForChild(id: Child.Id): Action[AnyContent] =
     action(childAttendanceRetrieve, AuditLogData.childId(id)).async { req =>
