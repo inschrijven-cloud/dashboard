@@ -233,6 +233,31 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
       }
   }
 
+  override def findAllOnDay(dayId: Id)(
+      implicit tenant: Tenant): Future[Seq[(Id, Seq[SingleAttendance])]] =
+    db.docs.getMany
+      .byType[String]("all-child-attendances",
+                      "default",
+                      MappedDocType(childAttendanceKind))
+      .includeDocs
+      .startKey(Seq(childAttendanceKind, dayId))
+      .endKey(Seq(childAttendanceKind, dayId + "\ufff0"))
+      .build
+      .query
+      .toFuture
+      .map(_.rows.map(doc =>
+        (createDayAttendance(doc.id, doc.doc.doc)._1,
+         createDayAttendance(doc.id, doc.doc.doc)._2.shifts)))
+      .map(list => {
+        list.foldLeft(Seq[(Child.Id, Seq[SingleAttendance])]()) {
+          (accumulator, current) =>
+            accumulator
+              .filterNot(_._1 == current._1) :+ (current._1, current._2 ++: accumulator
+              .filter(_._1 == current._1)
+              .flatMap(_._2))
+        }
+      })
+
   override def findAllRaw(
       implicit tenant: Tenant): Future[Seq[(Day.Id, Shift.Id, Child.Id)]] = {
     db.docs.getMany
@@ -274,7 +299,8 @@ class CouchChildAttendancesService @Inject()(couchDatabase: CouchDatabase)
            persisted.arrived,
            persisted.arrivedRegisteredBy,
            persisted.left,
-           persisted.leftRegisteredBy
+           persisted.leftRegisteredBy,
+           persisted.ageGroupData
          ))
      ))
   }
