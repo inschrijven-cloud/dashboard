@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 object ChildAttendanceApiController {
   case class BindAttendanceDataIds(
       shiftIds: Seq[Shift.Id],
-      ageGroup: Option[AgeGroupData]
+      ageGroupName: Option[String]
   )
 
   val bindShiftIdsReads = Json.reads[BindAttendanceDataIds]
@@ -123,7 +123,7 @@ class ChildAttendanceApiController @Inject()(
               childId,
               entityWithId.entity.date,
               req.body.shiftIds,
-              req.body.ageGroup
+              req.body.ageGroupName
             )(req.tenant) map (_ => Ok)
           } getOrElse Future.successful(NotFound)
         }

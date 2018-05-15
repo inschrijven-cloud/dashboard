@@ -1,11 +1,6 @@
 package cloud.speelplein.models
 
-object AgeGroupConfigEntry {
-  type Id = String
-}
-
-case class AgeGroupConfigEntry(id: AgeGroupConfigEntry.Id,
-                               name: String,
+case class AgeGroupConfigEntry(name: String, // Identifies the AgeGroup
                                bornOnOrAfter: DayDate,
                                bornOnOrBefore: DayDate)
 

@@ -30,13 +30,13 @@ trait ChildAttendancesService {
       childId: Child.Id,
       day: DayDate,
       shifts: Seq[Shift.Id],
-      ageGroupDate: Option[AgeGroupData] = None
+      ageGroupName: Option[String] = None
   )(implicit tenant: Tenant): Future[Seq[Res.DocOk]]
 
   def addAttendanceForChild(childId: Child.Id,
                             day: DayDate,
                             shift: Shift.Id,
-                            ageGroupData: Option[AgeGroupData] = None)(
+                            ageGroupName: Option[String] = None)(
       implicit tenant: Tenant): Future[Res.DocOk]
 
   def removeAttendancesForChild(

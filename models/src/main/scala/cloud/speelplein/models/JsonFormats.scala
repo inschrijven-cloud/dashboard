@@ -12,7 +12,6 @@ object JsonFormats {
   val emptyJsonObject = Json.obj()
 
   implicit val dayDateFormat = Json.format[DayDate]
-  implicit val ageGroupDataFormat = Json.format[AgeGroupData]
   implicit val singleAttendanceFormat = Json.format[SingleAttendance]
   implicit val contactPersonRelationshipFormat =
     Json.format[ContactPersonRelationship]
