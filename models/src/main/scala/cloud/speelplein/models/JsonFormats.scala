@@ -94,7 +94,8 @@ object JsonFormats {
     (JsPath \ "user_id").read[String] and
       (JsPath \ "name").read[String] and
       (JsPath \ "email").read[String] and
-      (JsPath \ "app_metadata" \ "tenants").read[Seq[TenantUserData]] and
+      (JsPath \ "app_metadata" \ "tenants")
+        .readWithDefault[Seq[TenantUserData]](Seq.empty) and
       (JsPath \ "logins_count").read[Int] and
       (JsPath \ "last_login").read[Instant] and
       (JsPath \ "picture").readNullable[String] and
