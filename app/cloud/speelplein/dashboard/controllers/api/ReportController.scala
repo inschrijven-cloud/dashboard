@@ -55,7 +55,16 @@ class ReportController @Inject()(
                                         childId: String): Action[AnyContent] =
     TODO
 
-  def downloadCompensation(year: Int): Action[AnyContent] = TODO
+  def downloadCompensation(year: Int): Action[AnyContent] =
+    action(exportCrewCompensation, AuditLogData.year(year)).async { req =>
+      reportService.getCrewCompensation(year)(req.tenant) map { sheet =>
+        val file = File.createTempFile(s"animatoren per dag - $year.xlsx",
+                                       System.nanoTime().toString)
+        sheet.saveAsXlsx(file.getAbsolutePath)
+
+        Ok.sendFile(file, fileName = _ => s"animatoren per dag - $year.xlsx")
+      }
+    }
 
   def downloadCompensationForCrew(year: Int,
                                   crewId: String): Action[AnyContent] = TODO

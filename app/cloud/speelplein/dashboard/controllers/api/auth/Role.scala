@@ -42,6 +42,7 @@ object Role {
         exportCrew,
         exportFiscalCert,
         exportChildrenPerDay,
+        exportCrewCompensation,
         auditLogAddEntry
       )
     )

@@ -73,6 +73,9 @@ object Permission {
   val exportFiscalCert = Permission(
     "export:fiscalcert",
     "Een lijst exporteren met data voor fiscale attesten")
+  val exportCrewCompensation = Permission(
+    "export:crewpcomensation",
+    "Een lijst exporteren met wanneer animatoren aanwezig waren.")
   val exportChildrenPerDay = Permission(
     "report:children-per-day",
     "Een lijst exporteren met hoeveel kinderen er per dag aanwezig waren")
@@ -152,7 +155,8 @@ object Permission {
     "Exporteren van lijsten" -> Seq(exportChildren,
                                     exportCrew,
                                     exportFiscalCert,
-                                    exportChildrenPerDay),
+                                    exportChildrenPerDay,
+                                    exportCrewCompensation),
     "Platformbeheer" -> Seq(listDatabases,
                             listTenants,
                             initTenantDbs,

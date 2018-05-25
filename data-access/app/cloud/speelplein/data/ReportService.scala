@@ -13,13 +13,79 @@ import scala.concurrent.Future
 
 trait ReportService {
   def getChildrenPerDay(year: Int)(implicit tenant: Tenant): Future[Sheet]
-
+  def getCrewCompensation(year: Int)(implicit tenant: Tenant): Future[Sheet]
 }
 
 class ReportServiceImpl @Inject()(
     childAttendancesService: ChildAttendancesService,
+    crewAttendancesService: CrewAttendancesService,
+    crewRepository: CrewRepository,
     dayService: DayService
 ) extends ReportService {
+
+  override def getCrewCompensation(year: Int)(
+      implicit tenant: Tenant): Future[Sheet] = {
+    for {
+      allAttendances <- crewAttendancesService.findAllRaw
+      allDays <- dayService.findAll.map(_.filter(_.entity.date.year == year))
+      allCrew <- crewRepository.findAll
+    } yield {
+
+      // return true if crew member did attend specified shift on day
+      def crewDidAttendShift(crewId: Crew.Id,
+                             dayId: Day.Id,
+                             shiftId: Shift.Id): Boolean = {
+        allAttendances.contains((dayId, shiftId, crewId))
+      }
+
+      val shifts = allDays
+        .sortBy(_.entity.date)
+        .map(day => day.entity)
+        .map(day => Day(day.date, day.shifts.sorted))
+        .flatMap(day => day.shifts.map(shift => (day.date, shift)))
+
+      val crewAttendances =
+        allCrew.filter(_.entity.active).sortBy(_.entity.lastName).map {
+          crewWithId =>
+            // Convert crew to a list of 1's and 0's (did or did not attend shift)
+            val attendances = shifts.map(
+              shiftWithDate =>
+                crewDidAttendShift(crewWithId.id,
+                                   shiftWithDate._1.getDayId,
+                                   shiftWithDate._2.id))
+
+            (crewWithId.id, crewWithId.entity.fullName, attendances)
+        }
+
+      val headerStyle = CellStyle(fillPattern = CellFill.Solid,
+                                  fillForegroundColor = Color.AquaMarine,
+                                  font = Font(bold = true))
+
+      val header = Seq(
+        Row()
+          .withStyle(headerStyle)
+          .withCellValues("" +: shifts.map(_._1.toString): _*),
+        Row()
+          .withStyle(headerStyle)
+          .withCellValues("" +: shifts.map(_._2.kind.description): _*)
+      )
+
+      val body = crewAttendances.map {
+        case (crewId, fullName, attendances) =>
+          val cells: Seq[Cell] = Cell(fullName) +: attendances.map(bool =>
+            if (bool) Cell(1) else Cell(0))
+
+          Row().withCells(cells)
+      }
+
+      Sheet(name = s"Aanwezigheden animatoren ($year)")
+        .withRows(header ++ body)
+        .withColumns((0 to shifts.length + 1).map(idx =>
+          Column(index = idx, autoSized = true)): _*)
+
+    }
+  }
+
   override def getChildrenPerDay(year: Int)(
       implicit tenant: Tenant): Future[Sheet] = {
     for {

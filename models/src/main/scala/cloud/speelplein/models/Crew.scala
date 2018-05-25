@@ -10,7 +10,9 @@ case class Crew(
     yearStarted: Option[Int] = None,
     birthDate: Option[DayDate],
     remarks: String = ""
-)
+) {
+  def fullName: String = firstName + ' ' + lastName
+}
 
 object Crew {
   type Id = String
