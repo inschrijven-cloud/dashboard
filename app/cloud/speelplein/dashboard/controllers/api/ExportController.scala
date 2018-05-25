@@ -67,5 +67,19 @@ class ExportController @Inject()(
     }
   }
 
-  def downloadChildrenWithExtraMedicalAttention: Action[AnyContent] = TODO
+  def downloadChildrenWithRemarks: Action[AnyContent] =
+    action(exportChildren).async { req =>
+      exportService.childrenWithRemarksSheet(req.tenant) map { sheet =>
+        val file =
+          File.createTempFile("kinderen met opmerkingen.xlsx",
+                              System.nanoTime().toString)
+        sheet.saveAsXlsx(file.getAbsolutePath)
+
+        Ok.sendFile(file,
+                    fileName = _ =>
+                      "kinderen " + DayDate
+                        .createFromLocalDate(LocalDate.now)
+                        .getDayId + ".xlsx")
+      }
+    }
 }

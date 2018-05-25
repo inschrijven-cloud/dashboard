@@ -76,7 +76,7 @@ GET           /api/v1/files/childrenPerDay/:year                    cloud.speelp
 # Export API
 
 GET           /api/v1/files/export/children                         cloud.speelplein.dashboard.controllers.api.ExportController.downloadChildren
-GET           /api/v1/files/export/children/medical                 cloud.speelplein.dashboard.controllers.api.ExportController.downloadChildrenWithExtraMedicalAttention
+GET           /api/v1/files/export/children/with-comment            cloud.speelplein.dashboard.controllers.api.ExportController.downloadChildrenWithRemarks
 GET           /api/v1/files/export/crew                             cloud.speelplein.dashboard.controllers.api.ExportController.downloadCrew
 
 ### Superadmin API

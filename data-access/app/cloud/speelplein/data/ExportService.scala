@@ -62,6 +62,56 @@ class ExportService @Inject()(childRepository: ChildRepository,
     }
   }
 
+  def childrenWithRemarksSheet(implicit tenant: Tenant): Future[Sheet] = {
+    childRepository.findAll.map { children =>
+      val rows =
+        children.filter(_.entity.remarks.exists(_ != "")).map { child =>
+          Row().withCellValues(
+            child.id,
+            child.entity.firstName,
+            child.entity.lastName,
+            child.entity.remarks.getOrElse(""),
+            child.entity.birthDate.map(_.toString).getOrElse(""),
+            child.entity.legacyAddress.street.getOrElse(""),
+            child.entity.legacyAddress.number.getOrElse(""),
+            child.entity.legacyAddress.zipCode.map(_.toString).getOrElse(""),
+            child.entity.legacyAddress.city.getOrElse(""),
+            child.entity.legacyContact.email.mkString(", "),
+            child.entity.legacyContact.phone
+              .map { phoneContact =>
+                phoneContact.phoneNumber + phoneContact.comment
+                  .map(x => s" ($x)")
+                  .getOrElse("") +
+                  phoneContact.kind.map(x => s" ($x)").getOrElse("")
+              }
+              .mkString(", ")
+          )
+        }
+
+      Sheet(name = "Alle kinderen")
+        .withRows(
+          Seq(
+            Row(style = headerStyle).withCellValues(
+              "Id",
+              "Voornaam",
+              "Familienaam",
+              "Opmerkingen",
+              "Geboortedatum",
+              "Straat",
+              "Nummer",
+              "Postcode",
+              "Stad",
+              "Email",
+              "Telefoon"
+            )
+          ) ++ rows
+        )
+        .withColumns(
+          (0 to 9).map(idx => Column(index = idx, autoSized = true)): _*
+        )
+    }
+  }
+
   def crewSheet(implicit tenant: Tenant): Future[Sheet] = {
     crewRepository.findAll map { crew =>
       val rows = crew.map { crewMember =>
