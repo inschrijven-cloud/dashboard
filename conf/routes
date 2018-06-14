@@ -27,6 +27,12 @@ GET           /api/v1/contactperson/:id                             cloud.speelp
 PUT           /api/v1/contactperson/:id                             cloud.speelplein.dashboard.controllers.api.ContactPersonApiController.update(id)
 DELETE        /api/v1/contactperson/:id                             cloud.speelplein.dashboard.controllers.api.ContactPersonApiController.delete(id)
 
+GET           /api/v1/contact-person                                cloud.speelplein.dashboard.controllers.api.ContactPersonApiController.all
+POST          /api/v1/contact-person                                cloud.speelplein.dashboard.controllers.api.ContactPersonApiController.create
+GET           /api/v1/contact-person/:id                            cloud.speelplein.dashboard.controllers.api.ContactPersonApiController.getById(id)
+PUT           /api/v1/contact-person/:id                            cloud.speelplein.dashboard.controllers.api.ContactPersonApiController.update(id)
+DELETE        /api/v1/contact-person/:id                            cloud.speelplein.dashboard.controllers.api.ContactPersonApiController.delete(id)
+
 # Crew API
 
 POST          /api/v1/crew                                          cloud.speelplein.dashboard.controllers.api.CrewApiController.create
@@ -34,6 +40,12 @@ GET           /api/v1/crew                                          cloud.speelp
 GET           /api/v1/crew/:id                                      cloud.speelplein.dashboard.controllers.api.CrewApiController.getById(id)
 PUT           /api/v1/crew/:id                                      cloud.speelplein.dashboard.controllers.api.CrewApiController.update(id)
 DELETE        /api/v1/crew/:id                                      cloud.speelplein.dashboard.controllers.api.CrewApiController.delete(id)
+
+POST          /api/v1/crew-member                                   cloud.speelplein.dashboard.controllers.api.CrewApiController.create
+GET           /api/v1/crew-member                                   cloud.speelplein.dashboard.controllers.api.CrewApiController.all
+GET           /api/v1/crew-member/:id                               cloud.speelplein.dashboard.controllers.api.CrewApiController.getById(id)
+PUT           /api/v1/crew-member/:id                               cloud.speelplein.dashboard.controllers.api.CrewApiController.update(id)
+DELETE        /api/v1/crew-member/:id                               cloud.speelplein.dashboard.controllers.api.CrewApiController.delete(id)
 
 
 # Attendance API - Children
