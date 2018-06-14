@@ -45,6 +45,9 @@ trait CrewAttendancesService {
 
   def findAll(implicit tenant: Tenant): Future[Map[Crew.Id, Seq[DayAttendance]]]
 
+  def findAllOnDay(dayId: Day.Id)(
+      implicit tenant: Tenant): Future[Seq[(Crew.Id, Seq[SingleAttendance])]]
+
   def findAllPerDay(
       implicit tenant: Tenant): Future[Map[Day.Id, AttendancesOnDay]]
 

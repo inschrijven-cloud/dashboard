@@ -12,6 +12,8 @@ object DayDate {
 
   def createFromLocalDate(date: LocalDate): DayDate =
     DayDate(date.getDayOfMonth, date.getMonth.getValue, date.getYear)
+
+  def today: DayDate = createFromLocalDate(LocalDate.now)
 }
 
 /**

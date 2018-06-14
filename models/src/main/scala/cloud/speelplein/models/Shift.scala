@@ -92,6 +92,8 @@ case class Shift(
 case class RelativeTime(hour: Int, minute: Int) extends Ordered[RelativeTime] {
   override def compare(that: RelativeTime): Int =
     this.hour * 60 + this.minute - (that.hour * 60 + that.minute)
+
+  override def toString: String = s"$hour:" + f"$minute%02d"
 }
 
 case class StartAndEndTime(start: RelativeTime, end: RelativeTime)

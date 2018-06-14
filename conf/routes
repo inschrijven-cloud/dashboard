@@ -72,6 +72,7 @@ GET           /api/v1/files/compensation/:year                      cloud.speelp
 GET           /api/v1/files/compensation/:year/:crewId              cloud.speelplein.dashboard.controllers.api.ReportController.downloadCompensationForCrew(year: Int, crewId)
 
 GET           /api/v1/files/childrenPerDay/:year                    cloud.speelplein.dashboard.controllers.api.ReportController.downloadChildrenPerDay(year: Int)
+GET           /api/v1/files/attendance/:dayId                       cloud.speelplein.dashboard.controllers.api.ReportController.downloadAttendancesOnDay(dayId)
 
 # Export API
 

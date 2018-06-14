@@ -13,11 +13,19 @@ import cloud.speelplein.dashboard.controllers.actions.{
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.ExportService
-import cloud.speelplein.models.{AuditLogData, DayDate}
+import cloud.speelplein.models.{AuditLogData, Child, Day, DayDate}
+import ExportController.{BindChildIds, bindChildIdsFormat}
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
+import play.api.libs.json.{Json, OFormat}
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
+
+object ExportController {
+  case class BindChildIds(childIds: Seq[Child.Id])
+  implicit val bindChildIdsFormat: OFormat[BindChildIds] =
+    Json.format[BindChildIds]
+}
 
 class ExportController @Inject()(
     exportService: ExportService,

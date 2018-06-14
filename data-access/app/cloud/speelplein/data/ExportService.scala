@@ -1,8 +1,11 @@
 package cloud.speelplein.data
 
-import javax.inject.Inject
+import java.lang
 
-import cloud.speelplein.models.Tenant
+import cloud.speelplein.EntityWithId
+import cloud.speelplein.models.Child.Id
+import javax.inject.Inject
+import cloud.speelplein.models.{Child, Day, DayDate, Tenant}
 import com.norbitltd.spoiwo.model.enums.CellFill
 import com.norbitltd.spoiwo.model._
 
@@ -15,102 +18,11 @@ class ExportService @Inject()(childRepository: ChildRepository,
                                       fillForegroundColor = Color.AquaMarine,
                                       font = Font(bold = true))
 
-  def childSheet(implicit tenant: Tenant): Future[Sheet] = {
-    childRepository.findAll.map { children =>
-      val rows = children.map { child =>
-        Row().withCellValues(
-          child.id,
-          child.entity.firstName,
-          child.entity.lastName,
-          child.entity.birthDate.map(_.toString).getOrElse(""),
-          child.entity.legacyAddress.street.getOrElse(""),
-          child.entity.legacyAddress.number.getOrElse(""),
-          child.entity.legacyAddress.zipCode.map(_.toString).getOrElse(""),
-          child.entity.legacyAddress.city.getOrElse(""),
-          child.entity.legacyContact.email.mkString(", "),
-          child.entity.legacyContact.phone
-            .map { phoneContact =>
-              phoneContact.phoneNumber + phoneContact.comment
-                .map(x => s" ($x)")
-                .getOrElse("") +
-                phoneContact.kind.map(x => s" ($x)").getOrElse("")
-            }
-            .mkString(", ")
-        )
-      }
+  def childSheet(implicit tenant: Tenant): Future[Sheet] =
+    childRepository.findAll.map(createChildSheet)
 
-      Sheet(name = "Alle kinderen")
-        .withRows(
-          Seq(
-            Row(style = headerStyle).withCellValues(
-              "Id",
-              "Voornaam",
-              "Familienaam",
-              "Geboortedatum",
-              "Straat",
-              "Nummer",
-              "Postcode",
-              "Stad",
-              "Email",
-              "Telefoon"
-            )
-          ) ++ rows
-        )
-        .withColumns(
-          (0 to 9).map(idx => Column(index = idx, autoSized = true)): _*
-        )
-    }
-  }
-
-  def childrenWithRemarksSheet(implicit tenant: Tenant): Future[Sheet] = {
-    childRepository.findAll.map { children =>
-      val rows =
-        children.filter(_.entity.remarks.exists(_ != "")).map { child =>
-          Row().withCellValues(
-            child.id,
-            child.entity.firstName,
-            child.entity.lastName,
-            child.entity.remarks.getOrElse(""),
-            child.entity.birthDate.map(_.toString).getOrElse(""),
-            child.entity.legacyAddress.street.getOrElse(""),
-            child.entity.legacyAddress.number.getOrElse(""),
-            child.entity.legacyAddress.zipCode.map(_.toString).getOrElse(""),
-            child.entity.legacyAddress.city.getOrElse(""),
-            child.entity.legacyContact.email.mkString(", "),
-            child.entity.legacyContact.phone
-              .map { phoneContact =>
-                phoneContact.phoneNumber + phoneContact.comment
-                  .map(x => s" ($x)")
-                  .getOrElse("") +
-                  phoneContact.kind.map(x => s" ($x)").getOrElse("")
-              }
-              .mkString(", ")
-          )
-        }
-
-      Sheet(name = "Alle kinderen")
-        .withRows(
-          Seq(
-            Row(style = headerStyle).withCellValues(
-              "Id",
-              "Voornaam",
-              "Familienaam",
-              "Opmerkingen",
-              "Geboortedatum",
-              "Straat",
-              "Nummer",
-              "Postcode",
-              "Stad",
-              "Email",
-              "Telefoon"
-            )
-          ) ++ rows
-        )
-        .withColumns(
-          (0 to 9).map(idx => Column(index = idx, autoSized = true)): _*
-        )
-    }
-  }
+  def childrenWithRemarksSheet(implicit tenant: Tenant): Future[Sheet] =
+    childRepository.findAll.map(createChildSheet)
 
   def crewSheet(implicit tenant: Tenant): Future[Sheet] = {
     crewRepository.findAll map { crew =>
@@ -163,6 +75,51 @@ class ExportService @Inject()(childRepository: ChildRepository,
           (0 to 11).map(idx => Column(index = idx, autoSized = true)): _*
         )
     }
+  }
+
+  private def createChildSheet(children: Seq[EntityWithId[Id, Child]]) = {
+    val rows = children.map { child =>
+      Row().withCellValues(
+        child.id,
+        child.entity.firstName,
+        child.entity.lastName,
+        child.entity.birthDate.map(_.toString).getOrElse(""),
+        child.entity.legacyAddress.street.getOrElse(""),
+        child.entity.legacyAddress.number.getOrElse(""),
+        child.entity.legacyAddress.zipCode.map(_.toString).getOrElse(""),
+        child.entity.legacyAddress.city.getOrElse(""),
+        child.entity.legacyContact.email.mkString(", "),
+        child.entity.legacyContact.phone
+          .map { phoneContact =>
+            phoneContact.phoneNumber + phoneContact.comment
+              .map(x => s" ($x)")
+              .getOrElse("") +
+              phoneContact.kind.map(x => s" ($x)").getOrElse("")
+          }
+          .mkString(", ")
+      )
+    }
+
+    Sheet(name = "Alle kinderen")
+      .withRows(
+        Seq(
+          Row(style = headerStyle).withCellValues(
+            "Id",
+            "Voornaam",
+            "Familienaam",
+            "Geboortedatum",
+            "Straat",
+            "Nummer",
+            "Postcode",
+            "Stad",
+            "Email",
+            "Telefoon"
+          )
+        ) ++ rows
+      )
+      .withColumns(
+        (0 to 9).map(idx => Column(index = idx, autoSized = true)): _*
+      )
   }
 
 }

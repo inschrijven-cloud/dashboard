@@ -28,6 +28,8 @@ case class Child(
     /** Other remarks */
     remarks: Option[String]
 ) {
+  def fullName: String = firstName + ' ' + lastName
+
   def primaryContactPersonId: Option[ContactPersonRelationship] =
     contactPeople.headOption
 }

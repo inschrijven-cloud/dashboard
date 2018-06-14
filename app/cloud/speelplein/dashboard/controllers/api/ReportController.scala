@@ -12,7 +12,7 @@ import cloud.speelplein.dashboard.controllers.actions.{
 import cloud.speelplein.dashboard.controllers.api.auth.Permission
 import cloud.speelplein.dashboard.controllers.api.auth.Permission._
 import cloud.speelplein.data.{FiscalCertificateService, ReportService}
-import cloud.speelplein.models.AuditLogData
+import cloud.speelplein.models.{AuditLogData, Day}
 import com.norbitltd.spoiwo.natures.xlsx.Model2XlsxConversions._
 import com.typesafe.scalalogging.StrictLogging
 import play.api.mvc.{Action, ActionBuilder, AnyContent, InjectedController}
@@ -80,4 +80,17 @@ class ReportController @Inject()(
       }
     }
 
+  def downloadAttendancesOnDay(dayId: Day.Id): Action[AnyContent] =
+    action(exportChildren).async { req =>
+      reportService.attendancesOnDayWorkbook(dayId)(req.tenant) map {
+        workbook =>
+          val file =
+            File.createTempFile("aanwezigheden.xlsx",
+                                System.nanoTime().toString)
+          workbook.saveAsXlsx(file.getAbsolutePath)
+
+          Ok.sendFile(file, fileName = _ => "aanwezigheden " + dayId + ".xlsx")
+      }
+
+    }
 }

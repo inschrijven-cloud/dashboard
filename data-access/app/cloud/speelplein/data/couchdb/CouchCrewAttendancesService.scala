@@ -190,6 +190,31 @@ class CouchCrewAttendancesService @Inject()(couchDatabase: CouchDatabase)
       })
   }
 
+  override def findAllOnDay(dayId: Id)(
+      implicit tenant: Tenant): Future[Seq[(Id, Seq[SingleAttendance])]] =
+    db.docs.getMany
+      .byType[String]("all-crew-attendances",
+                      "default",
+                      MappedDocType(crewAttendanceKind))
+      .includeDocs
+      .startKey(Seq(crewAttendanceKind, dayId))
+      .endKey(Seq(crewAttendanceKind, dayId + "\ufff0"))
+      .build
+      .query
+      .toFuture
+      .map(_.rows.map(doc =>
+        (createDayAttendance(doc.id, doc.doc.doc)._1,
+         createDayAttendance(doc.id, doc.doc.doc)._2.shifts)))
+      .map(list => {
+        list.foldLeft(Seq[(Child.Id, Seq[SingleAttendance])]()) {
+          (accumulator, current) =>
+            accumulator
+              .filterNot(_._1 == current._1) :+ (current._1, current._2 ++: accumulator
+              .filter(_._1 == current._1)
+              .flatMap(_._2))
+        }
+      })
+
   override def findAllPerDay(
       implicit tenant: Tenant): Future[Map[Id, AttendancesOnDay]] = {
     db.docs.getMany

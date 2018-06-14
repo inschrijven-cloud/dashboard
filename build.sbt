@@ -65,7 +65,7 @@ lazy val dataAccess = Project("data-access", file("data-access"))
       "io.waylay.influxdb" %% "influxdb-scala" % "2.0.1",
       "com.ibm" %% "couchdb-scala" % "0.7.2",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
-      "com.norbitltd" % "spoiwo" % "1.0.6",
+      "com.norbitltd" %% "spoiwo" % "1.3.1",
       "io.lemonlabs" %% "scala-uri" % "0.5.0",
       "io.verizon.delorean" %% "core" % "1.2.40-scalaz-7.2",
       "com.pauldijou" %% "jwt-core" % "0.14.1",
